@@ -1,4 +1,4 @@
-package com.example.springtest_demo;
+package com.example.PunchCardApplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,10 +12,10 @@ import java.time.format.DateTimeFormatter;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.example.Controller"})
-public class SpringTestDemoApplication {
+public class PunchCardApplication  {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringTestDemoApplication.class, args);
+        SpringApplication.run(PunchCardApplication .class, args);
 
         // 1. 获取当前日期和时间（不含时区）
         LocalDateTime nowDateTime = LocalDateTime.now();
