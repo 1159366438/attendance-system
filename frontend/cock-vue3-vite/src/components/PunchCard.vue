@@ -11,11 +11,11 @@
           <el-icon size="48" color="#F56C6C" v-else><CircleClose /></el-icon>
           <p>{{ isPunched ? '今日已打卡' : '今日未打卡' }}</p>
         </div>
-        <el-button type="primary" size="large" @click="handlePunch" v-if="!isPunched">
+        <el-button type="primary" size="large" @click="handlePunchIn" v-if="!isPunched">
           立即打卡
         </el-button>
         <el-button type="success" size="large" disabled v-else>
-          已打卡（{{ punchTime }}）
+          已打卡（{{ punchedTime }}）
         </el-button>
       </el-card>
     </div>
@@ -31,7 +31,7 @@ import { punchApi } from  '../api/punchApi.ts'
 // 响应式数据
 const todayDate = ref('')
 const isPunched = ref(false) // 是否已打卡
-const punchTime = ref('')
+const punchedTime = ref('')
 
 // 格式化今日日期
 const formatTodayDate = () => {
@@ -45,14 +45,14 @@ const formatTodayDate = () => {
 }
 
 // 打卡操作
-const handlePunch = async () => {
+const handlePunchIn = async () => {
     // 调用封装的记录接口
     try {
-      const res = await punchApi.getPunchRecord()
+      const res = await punchApi.getPunchRecords()
       console.log(res)
       isPunched.value = true
       const now = new Date()
-      punchTime.value = now.toLocaleTimeString('zh-CN', {
+      punchedTime.value = now.toLocaleTimeString('zh-CN', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
@@ -72,7 +72,7 @@ onMounted(() => {
   formatTodayDate()
   // 模拟已打卡状态（实际项目从接口获取）
   // isPunched.value = true
-  // punchTime.value = '09:05:30'
+  // punchedTime.value = '09:05:30'
 })
 </script>
 

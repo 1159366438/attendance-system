@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { punchApi } from '../api/punchApi'
+import { userApi } from '../api/punchApi'
 import { type MenuText } from '../constants/menu';
 
 // 接收父组件传递的菜单文本
@@ -58,7 +58,7 @@ const updateTime = () => {
 
 // 获取用户信息
 const getUserInfo = async () => {
-  const res = await punchApi.getUserInfo()
+  const res = await userApi.getUserInfo()
   if (res.code === 200) {
     userInfo.value = res.data
   }
