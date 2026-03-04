@@ -2,8 +2,8 @@
  * 用户状态管理
  */
 import { defineStore } from 'pinia'
-import { userApi } from '../api/userApi'
-import type { UserInfo } from '../types'
+import { userApi } from '../../api/userApi'
+import type { UserInfo } from '../../types'
 
 export const useUserStore = defineStore('user', {
   state: () => ({

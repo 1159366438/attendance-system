@@ -2,9 +2,9 @@
  * 打卡状态管理
  */
 import { defineStore } from 'pinia'
-import { punchApi } from '../api/punchApi'
-import type { PunchRecord } from '../types'
-import { PUNCH_CONSTANTS } from '../constants/punch'
+import { punchApi } from '../../api/punchApi'
+import type { PunchRecord } from '../../types'
+import { PUNCH_CONSTANTS } from '../../constants/punch'
 
 export const usePunchStore = defineStore('punch', {
   state: () => ({

@@ -1,0 +1,42 @@
+.punch-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.punch-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.punch-header h2 {
+  font-size: 34px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.punch-header .date {
+  font-size: 14px;
+  color: #666;
+}
+
+.punch-body {
+  width: 400px;
+}
+
+.punch-card-item {
+  text-align: center;
+  padding: 30px;
+}
+
+.punch-status {
+  margin-bottom: 20px;
+}
+
+.punch-status p {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #333;
+}

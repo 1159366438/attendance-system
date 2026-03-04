@@ -25,10 +25,9 @@
 <script setup lang="ts">
 import { ref, onMounted, getCurrentInstance, computed } from 'vue'
 import { CircleCheck, CircleClose } from '@element-plus/icons-vue'
-import { usePunchStore } from '../store/punch'
-import { useUserStore } from '../store/user'
-import { formatDate } from '../utils'
-import { PUNCH_CONSTANTS } from '../constants/punch'
+import { usePunchStore, useUserStore } from '../../store'
+import { formatDate } from '../../utils'
+import { PUNCH_CONSTANTS } from '../../constants/punch'
 
 // 响应式数据
 const todayDate = ref('')
@@ -80,46 +79,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.punch-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.punch-header {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.punch-header h2 {
-  font-size: 34px;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.punch-header .date {
-  font-size: 14px;
-  color: #666;
-}
-
-.punch-body {
-  width: 400px;
-}
-
-.punch-card-item {
-  text-align: center;
-  padding: 30px;
-}
-
-.punch-status {
-  margin-bottom: 20px;
-}
-
-.punch-status p {
-  margin-top: 10px;
-  font-size: 18px;
-  color: #333;
-}
+@import '../../assets/css/punch-card.css';
 </style>

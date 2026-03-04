@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import PunchPage from '../views/PunchPage.vue'
+import PunchPage from '../pages/home/PunchPage.vue'
+import RecordPage from '../pages/home/RecordPage.vue'
 
 const routes = [
   {
@@ -11,6 +12,12 @@ const routes = [
     name: 'PunchPage',
     component: PunchPage,
     meta: { title: '打卡页面' }
+  },
+  {
+    path: '/record',
+    name: 'RecordPage',
+    component: RecordPage,
+    meta: { title: '打卡记录' }
   }
 ]
 
