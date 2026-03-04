@@ -1,7 +1,5 @@
 package com.example.service.impl;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.example.dao.AttendanceRecordDao;
 import com.example.entity.AttendanceRecord;
 import com.example.service.AttendanceRecordService;
@@ -64,10 +62,8 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
 
     @Override
     public List<AttendanceRecord> queryByPage(int page, int size) {
-        // 使用PageHelper进行分页
-        PageHelper.startPage(page, size);
-        // 查询所有记录，PageHelper会自动进行分页处理
-        return attendanceRecordDao.queryAll();
+        int offset = (page - 1) * size;
+        return attendanceRecordDao.queryByPage(offset, size);
     }
 
     @Override

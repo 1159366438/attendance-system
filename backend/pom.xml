@@ -55,12 +55,7 @@
             <version>3.0.5</version> <!-- 稳定版本 -->
         </dependency>
 
-        <!-- PageHelper分页插件 -->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.4.7</version>
-        </dependency>
+
 
         <!-- MySQL驱动（Spring Boot 4.0.x自动管理版本，无需手动指定） -->
         <dependency>

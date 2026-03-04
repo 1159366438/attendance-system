@@ -59,6 +59,15 @@
         where id = #{id}
     </delete>
 
+    <!-- 分页查询 -->
+    <select id="queryByPage" resultMap="BaseResultMap">
+        select
+            id, user_id, check_in_time, check_in_type, check_in_status, check_in_location, create_time, update_time
+        from attendance_record
+        order by create_time desc
+        limit #{limit} offset #{offset}
+    </select>
+
     <!-- 查询总记录数 -->
     <select id="countAll" resultType="int">
         select count(*) from attendance_record

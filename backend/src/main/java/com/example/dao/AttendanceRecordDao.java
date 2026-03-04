@@ -50,6 +50,15 @@ public interface AttendanceRecordDao {
     int update(AttendanceRecord attendanceRecord);
 
     /**
+     * 分页查询打卡记录
+     *
+     * @param offset 偏移量
+     * @param limit 每页数量
+     * @return 打卡记录列表
+     */
+    List<AttendanceRecord> queryByPage(int offset, int limit);
+
+    /**
      * 查询总记录数
      *
      * @return 总记录数
