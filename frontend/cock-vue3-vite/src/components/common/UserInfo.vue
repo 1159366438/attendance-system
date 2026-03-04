@@ -17,9 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, getCurrentInstance, computed } from 'vue'
-import { useUserStore } from '../store/user'
-import { formatDate } from '../utils'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useUserStore } from '../../store'
+import { formatDate } from '../../utils'
+import { ElMessage } from 'element-plus'
+import { APP_CONFIG } from '../../config/appConfig'
 
 
 // 接收父组件传递的菜单文本
@@ -36,7 +38,6 @@ const props = defineProps({
  * 获取用户信息
  * 调用userStore.fetchUserInfo()获取用户信息
  */
-const { proxy } = getCurrentInstance() as any
 const userStore = useUserStore()
 
 // 响应式数据
@@ -54,7 +55,7 @@ const updateTime = () => {
 const getUserInfo = async () => {
   await userStore.fetchUserInfo()
   if (userStore.error) {
-    proxy.$message.error(userStore.error)
+    ElMessage.error(userStore.error)
   }
 };
 
@@ -65,57 +66,12 @@ onMounted(() => {
   updateTime()
   getUserInfo()
   // 每秒更新时间
-  const timer = setInterval(updateTime, 1000)
+  const timer = setInterval(updateTime, APP_CONFIG.UI.TIMING.AUTO_UPDATE_INTERVAL)
   // 卸载时清除定时器
   onUnmounted(() => clearInterval(timer))
 })
 </script>
 
 <style scoped>
-/* 外层容器：作为标题定位的参考（必须加relative） */
-.user-header-container {
-  position: relative; /* 核心：让子元素absolute基于此定位 */
-  width: 100%; /* 占满父容器宽度 */
-  padding: 8px 16px; /* 内边距，避免标题贴边 */
-}
-
-/* h2标题样式：左上角固定 + 重置默认样式 */
-.current-menu {
-  /* 核心：左上角定位 */
-  position: absolute; /* 脱离文档流，固定位置 */
-  top: 8px; /* 距离顶部8px */
-  left: 16px;
-}
-
-/* 用户信息区域：向右偏移，避免被标题覆盖 */
-.user-info {
-  display: flex;
-  justify-content: flex-end; /* 整体居右 */
-  align-items: center;
-  gap: 16px;
-  /* 关键：给右侧内容加左内边距，避开左上角标题 */
-  padding-left: 200px; /* 足够容纳标题宽度，可根据标题长度调整 */
-}
-
-.user-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-}
-
-.user-name {
-  font-size: 14px;
-  color: #333;
-}
-
-.refresh-time {
-  font-size: 12px;
-  color: #999; /* 加浅灰色，和标题区分 */
-}
+@import '../../assets/css/user-info.css';
 </style>

@@ -1,19 +1,11 @@
 <template>
-  <router-view />
+  <Layout />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Layout from './layouts/Layout.vue'
+</script>
 
 <style>
-/* 全局样式 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background-color: #f5f5f5;
-  font-family: 'Microsoft Yahei', sans-serif;
-}
+@import './assets/css/global.css';
 </style>

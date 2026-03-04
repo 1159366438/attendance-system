@@ -7,9 +7,9 @@
     <div class="punch-body">
       <el-card class="punch-card-item">
         <div class="punch-status">
-          <el-icon size="48" color="#67C23A" v-if="isPunched"><CircleCheck /></el-icon>
-          <el-icon size="48" color="#F56C6C" v-else><CircleClose /></el-icon>
-          <p>{{ isPunched ? '今日已打卡' : '今日未打卡' }}</p>
+          <el-icon :size="APP_CONFIG.UI.SIZES.ICON_SIZE" :color="APP_CONFIG.UI.COLORS.PRIMARY_SUCCESS" v-if="isPunched"><CircleCheck /></el-icon>
+          <el-icon :size="APP_CONFIG.UI.SIZES.ICON_SIZE" :color="APP_CONFIG.UI.COLORS.PRIMARY_ERROR" v-else><CircleClose /></el-icon>
+          <p>{{ isPunched ? t('punchStatus.punched', '今日已打卡') : t('punchStatus.unpunched', '今日未打卡') }}</p>
         </div>
         <el-button type="primary" size="large" @click="handlePunchIn" v-if="!isPunched">
           立即打卡
@@ -23,12 +23,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, getCurrentInstance, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { CircleCheck, CircleClose } from '@element-plus/icons-vue'
-import { usePunchStore } from '../store/punch'
-import { useUserStore } from '../store/user'
-import { formatDate } from '../utils'
-import { PUNCH_CONSTANTS } from '../constants/punch'
+import { usePunchStore, useUserStore } from '../../store'
+import { formatDate } from '../../utils'
+import { PUNCH_CONSTANTS } from '../../constants/punch'
+import { ElMessage } from 'element-plus'
+import { APP_CONFIG } from '../../config/appConfig'
+import { t } from '../../locales'
 
 // 响应式数据
 const todayDate = ref('')
@@ -41,8 +43,6 @@ const punchedTime = computed(() => punchStore.punchedTime)
 const formatTodayDate = () => {
   todayDate.value = formatDate(new Date(), 'date')
 }
-
-const { proxy } = getCurrentInstance() as any
 
 // 打卡操作
 const handlePunchIn = async () => {
@@ -58,15 +58,16 @@ const handlePunchIn = async () => {
     const success = await punchStore.punchIn(username)
     
     if (success) {
-      proxy.$message.success(PUNCH_CONSTANTS.MESSAGES.SUCCESS)
+      ElMessage.success(PUNCH_CONSTANTS.MESSAGES.SUCCESS())
     } else if (punchStore.error) {
-      proxy.$message.error(punchStore.error)
+      ElMessage.error(punchStore.error)
     } else {
-      proxy.$message.error(PUNCH_CONSTANTS.MESSAGES.FAILED)
+      ElMessage.error(PUNCH_CONSTANTS.MESSAGES.FAILED())
     }
   } catch (error) {
-    proxy.$message.error(PUNCH_CONSTANTS.MESSAGES.ERROR)
-    console.error('打卡失败:', error)
+    ElMessage.error(PUNCH_CONSTANTS.MESSAGES.ERROR())
+    // 开发调试时可以启用日志
+    // console.error('打卡失败:', error)
   }
 }
 
@@ -80,46 +81,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.punch-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.punch-header {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.punch-header h2 {
-  font-size: 34px;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.punch-header .date {
-  font-size: 14px;
-  color: #666;
-}
-
-.punch-body {
-  width: 400px;
-}
-
-.punch-card-item {
-  text-align: center;
-  padding: 30px;
-}
-
-.punch-status {
-  margin-bottom: 20px;
-}
-
-.punch-status p {
-  margin-top: 10px;
-  font-size: 18px;
-  color: #333;
-}
+@import '../../assets/css/punch-card.css';
 </style>

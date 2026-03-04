@@ -1,0 +1,40 @@
+/* CSS变量定义 */
+:root {
+  /* 颜色变量 */
+  --color-primary-success: #67C23A;
+  --color-primary-error: #F56C6C;
+  --color-active-text: #ffd04b;
+  --color-background-dark: #545c64;
+  --color-background-highlight: rgba(255, 208, 75, 0.2);
+  --color-text-light: #fff;
+  --color-text-dark: #333;
+  --color-text-gray: #666;
+  --color-text-light-gray: #999;
+  
+  /* 尺寸变量 */
+  --size-menu-width: 240px;
+  --size-icon: 48px;
+  --size-menu-item-height: 48px;
+  --size-card-width: 400px;
+  --size-avatar: 32px;
+  
+  /* 间距变量 */
+  --spacing-layout-gap: 10px;
+  --spacing-layout-padding: 10px;
+  --spacing-element-margin: 20px;
+  --spacing-element-padding: 16px;
+  --spacing-element-padding-large: 20px;
+  --spacing-element-padding-small: 8px;
+  
+  /* 阴影变量 */
+  --shadow-blur: 16px;
+  --shadow-offset-y: 2px;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  
+  /* 字体变量 */
+  --font-size-small: 12px;
+  --font-size-normal: 14px;
+  --font-size-large: 16px;
+  --font-size-extra-large: 18px;
+  --font-size-title: 34px;
+}

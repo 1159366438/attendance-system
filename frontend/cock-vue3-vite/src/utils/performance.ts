@@ -1,0 +1,34 @@
+/**
+ * 性能优化工具函数
+ */
+
+/**
+ * 防抖函数
+ * @param func 要执行的函数
+ * @param delay 延迟时间（毫秒）
+ * @returns 防抖处理后的函数
+ */
+export const debounce = <T extends (...args: any[]) => any>(func: T, delay: number) => {
+  let timeoutId: number;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => func(...args), delay);
+  };
+};
+
+/**
+ * 节流函数
+ * @param func 要执行的函数
+ * @param limit 时间限制（毫秒）
+ * @returns 节流处理后的函数
+ */
+export const throttle = <T extends (...args: any[]) => any>(func: T, limit: number) => {
+  let inThrottle: boolean;
+  return (...args: Parameters<T>) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+};

@@ -1,25 +1,26 @@
 /**
  * 打卡相关常量
  */
+import { t } from '../locales'
 
 // 打卡相关常量
 export const PUNCH_CONSTANTS = {
   // 打卡消息
   MESSAGES: {
-    SUCCESS: '打卡成功',
-    FAILED: '打卡失败！',
-    ERROR: '打卡时发生错误',
-    NETWORK_ERROR: '网络异常，请稍后重试',
-    INVALID_USER: '用户信息无效'
+    SUCCESS: () => t('messages.punchSuccess', '打卡成功'),
+    FAILED: () => t('messages.punchFailed', '打卡失败！'),
+    ERROR: () => t('messages.punchError', '打卡时发生错误'),
+    NETWORK_ERROR: () => t('messages.networkError', '网络异常，请稍后重试'),
+    INVALID_USER: () => t('messages.invalidUser', '用户信息无效')
   },
   
   // 打卡状态
   STATUS: {
-    PUNCHED: '已打卡',
-    UNPUNCHED: '未打卡',
-    SUCCESS: '正常',
-    LATE: '迟到',
-    ABSENT: '缺勤'
+    PUNCHED: () => t('punchStatus.punched', '已打卡'),
+    UNPUNCHED: () => t('punchStatus.unpunched', '未打卡'),
+    SUCCESS: () => t('punchStatus.success', '正常'),
+    LATE: () => t('punchStatus.late', '迟到'),
+    ABSENT: () => t('punchStatus.absent', '缺勤')
   },
   
   // 打卡时间限制（可选）
@@ -33,8 +34,8 @@ export const PUNCH_CONSTANTS = {
 
 // 页面名称常量
 export const PAGE_NAMES = {
-  PUNCH: '打卡页面',
-  RECORD: '打卡记录',
-  USER: '用户中心',
-  SETTING: '设置'
+  PUNCH: () => t('pageTitles.punch', '打卡页面'),
+  RECORD: () => t('pageTitles.record', '打卡记录'),
+  USER: () => t('pageTitles.user', '用户中心'),
+  SETTING: () => t('pageTitles.setting', '设置')
 }
