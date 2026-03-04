@@ -1,13 +1,20 @@
 <template>
   <el-table :data="tableData" stripe style="width: 100%">
-    <el-table-column prop="date" label="Date" width="180" />
-    <el-table-column prop="name" label="Name" width="180" />
-    <el-table-column prop="time" label="Time" />
+    <el-table-column prop="date" :label="dateLabel" width="180" />
+    <el-table-column prop="name" :label="nameLabel" width="180" />
+    <el-table-column prop="time" :label="timeLabel" />
   </el-table>
 </template>
 
 <script lang="ts" setup>
-const tableData = [
+import { ref } from 'vue'
+import { t } from '../../locales'
+
+const dateLabel = t('record.date', 'Date')
+const nameLabel = t('record.name', 'Name')
+const timeLabel = t('record.time', 'Time')
+
+const tableData = ref([
   {
     date: '2016-05-03',
     name: 'Tom',
@@ -28,5 +35,5 @@ const tableData = [
     name: 'Tom',
     time: '20:35:57',
   },
-]
+])
 </script>

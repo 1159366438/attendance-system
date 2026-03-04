@@ -9,8 +9,9 @@
         active-text-color="#ffd04b"
         background-color="#545c64"
         class="el-menu-vertical-demo sidebar-menu"
-        default-active="punch"
+        :default-active="activeIndex"
         text-color="#fff"
+        :default-openeds="defaultOpenedMenus"
         @open="handleOpen"
         @close="handleClose"
         @select="handleMenuSelect"
@@ -70,28 +71,39 @@ import {
 const route = useRoute()
 const router = useRouter()
 
+// 默认展开的菜单项
+const defaultOpenedMenus = ref(['1'])
+
+// 动态激活的菜单项
+const activeIndex = ref('punch')
+
 // 新增：当前要传递给UserInfo的菜单文本（初始化显示今日打卡）
 const currentMenuText = ref<MenuText>(getMenuText('today'));
 
-// 根据当前路由更新菜单文本
+// 根据当前路由更新菜单文本和激活项
 const updateMenuTextByRoute = () => {
   const path = route.path
   if (path === '/punch') {
     currentMenuText.value = getMenuText('today')
+    activeIndex.value = 'punch'
   } else if (path === '/record') {
     currentMenuText.value = getMenuText('record')
+    activeIndex.value = 'record'
   }
 }
 
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
+const handleOpen = (_key: string, _keyPath: string[]) => {
+  // 开发调试时可以启用日志
+  // console.log(_key, _keyPath)
+};
+const handleClose = (_key: string, _keyPath: string[]) => {
+  // 开发调试时可以启用日志
+  // console.log(_key, _keyPath)
+};
 
 const handleMenuSelect = (key: string) => {
-  console.log('切换到菜单：', key)
+  // 开发调试时可以启用日志
+  // console.log('切换到菜单：', key)
   // 根据菜单key跳转到对应路由
   if (key === 'punch') {
     router.push('/punch')

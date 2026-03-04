@@ -17,9 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, getCurrentInstance, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useUserStore } from '../../store'
 import { formatDate } from '../../utils'
+import { ElMessage } from 'element-plus'
 
 
 // 接收父组件传递的菜单文本
@@ -36,7 +37,6 @@ const props = defineProps({
  * 获取用户信息
  * 调用userStore.fetchUserInfo()获取用户信息
  */
-const { proxy } = getCurrentInstance() as any
 const userStore = useUserStore()
 
 // 响应式数据
@@ -54,7 +54,7 @@ const updateTime = () => {
 const getUserInfo = async () => {
   await userStore.fetchUserInfo()
   if (userStore.error) {
-    proxy.$message.error(userStore.error)
+    ElMessage.error(userStore.error)
   }
 };
 

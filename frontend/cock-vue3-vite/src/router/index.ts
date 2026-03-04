@@ -5,7 +5,7 @@ import RecordPage from '../pages/home/RecordPage.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/punch' // 默认跳转到打卡页
+    redirect: '/punch'
   },
   {
     path: '/punch',

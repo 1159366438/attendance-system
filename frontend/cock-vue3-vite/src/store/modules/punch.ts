@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 import { punchApi } from '../../api/punchApi'
 import type { PunchRecord } from '../../types'
 import { PUNCH_CONSTANTS } from '../../constants/punch'
+import { t } from '../../locales'
 
 export const usePunchStore = defineStore('punch', {
   state: () => ({
@@ -29,6 +30,7 @@ export const usePunchStore = defineStore('punch', {
         
         // 调用打卡接口
         const res = await punchApi.punchIn({ username, punchTime })
+        // 开发调试时可以启用日志
         console.log('打卡接口响应:', res)
         if (res.data.code === 200) {
           // 打卡成功后更新本地状态
@@ -41,12 +43,13 @@ export const usePunchStore = defineStore('punch', {
           })
           return true
         } else {
-            this.error = PUNCH_CONSTANTS.MESSAGES.FAILED
+            this.error = PUNCH_CONSTANTS.MESSAGES.FAILED()
           return false
         }
       } catch (error) {
-        this.error = PUNCH_CONSTANTS.MESSAGES.ERROR
-        console.error('打卡异常:', error)
+        this.error = PUNCH_CONSTANTS.MESSAGES.ERROR()
+        // 开发调试时可以启用日志
+        // console.error('打卡异常:', error)
         return false
       } finally {
         this.loading = false
@@ -61,11 +64,12 @@ export const usePunchStore = defineStore('punch', {
         if (res.status === 200) {
           this.punchRecords = res.data
         } else {
-          this.error = '获取打卡记录失败'
+          this.error = t('messages.getUserInfoFailed', '获取打卡记录失败')
         }
       } catch (error) {
-        this.error = '获取打卡记录时发生错误'
-        console.error('获取打卡记录失败:', error)
+        this.error = t('messages.getUserInfoError', '获取打卡记录时发生错误')
+        // 开发调试时可以启用日志
+        // console.error('获取打卡记录失败:', error)
       } finally {
         this.loading = false
       }

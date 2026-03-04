@@ -3,5 +3,5 @@
  * 统一导出所有store模块
  */
 
-export * from './modules/punch'
-export * from './modules/user'
+export { useUserStore } from './modules/user'
+export { usePunchStore } from './modules/punch'

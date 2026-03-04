@@ -23,11 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, getCurrentInstance, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { usePunchStore, useUserStore } from '../../store'
 import { formatDate } from '../../utils'
 import { PUNCH_CONSTANTS } from '../../constants/punch'
+import { ElMessage } from 'element-plus'
 
 // 响应式数据
 const todayDate = ref('')
@@ -40,8 +41,6 @@ const punchedTime = computed(() => punchStore.punchedTime)
 const formatTodayDate = () => {
   todayDate.value = formatDate(new Date(), 'date')
 }
-
-const { proxy } = getCurrentInstance() as any
 
 // 打卡操作
 const handlePunchIn = async () => {
@@ -57,15 +56,16 @@ const handlePunchIn = async () => {
     const success = await punchStore.punchIn(username)
     
     if (success) {
-      proxy.$message.success(PUNCH_CONSTANTS.MESSAGES.SUCCESS)
+      ElMessage.success(PUNCH_CONSTANTS.MESSAGES.SUCCESS())
     } else if (punchStore.error) {
-      proxy.$message.error(punchStore.error)
+      ElMessage.error(punchStore.error)
     } else {
-      proxy.$message.error(PUNCH_CONSTANTS.MESSAGES.FAILED)
+      ElMessage.error(PUNCH_CONSTANTS.MESSAGES.FAILED())
     }
   } catch (error) {
-    proxy.$message.error(PUNCH_CONSTANTS.MESSAGES.ERROR)
-    console.error('打卡失败:', error)
+    ElMessage.error(PUNCH_CONSTANTS.MESSAGES.ERROR())
+    // 开发调试时可以启用日志
+    // console.error('打卡失败:', error)
   }
 }
 
