@@ -59,4 +59,15 @@ public class AttendanceRecordServiceImpl implements AttendanceRecordService {
         // 执行打卡操作，实际上就是插入一条打卡记录
         return insert(attendanceRecord);
     }
+
+    @Override
+    public List<AttendanceRecord> queryByPage(int page, int size) {
+        int offset = (page - 1) * size;
+        return attendanceRecordDao.queryByPage(offset, size);
+    }
+
+    @Override
+    public int countAll() {
+        return attendanceRecordDao.countAll();
+    }
 }

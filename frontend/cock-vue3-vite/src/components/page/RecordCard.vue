@@ -1,36 +1,53 @@
 <template>
-  <el-table 
-    :data="tableData" 
-    stripe 
-    style="width: 100%" 
-    v-loading="loading"
-    empty-text="暂无打卡记录"
-  >
-    <el-table-column :label="dateLabel" width="180">
-      <template #default="{ row }">
-        {{ formatDateField(row.checkInTime) }}
-      </template>
-    </el-table-column>
-    <el-table-column :label="nameLabel" width="180">
-      <template #default="{ row }">
-        {{ formatUserId(row.userId) }}
-      </template>
-    </el-table-column>
-    <el-table-column :label="timeLabel" width="180">
-      <template #default="{ row }">
-        {{ formatTimeField(row.checkInTime) }}
-      </template>
-    </el-table-column>
-    <el-table-column 
-      prop="checkInLocation" 
-      :label="locationLabel" 
-      :formatter="locationFormatter"
+  <div class="record-card">
+    <el-table 
+      :data="tableData" 
+      stripe 
+      style="width: 100%" 
+      v-loading="loading"
+      empty-text="暂无打卡记录"
+    >
+      <el-table-column :label="dateLabel" width="180">
+        <template #default="{ row }">
+          {{ formatDateField(row.checkInTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column :label="nameLabel" width="180">
+        <template #default="{ row }">
+          {{ formatUserId(row.userId) }}
+        </template>
+      </el-table-column>
+      <el-table-column :label="timeLabel" width="180">
+        <template #default="{ row }">
+          {{ formatTimeField(row.checkInTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column 
+        prop="checkInLocation" 
+        :label="locationLabel" 
+        :formatter="locationFormatter"
+      />
+    </el-table>
+    
+    <!-- 分页组件 -->
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[15, 30, 50, 100]"
+      :small="false"
+      :disabled="false"
+      :background="false"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalRecords"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      class="pagination"
     />
-  </el-table>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, onErrorCaptured } from 'vue'
+import { onMounted, computed, onErrorCaptured, ref } from 'vue'
 import { usePunchStore } from '../../store'
 import { t } from '../../locales'
 import { formatDate } from '../../utils'
@@ -46,8 +63,25 @@ const timeLabel = computed(() => t('record.time', 'Time'))
 const locationLabel = computed(() => t('record.location', '打卡地点'))
 
 // Computed properties
-const tableData = computed<PunchRecord[]>(() => punchStore.punchRecords || [])
+const tableData = computed<PunchRecord[]>(() => punchStore.pagination.records || [])
 const loading = computed(() => punchStore.loading)
+const totalRecords = computed(() => punchStore.pagination.total)
+const currentPage = computed({
+  get: () => punchStore.pagination.page,
+  set: (_value) => {
+    // 不直接修改，而是在change事件中处理
+  }
+})
+const pageSize = computed({
+  get: () => punchStore.pagination.size,
+  set: (_value) => {
+    // 不直接修改，而是在change事件中处理
+  }
+})
+
+// Refs
+const currentPageRef = ref(1)
+const pageSizeRef = ref(15)
 
 // Methods
 const formatDateField = (dateValue: Date | string | undefined): string => {
@@ -80,13 +114,31 @@ const locationFormatter = (_row: PunchRecord, _column: unknown, cellValue: strin
   return cellValue || '未知地点'
 }
 
-// Lifecycle
-onMounted(async () => {
+// 分页大小改变事件
+const handleSizeChange = async (size: number) => {
+  pageSizeRef.value = size
+  currentPageRef.value = 1  // 改变每页大小时回到第一页
+  await loadPunchRecords(currentPageRef.value, pageSizeRef.value)
+}
+
+// 页码改变事件
+const handleCurrentChange = async (page: number) => {
+  currentPageRef.value = page
+  await loadPunchRecords(currentPageRef.value, pageSizeRef.value)
+}
+
+// 加载打卡记录
+const loadPunchRecords = async (page: number, size: number) => {
   try {
-    await punchStore.fetchPunchRecords()
+    await punchStore.fetchPunchRecords(page, size)
   } catch (err) {
     console.error('获取打卡记录失败:', err)
   }
+}
+
+// Lifecycle
+onMounted(async () => {
+  await loadPunchRecords(currentPageRef.value, pageSizeRef.value)
 })
 
 // Error handling
@@ -94,3 +146,16 @@ onErrorCaptured((err) => {
   console.error('RecordCard组件捕获错误:', err)
 })
 </script>
+
+<style scoped>
+.record-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+.pagination {
+  margin-top: 20px;
+  justify-content: center;
+}
+</style>

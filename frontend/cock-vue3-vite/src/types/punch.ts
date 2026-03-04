@@ -15,3 +15,12 @@ export interface PunchRecord {
   createTime?: Date  // 记录创建时间
   updateTime?: Date  // 记录更新时间
 }
+
+// 分页响应类型
+export interface PageResponse<T> {
+  records: T[];
+  total: number;
+  page: number;
+  size: number;
+  pages: number;
+}

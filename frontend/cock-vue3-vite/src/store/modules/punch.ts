@@ -12,13 +12,25 @@ export const usePunchStore = defineStore('punch', {
   state: () => ({
     isPunched: false,
     punchedTime: '',
-    punchRecords: [] as PunchRecord[],
+    punchRecords: [] as PunchRecord[],  // 保留原始字段兼容性
+    pagination: {
+      records: [] as PunchRecord[],
+      total: 0,
+      page: 1,
+      size: 15,
+      pages: 0
+    },
     loading: false,
     error: ''
   }),
   
   getters: {
-    hasPunchRecords: (state) => state.punchRecords.length > 0
+    hasPunchRecords: (state) => state.punchRecords.length > 0,
+    paginatedRecords: (state) => state.pagination.records,
+    totalPages: (state) => state.pagination.pages,
+    currentPage: (state) => state.pagination.page,
+    totalRecords: (state) => state.pagination.total,
+    pageSize: (state) => state.pagination.size
   },
   
   actions: {
@@ -57,14 +69,24 @@ export const usePunchStore = defineStore('punch', {
       }
     },
     
-    async fetchPunchRecords() {
+    async fetchPunchRecords(page: number = 1, size: number = 15) {
       this.loading = true
       this.error = ''
       try {
-        const res = await punchApi.getPunchRecords()
+        const res = await punchApi.getPunchRecords({ page, size })
         console.log('获取打卡记录响应:', res)
         if (res.status === BUSINESS_STATUS.SUCCESS) {
-          this.punchRecords = res.data
+          // 更新分页数据
+          this.pagination = {
+            records: res.data.records || [],
+            total: res.data.total || 0,
+            page: res.data.page || 1,
+            size: res.data.size || 15,
+            pages: res.data.pages || 0
+          };
+          
+          // 为了向后兼容，也更新旧的punchRecords字段
+          this.punchRecords = res.data.records || [];
         } else {
           this.error = t('messages.getUserInfoFailed', '获取打卡记录失败')
         }

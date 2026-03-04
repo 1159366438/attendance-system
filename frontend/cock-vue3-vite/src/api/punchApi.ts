@@ -3,8 +3,8 @@ import service from './axios'
 // 打卡相关接口封装
 export const punchApi = {
   // 获取打卡记录
-  getPunchRecords: () => {
-    return service.get('/punch/record')
+  getPunchRecords: (params: { page?: number; size?: number } = {}) => {
+    return service.get('/punch/record', { params })
   },
   
   // 打卡接口

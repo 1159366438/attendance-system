@@ -48,6 +48,22 @@ public interface AttendanceRecordService {
     int update(AttendanceRecord attendanceRecord);
 
     /**
+     * 分页查询打卡记录
+     *
+     * @param page 页码 (从1开始)
+     * @param size 每页数量
+     * @return 打卡记录列表
+     */
+    List<AttendanceRecord> queryByPage(int page, int size);
+
+    /**
+     * 查询总记录数
+     *
+     * @return 总记录数
+     */
+    int countAll();
+
+    /**
      * 通过主键删除数据
      *
      * @param id 主键

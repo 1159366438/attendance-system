@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 @RestController // 标识为REST接口，返回JSON数据
@@ -24,20 +26,38 @@ public class PunchController {
     private AttendanceRecordService attendanceRecordService;
 
     /**
-     * 获取打卡记录接口
+     * 获取打卡记录接口（分页）
      * <p>
-     * 该接口用于获取用户的打卡记录信息
+     * 该接口用于获取用户的打卡记录信息（支持分页）
      * </p>
-     *
-     * @return 打卡记录列表
+     * 
+     * @param page 页码，默认为1
+     * @param size 每页数量，默认为15
+     * @return 包含打卡记录列表和总数的响应
      * @since 1.0.0
      */
     @GetMapping("/record")
-    public List<AttendanceRecord> getPunchRecords() {
+    public Map<String, Object> getPunchRecords(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "15") int size) {
 
-        System.out.println("获取打卡记录请求成功");
-        // 调用服务层获取打卡记录
-        return attendanceRecordService.queryAll();
+        System.out.println("获取打卡记录请求成功，页码: " + page + ", 每页数量: " + size);
+        
+        // 计算总数
+        int total = attendanceRecordService.countAll();
+        
+        // 获取分页数据
+        List<AttendanceRecord> records = attendanceRecordService.queryByPage(page, size);
+        
+        // 构造响应数据
+        Map<String, Object> response = new HashMap<>();
+        response.put("records", records);
+        response.put("total", total);
+        response.put("page", page);
+        response.put("size", size);
+        response.put("pages", (int) Math.ceil((double) total / size));
+        
+        return response;
     }
 
     /**
