@@ -4,7 +4,14 @@
 
 // 打卡记录类型
 export interface PunchRecord {
-  date: string // 打卡日期
-  time: string // 打卡时间
-  status: string // 打卡状态
+  id?: number        // 主键ID
+  userId?: number    // 打卡用户ID
+  date?: string      // 打卡日期 (对应后端checkInTime字段)
+  time?: string      // 打卡时间 (对应后端checkInTime字段)
+  checkInTime?: Date // 打卡时间
+  checkInType?: number // 打卡类型：1-上班打卡 2-下班打卡 3-加班打卡
+  checkInStatus?: number // 打卡状态：1-正常 2-迟到 3-早退 4-旷工
+  checkInLocation?: string // 打卡地点
+  createTime?: Date  // 记录创建时间
+  updateTime?: Date  // 记录更新时间
 }

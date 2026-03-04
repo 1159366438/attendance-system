@@ -4,6 +4,7 @@
 import { defineStore } from 'pinia'
 import { userApi } from '../../api/userApi'
 import type { UserInfo } from '../../types'
+import { BUSINESS_STATUS } from '../../constants/api'
 import { t } from '../../locales'
 
 export const useUserStore = defineStore('user', {
@@ -28,7 +29,7 @@ export const useUserStore = defineStore('user', {
         const res = await userApi.getUserInfo()
         // 开发调试时可以启用日志
         console.log('获取用户信息接口响应:', res)
-        if (res.status === 200) {
+        if (res.status === BUSINESS_STATUS.SUCCESS) {
           this.userInfo.name = res.data.username
         } else {
           this.error = t('messages.getUserInfoFailed', '获取用户信息失败')

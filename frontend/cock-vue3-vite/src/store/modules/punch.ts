@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 import { punchApi } from '../../api/punchApi'
 import type { PunchRecord } from '../../types'
 import { PUNCH_CONSTANTS } from '../../constants/punch'
+import { BUSINESS_STATUS } from '../../constants/api'
 import { t } from '../../locales'
 
 export const usePunchStore = defineStore('punch', {
@@ -32,7 +33,7 @@ export const usePunchStore = defineStore('punch', {
         const res = await punchApi.punchIn({ username, punchTime })
         // 开发调试时可以启用日志
         console.log('打卡接口响应:', res)
-        if (res.data.code === 200) {
+        if (res.data.code === BUSINESS_STATUS.SUCCESS) {
           // 打卡成功后更新本地状态
           this.isPunched = true
           const now = new Date()
@@ -61,7 +62,8 @@ export const usePunchStore = defineStore('punch', {
       this.error = ''
       try {
         const res = await punchApi.getPunchRecords()
-        if (res.status === 200) {
+        console.log('获取打卡记录响应:', res)
+        if (res.status === BUSINESS_STATUS.SUCCESS) {
           this.punchRecords = res.data
         } else {
           this.error = t('messages.getUserInfoFailed', '获取打卡记录失败')

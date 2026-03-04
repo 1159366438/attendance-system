@@ -18,7 +18,8 @@ export const zhCN = {
   record: {
     date: '日期',
     name: '姓名',
-    time: '时间'
+    time: '时间',
+    location: '打卡地点'
   },
 
   // 消息提示
