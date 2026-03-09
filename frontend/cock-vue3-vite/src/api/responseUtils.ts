@@ -15,22 +15,26 @@ export function normalizeResponse<T>(res: any): NormalizedResponse<T> {
   const status = res?.status || 0;
   const payload = res?.data;
 
-  // If response body has a "code" field, assume it's the business code.
+  // If response body has a "code" field, treat as business response.
   if (payload && typeof payload === 'object' && 'code' in payload) {
-    const success = payload.code === BUSINESS_STATUS.SUCCESS;
+    // backend may return code and message fields
+    const code = payload.code;
+    // require both HTTP 200 and business-code 200 for success
+    const success = status === BUSINESS_STATUS.SUCCESS && code === BUSINESS_STATUS.SUCCESS;
     return {
       success,
       data: payload,
-      message: payload.msg || '',
-      status
+      message: payload.message || payload.msg || '',
+      status,
     };
   }
 
-  // Otherwise fall back to HTTP status success check (200)
+  // Fallback: rely on HTTP status code alone
   const success = status === BUSINESS_STATUS.SUCCESS;
   return {
     success,
     data: payload,
-    status
+    message: '',
+    status,
   };
 }
