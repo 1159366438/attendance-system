@@ -34,6 +34,10 @@ npm run preview   # 本地预览构建结果
 	- 若 `npm run dev` 失败，请检查 Node 版本；必要时运行 `npm cache clean --force` 然后重装依赖。
 	- 若需回滚依赖改动，请从 git 恢复 `package.json` 与 `package-lock.json`。
 
+- **代码规范**：
+	- **注释**：所有代码注释必须用**中文**编写，确保代码易读易维护。
+	- **Git 提交信息**：所有 commit message 必须用**中文**，格式如 `feat: 添加新功能` 或 `fix: 修复某个问题`。
+
 ---
 
 此文档用于说明前端结构与运行步骤。如需我将 README 翻译为更详尽的部署/贡献指南，我可以继续扩展。

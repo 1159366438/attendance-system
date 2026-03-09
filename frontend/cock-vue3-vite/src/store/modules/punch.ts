@@ -78,7 +78,14 @@ export const usePunchStore = defineStore('punch', {
         console.log('获取打卡记录响应:', res);
         const { success, data } = normalizeResponse(res);
         if (success) {
-          const body = data || {};
+          // 为响应数据添加类型定义以解决 TypeScript 类型错误
+          const body = (data || {}) as {
+            records?: any[];
+            total?: number;
+            page?: number;
+            size?: number;
+            pages?: number;
+          };
           this.pagination = {
             records: body.records || [],
             total: body.total || 0,

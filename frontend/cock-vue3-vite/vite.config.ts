@@ -29,22 +29,15 @@ export default defineConfig({
   // 4. 构建配置 - 生产环境禁用 source map，防止源码暴露
   build: {
     sourcemap: false, // 禁用 source map，防止代码被反向工程
-    minify: 'terser', // 使用 terser 压缩，提高混淆效果
-    terserOptions: {
-      compress: {
-        drop_console: true, // 生产环境移除 console 日志
-      },
-      format: {
-        comments: false, // 移除注释
-      },
-    },
+    minify: true, // 使用默认压缩方式
     rollupOptions: {
       output: {
         // 输出目录结构，避免浏览器可以直接列出文件
         entryFileNames: 'js/[name]-[hash].js',
         chunkFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
-          const info = assetInfo.name.split('.');
+          const name = assetInfo.name || 'asset';
+          const info = name.split('.');
           const ext = info[info.length - 1];
           if (/png|jpe?g|gif|svg/.test(ext)) {
             return `images/[name]-[hash][extname]`;

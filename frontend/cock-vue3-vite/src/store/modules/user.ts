@@ -4,7 +4,6 @@
 import { defineStore } from 'pinia'
 import { userApi } from '../../api/userApi'
 import type { UserInfo } from '../../types'
-import { BUSINESS_STATUS } from '../../constants/api'
 import { t } from '../../locales'
 import { normalizeResponse } from '../../api/responseUtils'
 
