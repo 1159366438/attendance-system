@@ -12,7 +12,6 @@ export const usePunchStore = defineStore('punch', {
   state: () => ({
     isPunched: false,
     punchedTime: '',
-    punchRecords: [] as PunchRecord[],  // 保留原始字段兼容性
     pagination: {
       records: [] as PunchRecord[],
       total: 0,
@@ -25,7 +24,8 @@ export const usePunchStore = defineStore('punch', {
   }),
   
   getters: {
-    hasPunchRecords: (state) => state.punchRecords.length > 0,
+    punchRecords: (state) => state.pagination.records,  // 通过 getter 提供向后兼容
+    hasPunchRecords: (state) => state.pagination.records.length > 0,
     paginatedRecords: (state) => state.pagination.records,
     totalPages: (state) => state.pagination.pages,
     currentPage: (state) => state.pagination.page,
@@ -84,9 +84,6 @@ export const usePunchStore = defineStore('punch', {
             size: res.data.size || 15,
             pages: res.data.pages || 0
           };
-          
-          // 为了向后兼容，也更新旧的punchRecords字段
-          this.punchRecords = res.data.records || [];
         } else {
           this.error = t('messages.getUserInfoFailed', '获取打卡记录失败')
         }
