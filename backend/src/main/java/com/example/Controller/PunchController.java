@@ -2,7 +2,6 @@ package com.example.controller;
 
 import com.example.common.ResponseResult;
 import com.example.dto.PunchRequest;
-import com.example.dto.PunchResponse;
 import com.example.entity.PunchRecord;
 import com.example.entity.User;
 import com.example.service.PunchRecordService;

@@ -26,6 +26,8 @@ import { formatDate } from '../../utils'
 import { APP_CONFIG } from '../../config/appConfig'
 import { USER_INFO_CONSTANTS } from '../../constants/userConstants'
 import { EVENT_CONSTANTS } from '../../constants/appArchitectureConstants'
+import { ElMessage } from 'element-plus'
+import { MESSAGE_CONSTANTS } from '../../constants/messages'
 
 
 // 接收父组件传递的菜单文本
@@ -63,8 +65,15 @@ const updateTime = () => {
 };
 
 const getUserInfo = async () => {
-  await userStore.fetchUserInfo()
-  // 错误已在axios拦截器中统一处理
+  try {
+    await userStore.fetchUserInfo()
+    // 错误已在axios拦截器中统一处理
+  } catch (error) {
+    // 兜底错误处理，防止错误冒泡
+    console.error('获取用户信息失败:', error)
+    // 显示错误消息给用户
+    ElMessage.error(MESSAGE_CONSTANTS.USER_INFO.FETCH_FAILED())
+  }
 };
 
 

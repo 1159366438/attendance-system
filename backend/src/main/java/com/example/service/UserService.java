@@ -33,6 +33,9 @@ public interface UserService {
      * @return 用户对象，如果验证失败则返回null
      */
     User login(String username, String rawPassword);
+    
+    // 临时保留简单验证方法
+    // User loginSimple(String username, String password);
 
     /**
      * 查询所有用户数据

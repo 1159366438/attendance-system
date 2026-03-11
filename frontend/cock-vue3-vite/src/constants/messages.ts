@@ -15,7 +15,10 @@ export const MESSAGE_CONSTANTS = {
     LOGIN_SUCCESS: () => t('messages.loginSuccess', '登录成功'),
     LOGIN_FAILED: () => t('messages.loginFailed', '登录失败'),
     LOGOUT_SUCCESS: () => t('messages.logoutSuccess', '退出登录成功'),
-    LOGOUT_FAILED: () => t('messages.logoutFailed', '退出登录失败')
+    LOGOUT_FAILED: () => t('messages.logoutFailed', '退出登录失败'),
+    INVALID_CREDENTIALS: () => t('messages.invalidCredentials', '用户名或密码错误'),
+    PARAM_ERROR: () => t('messages.paramError', '登录参数错误'),
+    AUTH_FAILED: () => t('messages.authFailed', '认证失败，请重新登录')
   },
 
   // 通用操作消息
@@ -38,5 +41,12 @@ export const MESSAGE_CONSTANTS = {
     WELCOME: () => t('messages.welcome', '欢迎使用考勤系统'),
     MAINTENANCE: () => t('messages.maintenance', '系统维护中'),
     VERSION: () => t('messages.version', '版本信息')
+  },
+  
+  // 通用消息
+  COMMON: {
+    SERVER_ERROR: () => t('messages.serverError', '服务器内部错误，请稍后重试'),
+    REQUEST_FAILED: () => t('messages.requestFailed', '请求失败'),
+    UNKNOWN_ERROR: () => t('messages.unknownError', '未知错误')
   }
 }

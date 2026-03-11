@@ -92,7 +92,7 @@ public class UserController {
             // 构造响应数据
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("user", user);
-            responseData.put("token", generateToken(user.getId())); // 生成临时令牌
+            // responseData.put("token", generateToken(user.getId())); // 生成临时令牌 - 暂时注释掉
             
             return ResponseResult.success(responseData);
         } catch (Exception e) {
@@ -103,34 +103,35 @@ public class UserController {
     }
     
     /**
-     * 生成认证令牌
-     * 
-     * @param userId 用户ID
-     * @return 生成的令牌
-     */
-    private String generateToken(Integer userId) {
+      * 生成认证令牌
+      * 
+      * @param userId 用户ID
+      * @return 生成的令牌
+      */
+     /*
+     private String generateToken(Integer userId) {
          // 在实际应用中，这里应该生成JWT令牌或其他类型的认证令牌
          // 为了演示目的，我们简单地生成一个包含用户ID的字符串
          return "Bearer temp_token_" + userId + "_" + System.currentTimeMillis();
      }
+     */
      
      /**
-      * 用户登出接口
-      * <p>
-      * 该接口用于处理用户登出请求
-      * </p>
-      *
-      * @return 标准响应格式
-      * @since 1.0.0
-      */
-     @PostMapping("/logout")
-     public ResponseResult<String> logout() {
-         System.out.println("登出请求");
-         
-         // 在实际应用中，这里应该使认证令牌失效
-         // 例如：将令牌加入黑名单或从缓存中删除
-         
-         return ResponseResult.success("登出成功");
-     }
+       * 用户登出接口
+       * <p>
+       * 该接口用于处理用户登出请求
+       * </p>
+       *
+       * @return 标准响应格式
+       * @since 1.0.0
+       */
+      @PostMapping("/logout")
+      public ResponseResult<String> logout() {
+          System.out.println("登出请求");
+          
+          // 暂时只返回成功消息，token功能已注释掉
+          
+          return ResponseResult.success("登出成功");
+      }
   
   }

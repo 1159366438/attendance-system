@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 import { userApi } from '../../api/userApi'
 import type { UserInfo } from '../../types'
 import { USER_CONSTANTS } from '../../constants/userConstants'
+import { STATUS_CODES } from '../../constants/statusCodes'
 
 import { BOOLEAN_CONSTANTS } from '../../constants/booleans'
 import { MESSAGE_CONSTANTS } from '../../constants/messages'
@@ -34,6 +35,34 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         const res = await userApi.getUserInfo(Number(this.userInfo.userId))
         // 开发调试时可以启用日志
         console.log('获取用户信息接口响应:', res)
+        
+        // 检查响应状态
+        if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
+          // 根据后端返回码进行精确错误处理
+          switch (res.data.code) {
+            case STATUS_CODES.BUSINESS.RESOURCE_NOT_FOUND:
+            case 404:
+              // 用户不存在
+              throw new Error(MESSAGE_CONSTANTS.USER_INFO.FETCH_ERROR())
+              
+            case STATUS_CODES.BUSINESS.AUTH_FAILED:
+            case 401:
+              // 认证失败，可能token过期
+              localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
+              localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+              throw new Error(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED())
+              
+            case STATUS_CODES.BUSINESS.SERVER_ERROR:
+            case 500:
+              // 服务器错误
+              throw new Error(MESSAGE_CONSTANTS.COMMON.SERVER_ERROR())
+              
+            default:
+              // 其他业务错误
+              throw new Error(res.data.msg || res.data.message || MESSAGE_CONSTANTS.USER_INFO.FETCH_FAILED())
+          }
+        }
+        
         if (res.data && res.data.data) {
           // 后端返回的数据包装在data.data中
           const userData = res.data.data;
@@ -43,6 +72,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         }
       } catch (error: any) {
         // 错误已在axios拦截器中统一处理
+        this.error = error.message || MESSAGE_CONSTANTS.USER_INFO.FETCH_FAILED()
       } finally {
         this.loading = BOOLEAN_CONSTANTS.FALSE
       }
@@ -54,6 +84,31 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
       try {
         // 调用真实的登录API
         const res = await userApi.login(username, password)
+        
+        // 检查响应状态
+        if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
+          // 根据后端返回码进行精确错误处理
+          switch (res.data.code) {
+            case STATUS_CODES.BUSINESS.AUTH_FAILED:
+            case 401:
+              // 认证失败，用户名或密码错误
+              throw new Error(MESSAGE_CONSTANTS.USER_INFO.INVALID_CREDENTIALS())
+              
+            case STATUS_CODES.BUSINESS.PARAM_ERROR:
+            case 400:
+              // 参数错误
+              throw new Error(MESSAGE_CONSTANTS.USER_INFO.PARAM_ERROR())
+              
+            case STATUS_CODES.BUSINESS.SERVER_ERROR:
+            case 500:
+              // 服务器错误
+              throw new Error(MESSAGE_CONSTANTS.COMMON.SERVER_ERROR())
+              
+            default:
+              // 其他业务错误
+              throw new Error(res.data.msg || res.data.message || MESSAGE_CONSTANTS.USER_INFO.LOGIN_FAILED())
+          }
+        }
         
         // 如果登录成功，更新用户信息
         if (res.data && res.data.data) {
@@ -71,10 +126,16 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
           data: { username, userId: this.userInfo.userId }
         }
       } catch (error: any) {
-        // 错误已在axios拦截器中统一处理
+        // 检查是否是认证失败错误
+        if (error.message && (error.message.includes(MESSAGE_CONSTANTS.USER_INFO.INVALID_CREDENTIALS()) || error.message.includes(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED()))) {
+          // 清除可能存在的无效认证信息
+          localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
+          localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+        }
+        
         return {
           success: BOOLEAN_CONSTANTS.FALSE,
-          message: MESSAGE_CONSTANTS.USER_INFO.LOGIN_FAILED(),
+          message: error.message || MESSAGE_CONSTANTS.USER_INFO.LOGIN_FAILED(),
           error
         }
       } finally {
@@ -85,7 +146,22 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
     async logout() {
       try {
         // 调用真实的登出API
-        await userApi.logout()
+        const res = await userApi.logout()
+        
+        // 检查响应状态
+        if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
+          // 根据后端返回码进行精确错误处理
+          switch (res.data.code) {
+            case STATUS_CODES.BUSINESS.SERVER_ERROR:
+            case 500:
+              // 服务器错误
+              throw new Error(MESSAGE_CONSTANTS.COMMON.SERVER_ERROR())
+              
+            default:
+              // 其他业务错误
+              throw new Error(res.data.msg || res.data.message || MESSAGE_CONSTANTS.USER_INFO.LOGOUT_FAILED())
+          }
+        }
         
         // 清空本地用户信息
         this.userInfo = {
@@ -109,7 +185,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         // 错误已在axios拦截器中统一处理
         return {
           success: false,
-          message: MESSAGE_CONSTANTS.USER_INFO.LOGOUT_FAILED(),
+          message: error.message || MESSAGE_CONSTANTS.USER_INFO.LOGOUT_FAILED(),
           error
         }
       }

@@ -68,4 +68,25 @@ public class UserServiceImpl implements UserService {
         
         return null; // 登录失败
     }
+    
+    /*
+    @Override
+    public User loginSimple(String username, String password) {
+        // 临时实现：只验证用户名是否存在（因为数据库中还没有密码字段）
+        User user = userDao.queryByUsername(username);
+        
+        if (user != null) {
+            // 用户存在即视为登录成功（暂时绕过密码验证）
+            User loginUser = new User();
+            loginUser.setId(user.getId());
+            loginUser.setUsername(user.getUsername());
+            loginUser.setAge(user.getAge());
+            loginUser.setAvatar(user.getAvatar());
+            loginUser.setCreateTime(user.getCreateTime());
+            return loginUser;
+        }
+        
+        return null; // 登录失败
+    }
+    */
 }

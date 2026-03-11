@@ -4,10 +4,13 @@
 import { defineStore } from 'pinia'
 import { punchApi } from '../../api/punchApi'
 import type { PunchRecord } from '../../types'
-import { PUNCH_STORE_CONSTANTS } from '../../constants/punchConstants'
+import { PUNCH_STORE_CONSTANTS, PUNCH_CONSTANTS } from '../../constants/punchConstants'
 import { TABLE_CONSTANTS } from '../../constants/table'
 import { BOOLEAN_CONSTANTS } from '../../constants/booleans'
 import { STORE_NAMES } from '../../constants/appArchitectureConstants'
+import { STATUS_CODES } from '../../constants/statusCodes'
+import { USER_CONSTANTS } from '../../constants/userConstants'
+import { MESSAGE_CONSTANTS } from '../../constants/messages'
 
 
 export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
@@ -47,6 +50,44 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
         const res = await punchApi.punchIn({ username, punchTime, userId: Number(userId) })
         // 开发调试时可以启用日志
         console.log('打卡接口响应:', res)
+        
+        // 检查响应状态
+         if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
+           // 根据后端返回码进行精确错误处理
+           switch (res.data.code) {
+             case STATUS_CODES.BUSINESS.PARAM_ERROR:
+             case 400:
+               // 参数错误
+               throw new Error(MESSAGE_CONSTANTS.USER_INFO.PARAM_ERROR())
+               
+             case STATUS_CODES.BUSINESS.AUTH_FAILED:
+             case 401:
+               // 认证失败
+               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
+               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+               throw new Error(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED())
+               
+             case STATUS_CODES.BUSINESS.PERMISSION_DENIED:
+             case 403:
+               // 权限不足
+               throw new Error(PUNCH_CONSTANTS.MESSAGES.FAILED())
+               
+             case STATUS_CODES.BUSINESS.RESOURCE_NOT_FOUND:
+             case 404:
+               // 用户不存在
+               throw new Error(PUNCH_CONSTANTS.MESSAGES.INVALID_USER())
+               
+             case STATUS_CODES.BUSINESS.SERVER_ERROR:
+             case 500:
+               // 服务器错误
+               throw new Error(MESSAGE_CONSTANTS.COMMON.SERVER_ERROR())
+               
+             default:
+               // 其他业务错误
+               throw new Error(res.data.msg || res.data.message || PUNCH_CONSTANTS.MESSAGES.ERROR())
+           }
+         }
+        
         // 打卡成功后更新本地状态
         this.isPunched = BOOLEAN_CONSTANTS.TRUE
         const now = new Date()
@@ -57,6 +98,7 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
         })
         return BOOLEAN_CONSTANTS.TRUE
       } catch (error: any) {
+        this.error = error.message || PUNCH_CONSTANTS.MESSAGES.ERROR()
         // 错误已在axios拦截器中统一处理
         return BOOLEAN_CONSTANTS.FALSE
       } finally {
@@ -70,6 +112,44 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
       try {
         const res = await punchApi.getPunchRecords({ userId, page, size })
         console.log('获取打卡记录响应:', res)
+        
+        // 检查响应状态
+         if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
+           // 根据后端返回码进行精确错误处理
+           switch (res.data.code) {
+             case STATUS_CODES.BUSINESS.PARAM_ERROR:
+             case 400:
+               // 参数错误
+               throw new Error(MESSAGE_CONSTANTS.USER_INFO.PARAM_ERROR())
+               
+             case STATUS_CODES.BUSINESS.AUTH_FAILED:
+             case 401:
+               // 认证失败
+               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
+               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+               throw new Error(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED())
+               
+             case STATUS_CODES.BUSINESS.PERMISSION_DENIED:
+             case 403:
+               // 权限不足
+               throw new Error(PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR())
+               
+             case STATUS_CODES.BUSINESS.RESOURCE_NOT_FOUND:
+             case 404:
+               // 用户不存在
+               throw new Error(PUNCH_CONSTANTS.MESSAGES.INVALID_USER())
+               
+             case STATUS_CODES.BUSINESS.SERVER_ERROR:
+             case 500:
+               // 服务器错误
+               throw new Error(MESSAGE_CONSTANTS.COMMON.SERVER_ERROR())
+               
+             default:
+               // 其他业务错误
+               throw new Error(res.data.msg || res.data.message || PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR())
+           }
+         }
+        
         // 更新分页数据 - 后端返回的数据结构在res.data.data中
         if (res.data && res.data.data) {
           const responseData = res.data.data;
@@ -92,6 +172,7 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
         }
         return BOOLEAN_CONSTANTS.TRUE; // 成功返回 true
       } catch (error: any) {
+        this.error = error.message || PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR()
         // 错误已在axios拦截器中统一处理
         return BOOLEAN_CONSTANTS.FALSE; // 异常返回 false
       } finally {

@@ -35,7 +35,7 @@ public class SecurityConfig {
             // 配置URL访问权限
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/user/login", "/api/user/logout").permitAll()
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/api/**").permitAll() // 暂时允许所有API访问，因为token功能已注释掉
                 .anyRequest().permitAll()
             )
             // 禁用csrf

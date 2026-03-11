@@ -4,9 +4,9 @@
 import axios from 'axios'
 import { APP_CONFIG } from '../config/appConfig'
 import { STATUS_CODES } from '../constants/statusCodes'
-import { USER_CONSTANTS } from '../constants/userConstants'
 import { ElMessage } from 'element-plus'
 import { API_ERROR_MESSAGES } from '../constants/apiErrorMessages'
+import { MESSAGE_CONSTANTS } from '../constants/messages'
 
 // 创建 axios 实例
 const service = axios.create({
@@ -43,24 +43,14 @@ service.interceptors.response.use(
       // 成功响应，直接返回
       return response
     } else {
-      // 业务错误处理 - 包括401未授权等业务错误
-      console.error('业务错误:', res.msg || res.message || '未知错误')
-      
-      // 根据业务错误码进行特殊处理
-      if (res.code === STATUS_CODES.BUSINESS.AUTH_FAILED || res.code === 401) {
-        // 处理认证失败
-        console.error('认证失败，跳转到登录页')
-        localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
-        localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
-        // 可以在这里添加跳转到登录页的逻辑
-        // router.push('/login')
-      }
+      // 业务错误处理 - 仅显示错误消息，具体业务逻辑由调用方处理
+      console.error('业务错误:', res.msg || res.message || MESSAGE_CONSTANTS.COMMON.UNKNOWN_ERROR())
       
       // 显示错误消息
-      ElMessage.error(res.msg || res.message || '请求失败')
+      ElMessage.error(res.msg || res.message || MESSAGE_CONSTANTS.COMMON.REQUEST_FAILED())
       
-      // 返回拒绝的Promise，让调用方可以捕获错误
-      return Promise.reject(new Error(res.msg || res.message || 'Error'))
+      // 返回拒绝的Promise，让调用方可以捕获错误并进行相应处理
+      return Promise.reject(new Error(res.msg || res.message || MESSAGE_CONSTANTS.COMMON.UNKNOWN_ERROR()))
     }
   },
   error => {
@@ -93,9 +83,6 @@ service.interceptors.response.use(
           break
         case 401:
           errorInfo.msg = API_ERROR_MESSAGES.HTTP.UNAUTHORIZED()
-          // HTTP 401也需要清理认证信息
-          localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
-          localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
           break
         case 403:
           errorInfo.msg = API_ERROR_MESSAGES.HTTP.FORBIDDEN()
