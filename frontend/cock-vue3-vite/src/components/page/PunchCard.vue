@@ -64,11 +64,8 @@ const handlePunchIn = async () => {
     
     if (success) {
       ElMessage.success(PUNCH_CONSTANTS.MESSAGES.SUCCESS())
-    } else if (punchStore.error) {
-      ElMessage.error(punchStore.error)
-    } else {
-      ElMessage.error(PUNCH_CONSTANTS.MESSAGES.FAILED())
     }
+    // 其他错误已在axios拦截器中统一处理
   } catch (error) {
     ElMessage.error(PUNCH_CONSTANTS.MESSAGES.ERROR())
     // 开发调试时可以启用日志

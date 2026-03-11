@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.common.ResponseResult;
 import com.example.dto.PunchRequest;
 import com.example.dto.PunchResponse;
 import com.example.entity.PunchRecord;
@@ -42,28 +43,34 @@ public class PunchController {
      * @since 1.0.0
      */
     @GetMapping("/record")
-    public Map<String, Object> getPunchRecords(
+    public ResponseResult<Map<String, Object>> getPunchRecords(
             @RequestParam("userId") Integer userId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "15") int size) {
 
         System.out.println("获取打卡记录请求成功，用户ID: " + userId + ", 页码: " + page + ", 每页数量: " + size);
         
-        // 计算总数
-        int total = punchRecordService.countByUserId(userId);
-        
-        // 获取分页数据
-        List<PunchRecord> records = punchRecordService.queryByUserIdAndPage(userId, page, size);
-        
-        // 构造响应数据
-        Map<String, Object> response = new HashMap<>();
-        response.put("records", records);
-        response.put("total", total);
-        response.put("page", page);
-        response.put("size", size);
-        response.put("pages", (int) Math.ceil((double) total / size));
-        
-        return response;
+        try {
+            // 计算总数
+            int total = punchRecordService.countByUserId(userId);
+            
+            // 获取分页数据
+            List<PunchRecord> records = punchRecordService.queryByUserIdAndPage(userId, page, size);
+            
+            // 构造响应数据
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("records", records);
+            responseData.put("total", total);
+            responseData.put("page", page);
+            responseData.put("size", size);
+            responseData.put("pages", (int) Math.ceil((double) total / size));
+            
+            return ResponseResult.success(responseData);
+        } catch (Exception e) {
+            System.err.println("获取打卡记录失败: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseResult.error(500, "获取打卡记录失败");
+        }
     }
 
     /**
@@ -73,24 +80,24 @@ public class PunchController {
      * </p>
      *
      * @param punchRequest 打卡请求参数，包含用户名和打卡时间
-     * @return 包含状态码和消息的响应
+     * @return 标准响应格式
      * @since 1.0.0
      */
     @PostMapping("/in")
-    public PunchResponse punchIn(@RequestBody PunchRequest punchRequest) {
+    public ResponseResult<String> punchIn(@RequestBody PunchRequest punchRequest) {
         System.out.println("打卡请求：" + punchRequest);
 
         try {
             // 1. 获取前台传递的用户ID
             Integer userId = punchRequest.getUserId();
             if (userId == null) {
-                return new PunchResponse(400, "用户ID不能为空");
+                return ResponseResult.error(400, "用户ID不能为空");
             }
 
             // 2. 查询用户信息，确保用户存在
             User user = userService.queryById(userId);
             if (user == null) {
-                return new PunchResponse(404, "用户不存在");
+                return ResponseResult.error(404, "用户不存在");
             }
 
             // 3. 设置为北京时间
@@ -117,13 +124,13 @@ public class PunchController {
             int result = punchRecordService.punchIn(punchRecord);
 
             if (result > 0) {
-                return new PunchResponse(200, "打卡成功");
+                return ResponseResult.success("打卡成功");
             } else {
-                return new PunchResponse(500, "打卡失败");
+                return ResponseResult.error(500, "打卡失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new PunchResponse(500, "打卡失败");
+            return ResponseResult.error(500, "打卡失败");
         }
     }
 

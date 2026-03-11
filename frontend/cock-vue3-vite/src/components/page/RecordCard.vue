@@ -149,12 +149,7 @@ const loadPunchRecords = async (page: number, size: number) => {
         recordsCount: punchStore.pagination.records.length
       })
     }
-    else if (punchStore.error) {
-      console.error('else if获取打卡记录失败:', punchStore.error)
-      ElMessage.error(punchStore.error)
-    } else {
-      ElMessage.error(PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_FAILED())
-    }
+    // 其他错误已在axios拦截器中统一处理
   } catch (err) {
     console.error('获取打卡记录失败:', err)
     ElMessage.error(PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR())

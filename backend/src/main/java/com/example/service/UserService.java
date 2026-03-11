@@ -26,6 +26,15 @@ public interface UserService {
     User queryByUsername(String username);
 
     /**
+     * 用户登录验证
+     *
+     * @param username 用户名
+     * @param rawPassword 明文密码
+     * @return 用户对象，如果验证失败则返回null
+     */
+    User login(String username, String rawPassword);
+
+    /**
      * 查询所有用户数据
      *
      * @return 用户列表

@@ -4,6 +4,7 @@ import com.example.dao.UserDao;
 import com.example.entity.User;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -15,6 +16,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User queryById(Integer id) {
@@ -44,5 +48,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public int deleteById(Integer id) {
         return userDao.deleteById(id);
+    }
+
+    @Override
+    public User login(String username, String rawPassword) {
+        // 根据用户名查询用户
+        User user = userDao.queryByUsername(username);
+        
+        if (user != null && passwordEncoder.matches(rawPassword, user.getPassword())) {
+            // 密码匹配，返回用户信息（注意：不要返回密码）
+            User loginUser = new User();
+            loginUser.setId(user.getId());
+            loginUser.setUsername(user.getUsername());
+            loginUser.setAge(user.getAge());
+            loginUser.setAvatar(user.getAvatar());
+            loginUser.setCreateTime(user.getCreateTime());
+            return loginUser;
+        }
+        
+        return null; // 登录失败
     }
 }

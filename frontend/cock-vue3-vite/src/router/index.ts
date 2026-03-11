@@ -44,8 +44,11 @@ router.beforeEach((to, _, next) => {
   // 如果目标路由需要认证（除了登录页之外的其他页面）
   if (to.matched.some(record => record.meta?.requiresAuth !== BOOLEAN_CONSTANTS.FALSE) && to.path !== ROUTE_CONSTANTS.PATHS.AUTH.LOGIN) {
     // 这里应该检查用户的认证状态
-    // 临时使用localStorage检查是否存在token或用户信息
-    const isAuthenticated = localStorage.getItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN) === STORAGE_VALUES.AUTH_STATUS.LOGGED_IN || !!localStorage.getItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+    // 仅使用localStorage检查是否存在登录状态
+    const isAuthenticated = localStorage.getItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN) === STORAGE_VALUES.AUTH_STATUS.LOGGED_IN
+    /* // 暂时注释掉token相关功能
+    || !!localStorage.getItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+    */
     
     if (!isAuthenticated) {
       // 如果未认证，重定向到登录页

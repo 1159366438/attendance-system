@@ -65,7 +65,6 @@ import { ROUTE_CONSTANTS } from '../constants/routeConstants'
 import { USER_CONSTANTS } from '../constants/userConstants'
 import { BOOLEAN_CONSTANTS } from '../constants/booleans'
 import { FORM_VALIDATION_CONSTANTS } from '../constants/formValidation'
-// import { APP_CONFIG } from '../config/appConfig'  // 暂时注释掉未使用的导入
 
 // 导入样式文件
 import '../assets/css/login.css'
@@ -141,8 +140,10 @@ const handleLogin = async () => {
       
       // 设置认证状态
       localStorage.setItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN, 'true')
+      /* // 暂时注释掉token相关功能
       // 这里可以设置token或其他认证信息
       localStorage.setItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN, 'temp_token_for_demo') // 仅为演示用
+      */
       
       // 根据是否记住密码决定跳转行为
       if (rememberMe.value) {
@@ -154,9 +155,8 @@ const handleLogin = async () => {
       const redirectPath = router.currentRoute.value.query.redirect as string
       // 跳转到指定页面或首页
       router.push({ path: redirectPath || ROUTE_CONSTANTS.PATHS.PAGES.HOME })
-    } else {
-      ElMessage.error(result.message || MESSAGE_CONSTANTS.USER_INFO.LOGIN_FAILED())
     }
+    // 其他错误已在axios拦截器中统一处理
   } catch (error) {
     console.error('Login error:', error)
     ElMessage.error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.VALIDATION_FAILED())

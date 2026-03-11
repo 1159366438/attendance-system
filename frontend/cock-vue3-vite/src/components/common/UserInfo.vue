@@ -23,7 +23,6 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useUserStore } from '../../store'
 import { formatDate } from '../../utils'
-import { ElMessage } from 'element-plus'
 import { APP_CONFIG } from '../../config/appConfig'
 import { USER_INFO_CONSTANTS } from '../../constants/userConstants'
 import { EVENT_CONSTANTS } from '../../constants/appArchitectureConstants'
@@ -65,9 +64,7 @@ const updateTime = () => {
 
 const getUserInfo = async () => {
   await userStore.fetchUserInfo()
-  if (userStore.error) {
-    ElMessage.error(userStore.error)
-  }
+  // 错误已在axios拦截器中统一处理
 };
 
 

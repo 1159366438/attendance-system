@@ -7,7 +7,8 @@ USE `mydatebase`;
 -- 创建用户表
 CREATE TABLE IF NOT EXISTS `user` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
-  `username` VARCHAR(50) NOT NULL,
+  `username` VARCHAR(50) NOT NULL UNIQUE,
+  `password` VARCHAR(255) DEFAULT '$2a$10$NQVgZc5sQB7FvHMRxJrwkedBqMTMtwL0C2YdytKE.Ur9eyo9ydwYm', -- 默认密码为 '123456' 的BCrypt哈希值
   `age` INT,
   `avatar` VARCHAR(255),
   `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP

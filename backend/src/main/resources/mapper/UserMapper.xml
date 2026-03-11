@@ -8,6 +8,7 @@
     <resultMap id="BaseResultMap" type="com.example.entity.User">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="age" column="age" jdbcType="INTEGER"/>
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -16,7 +17,7 @@
     <!-- 查询单个 -->
     <select id="queryById" resultMap="BaseResultMap">
         select
-            id, username, age, avatar, create_time
+            id, username, password, age, avatar, create_time
         from user
         where id = #{id}
     </select>
@@ -24,28 +25,28 @@
     <!-- 查询所有 -->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-            id, username, age, avatar, create_time
+            id, username, password, age, avatar, create_time
         from user
     </select>
 
     <!-- 根据用户名查询 -->
     <select id="queryByUsername" resultMap="BaseResultMap">
         select
-            id, username, age, avatar, create_time
+            id, username, password, age, avatar, create_time
         from user
         where username = #{username}
     </select>
 
     <!-- 新增 -->
     <insert id="insert" parameterType="com.example.entity.User">
-        insert into user (id, username, age, avatar, create_time)
-        values (#{id}, #{username}, #{age}, #{avatar}, #{createTime})
+        insert into user (id, username, password, age, avatar, create_time)
+        values (#{id}, #{username}, #{password}, #{age}, #{avatar}, #{createTime})
     </insert>
 
     <!-- 修改 -->
     <update id="update" parameterType="com.example.entity.User">
         update user
-        set username = #{username}, age = #{age}, avatar = #{avatar}, create_time = #{createTime}
+        set username = #{username}, password = #{password}, age = #{age}, avatar = #{avatar}, create_time = #{createTime}
         where id = #{id}
     </update>
 

@@ -16,6 +16,8 @@ public class User implements Serializable {
 
     private String username;
 
+    private String password;
+
     private Integer age;
 
     private String avatar;
@@ -37,6 +39,14 @@ public class User implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Integer getAge() {
@@ -64,4 +74,3 @@ public class User implements Serializable {
     }
 
 }
-
