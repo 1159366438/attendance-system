@@ -52,6 +52,82 @@
 - **v1.5.0** - 内测版：移动适配（响应式、PWA）
 - **v2.0.0** - 正式版：集成所有功能，经过充分测试，稳定可用
 
+## 快速开始
+
+### 环境要求
+- Node.js (v20.x 或更高版本)
+- Java JDK (v17 或更高版本)
+- Maven (v3.8 或更高版本)
+- MySQL (v8.0 或更高版本)
+
+### 克隆项目
+
+```bash
+# 克隆整个项目
+git clone https://github.com/1159366438/attendance-system.git
+cd attendance-system
+```
+
+### 后端启动
+
+```bash
+# 进入后端目录
+cd backend
+
+# 使用 Maven 构建并运行
+mvn spring-boot:run
+```
+
+### 前端启动
+
+```bash
+# 进入前端目录
+cd frontend/cock-vue3-vite
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+```
+
+### 项目结构
+
+```
+attendance-system/
+├── backend/                           # 后端 Spring Boot 项目
+│   ├── src/main/java/com/example/    # Java 源代码
+│   │   ├── common/                   # 通用类
+│   │   ├── config/                   # 配置类
+│   │   ├── controller/               # 控制器层
+│   │   ├── dao/                      # 数据访问层
+│   │   ├── dto/                      # 数据传输对象
+│   │   ├── entity/                   # 实体类
+│   │   ├── service/                  # 业务逻辑层
+│   │   └── PunchCardApplication.java # 启动类
+│   ├── src/main/resources/           # 资源文件
+│   │   ├── mapper/                   # MyBatis 映射文件
+│   │   ├── application.properties    # 应用配置
+│   │   ├── application.yml           # 应用配置
+│   │   └── schema.sql                # 数据库初始化脚本
+│   ├── pom.xml                       # Maven 依赖配置
+│   └── target/                       # 构建输出目录
+├── frontend/                         # 前端项目目录
+│   └── cock-vue3-vite/              # Vue 3 + Vite 项目
+│       ├── src/                      # 源代码
+│       ├── public/                   # 静态资源
+│       ├── package.json              # 项目配置
+│       └── vite.config.js            # Vite 配置
+├── doc/                              # 文档目录
+│   ├── api.md                        # API 接口文档
+│   ├── database.md                   # 数据库设计文档
+│   └── plan.md                       # 开发计划文档
+├── .gitignore                        # Git 忽略配置
+├── .gitattributes                      # Git 属性配置
+├── .mvn/                             # Maven Wrapper
+└── README.md                         # 项目说明文件
+```
+
 ## 技术待集成
 
 - **Redis** [![Status](https://img.shields.io/badge/status-待集成-yellow)](#) - 内存数据结构存储，可用作缓存和会话存储
