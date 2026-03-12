@@ -8,7 +8,7 @@ USE `mydatebase`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
   `username` VARCHAR(50) NOT NULL UNIQUE,
-  `password` VARCHAR(255) DEFAULT '$2a$10$NQVgZc5sQB7FvHMRxJrwkedBqMTMtwL0C2YdytKE.Ur9eyo9ydwYm', -- 默认密码为 '123456' 的BCrypt哈希值
+  `password` VARCHAR(255) DEFAULT '$2a$10$yVPtGTWrs3mZDvzn/c.jYu8.f19vVSKnXD9cXXKTk4.Y.WX.w9w7C', -- 默认密码为 '123456' 的BCrypt哈希值
   `age` INT,
   `avatar` VARCHAR(255),
   `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -28,6 +28,6 @@ CREATE TABLE IF NOT EXISTS `punch_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 添加测试数据
-INSERT INTO `user` (`username`, `password`, `age`) VALUES ('admin', '$2a$10$NQVgZc5sQB7FvHMRxJrwkedBqMTMtwL0C2YdytKE.Ur9eyo9ydwYm', 25); -- 密码为 '123456' 的BCrypt哈希值
-INSERT INTO `user` (`username`, `password`, `age`) VALUES ('user1', '$2a$10$NQVgZc5sQB7FvHMRxJrwkedBqMTMtwL0C2YdytKE.Ur9eyo9ydwYm', 30); -- 密码为 '123456' 的BCrypt哈希值
-INSERT INTO `user` (`username`, `password`, `age`) VALUES ('user2', '$2a$10$NQVgZc5sQB7FvHMRxJrwkedBqMTMtwL0C2YdytKE.Ur9eyo9ydwYm', 28); -- 密码为 '123456' 的BCrypt哈希值
+INSERT INTO `user` (`username`, `password`, `age`) VALUES ('admin', '$2a$10$byZHeNtemB1DFSAPJgGLzuuVLHig9xsUq4fbVaip806VYU1mFO9BG', 25); -- 密码为 '123456' 的BCrypt哈希值
+INSERT INTO `user` (`username`, `password`, `age`) VALUES ('user1', '$2a$10$byZHeNtemB1DFSAPJgGLzuuVLHig9xsUq4fbVaip806VYU1mFO9BG', 30); -- 密码为 '123456' 的BCrypt哈希值
+INSERT INTO `user` (`username`, `password`, `age`) VALUES ('user2', '$2a$10$byZHeNtemB1DFSAPJgGLzuuVLHig9xsUq4fbVaip806VYU1mFO9BG', 28); -- 密码为 '123456' 的BCrypt哈希值
