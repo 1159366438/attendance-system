@@ -81,7 +81,15 @@ public class UserServiceImpl implements UserService {
             User user = queryById(targetUserId);
             
             if (user != null) {
-                return ResponseResult.success(user);
+                // 创建一个新的用户对象，不包含密码字段，以确保安全性
+                User userWithoutPassword = new User();
+                userWithoutPassword.setId(user.getId());
+                userWithoutPassword.setUsername(user.getUsername());
+                userWithoutPassword.setAge(user.getAge());
+                userWithoutPassword.setAvatar(user.getAvatar());
+                userWithoutPassword.setCreateTime(user.getCreateTime());
+                
+                return ResponseResult.success(userWithoutPassword);
             } else {
                 return ResponseResult.error(404, "用户不存在");
             }
