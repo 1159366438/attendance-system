@@ -189,10 +189,12 @@ CREATE TABLE IF NOT EXISTS `punch_record` (
 
 ```sql
 -- 插入测试用户（密码均为123456的BCrypt哈希）
-INSERT INTO `user` (`username`, `age`) VALUES
-('admin', 25),
-('user1', 30),
-('user2', 28);
+INSERT INTO `user` (`username`, `password`, `age`) VALUES 
+('admin', '$2a$10$byZHeNtemB1DFSAPJgGLzuuVLHig9xsUq4fbVaip806VYU1mFO9BG', 25); -- 密码为 '123456' 的BCrypt哈希值
+INSERT INTO `user` (`username`, `password`, `age`) VALUES 
+('user1', '$2a$10$byZHeNtemB1DFSAPJgGLzuuVLHig9xsUq4fbVaip806VYU1mFO9BG', 30); -- 密码为 '123456' 的BCrypt哈希值
+INSERT INTO `user` (`username`, `password`, `age`) VALUES 
+('user2', '$2a$10$byZHeNtemB1DFSAPJgGLzuuVLHig9xsUq4fbVaip806VYU1mFO9BG', 28); -- 密码为 '123456' 的BCrypt哈希值
 
 -- 插入测试打卡记录（假设admin的打卡）
 INSERT INTO `punch_record` (`user_id`, `check_in_time`, `check_in_type`, `check_in_status`, `check_in_location`) VALUES

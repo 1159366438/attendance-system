@@ -31,41 +31,37 @@
 ## 1. 概述
 
 ### 1.1 基本信息
-- **基础URL**: `https://api.yourdomain.com/api`（示例，请替换为实际域名）
 - **协议**: HTTPS
-- **字符编码**: UTF-8
-- **内容类型**: 请求与响应均使用 `application/json`（特殊说明除外）
+- **域名**: `https://api.yourdomain.com`
 - **版本**: v1.0.1-beta
+- **字符编码**: UTF-8
+- **内容格式**: JSON
 
 ### 1.2 公共响应结构
-所有接口返回的JSON格式统一如下：
-
-| 字段 | 类型 | 必含 | 描述 |
-|------|------|------|------|
-| `code` | int | 是 | 业务状态码，200表示成功，其他表示失败 |
-| `msg` | string | 是 | 响应消息，可用于调试，不应直接展示给用户 |
-| `data` | object/array/string | 否 | 响应数据，具体结构见各接口说明 |
-
-**示例**：
+所有接口均遵循统一的响应格式：
 ```json
 {
   "code": 200,
-  "msg": "操作成功",
+  "msg": "success",
   "data": {}
 }
 ```
 
+| 字段名 | 类型 | 必填 | 描述 |
+|--------|------|------|------|
+| `code` | int | 是 | 业务状态码，200表示成功 |
+| `msg` | string | 是 | 响应消息 |
+| `data` | object | 否 | 响应数据，根据不同接口而变化 |
+
 ### 1.3 通用状态码
 | 状态码 | 说明 | 描述 |
 |--------|------|------|
-| 200 | Success | 请求成功 |
-| 400 | Bad Request | 请求参数错误（如缺少必填字段、格式错误） |
-| 401 | Unauthorized | 未认证或会话已过期 |
-| 403 | Forbidden | 权限不足，禁止访问 |
-| 404 | Not Found | 请求的资源不存在 |
-| 500 | Internal Server Error | 服务器内部错误，请稍后重试 |
-
-> **注意**：各接口可能返回更具体的业务错误码，详见接口说明中的“错误码”部分。
+| 200 | Success | 操作成功 |
+| 400 | Bad Request | 请求参数错误 |
+| 401 | Unauthorized | 未授权访问 |
+| 403 | Forbidden | 权限不足 |
+| 404 | Not Found | 资源不存在 |
+| 500 | Server Error | 服务器内部错误 |
 
 ### 1.4 认证方式
 - **Session/Cookie 认证**：用户登录成功后，服务器会下发 `JSESSIONID` 写入 Cookie，后续请求需携带该 Cookie。
@@ -79,7 +75,7 @@
 ### 1.6 数据格式说明
 - **时间格式**：所有时间字段均采用 **ISO 8601** 格式，例如 `2026-03-12T10:30:00.000Z`（UTC 时间）。
 - **ID字段**：均为整数类型（`Integer`）。
-- **删除标识**：`isDeleted` 字段，0-未删除，1-已删除。
+- **枚举值**：使用整数表示不同状态，具体含义参见各接口说明。
 
 ---
 
@@ -88,9 +84,9 @@
 ### 2.1 获取用户信息
 
 #### 接口说明
-获取指定用户的基本信息。若不传 `userId`，默认返回当前登录用户信息（需认证）。
+获取指定用户的基本信息（不含密码）。若不传 `userId`，默认返回当前登录用户信息（需认证）。
 
-- **请求URL**: `/user/info`
+- **请求URL**: `/api/user/info`
 - **请求方法**: `GET`
 - **Content-Type**: `application/x-www-form-urlencoded`（参数拼接在URL上）
 - **认证要求**: 需要登录
@@ -105,14 +101,13 @@
 |--------|------|------|------|------|
 | `code` | int | 是 | 200 | 业务状态码 |
 | `msg` | string | 是 | "操作成功" | 响应消息 |
-| `data` | object | 是 | 见下方 | 用户信息对象 |
+| `data` | object | 是 | 见下方 | 用户信息对象（不含密码字段） |
 
 **data 对象结构**：
 | 字段 | 类型 | 必含 | 示例 | 描述 |
 |------|------|------|------|------|
 | `id` | int | 是 | 1 | 用户ID |
 | `username` | string | 是 | "admin" | 用户名 |
-| `password` | string | 是 | "$2a$10$..." | BCrypt加密后的密码（通常不返回，但当前版本返回） |
 | `avatar` | string | 否 | null | 头像URL |
 | `createTime` | string | 是 | "2024-03-06T08:11:00.000Z" | 创建时间 |
 | `updateTime` | string | 是 | "2024-03-06T08:11:00.000Z" | 更新时间 |
@@ -133,7 +128,6 @@ Cookie: JSESSIONID=xxx
   "data": {
     "id": 1,
     "username": "admin",
-    "password": "$2a$10$NQVgZc5sQB7FvHMRxJrwkedBqMTMtwL0C2YdytKE.Ur9eyo9ydwYm",
     "avatar": null,
     "createTime": "2024-03-06T08:11:00.000Z",
     "updateTime": "2024-03-06T08:11:00.000Z",
@@ -156,7 +150,7 @@ Cookie: JSESSIONID=xxx
 #### 接口说明
 用户登录认证，成功后服务器会设置会话Cookie。
 
-- **请求URL**: `/user/login`
+- **请求URL**: `/api/user/login`
 - **请求方法**: `POST`
 - **Content-Type**: `application/json`
 - **认证要求**: 无需认证
@@ -220,7 +214,7 @@ Cookie: JSESSIONID=xxx
 #### 接口说明
 用户登出，销毁当前会话。
 
-- **请求URL**: `/user/logout`
+- **请求URL**: `/api/user/logout`
 - **请求方法**: `POST`
 - **Content-Type**: `application/json`
 - **认证要求**: 需要登录
@@ -267,7 +261,7 @@ Content-Type: application/json
 #### 接口说明
 获取指定用户的打卡记录，支持分页查询。
 
-- **请求URL**: `/punch/record`
+- **请求URL**: `/api/punch/record`
 - **请求方法**: `GET`
 - **Content-Type**: `application/x-www-form-urlencoded`（参数拼接在URL上）
 - **认证要求**: 需要登录
@@ -355,7 +349,7 @@ Cookie: JSESSIONID=xxx
 #### 接口说明
 用户进行上班打卡操作。后端会根据打卡时间自动判断状态（正常/迟到）。
 
-- **请求URL**: `/punch/in`
+- **请求URL**: `/api/punch/in`
 - **请求方法**: `POST`
 - **Content-Type**: `application/json`
 - **认证要求**: 需要登录
