@@ -232,5 +232,3 @@ INSERT INTO `punch_record` (`user_id`, `check_in_time`, `check_in_type`, `check_
 | v1.0.0-beta | 2026-03-12 | 初始版本，包含用户表和打卡记录表，定义基础字段与索引 |
 
 ---
-
-**文档结束**
