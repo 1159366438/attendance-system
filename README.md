@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/版本-v1.0.1--beta-blue?style=for-the-badge" alt="版本">
-  <img src="https://img.shields.io/badge/发布日期-2026--03--12-green?style=for-the-badge" alt="发布日期">
+  <img src="https://img.shields.io/badge/发布日期-2026--03--13-green?style=for-the-badge" alt="发布日期">
   <img src="https://img.shields.io/badge/许可证-MIT-yellow?style=for-the-badge" alt="许可证">
 </p>
 
