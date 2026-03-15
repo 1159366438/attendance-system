@@ -69,5 +69,6 @@ export const USER_CONSTANTS = {
     USER_ID: 0,
     AVATAR: '',
     GENDER: 0,
+    MENU_TEXT: '默认菜单',
   },
 };

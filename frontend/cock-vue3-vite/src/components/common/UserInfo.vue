@@ -31,11 +31,10 @@ import { MESSAGE_CONSTANTS } from '../../constants/messages'
 
 
 // 接收父组件传递的菜单文本
-const props = defineProps({
-  currentMenuText: {
-    type: String,
-    required: true,
-  }
+const props = withDefaults(defineProps<{
+  currentMenuText: string;
+}>(), {
+  currentMenuText: USER_CONSTANTS.DEFAULT_VALUES.MENU_TEXT
 });
 
 // 定义事件
