@@ -83,6 +83,8 @@
 | Prettier | v3.x | 代码格式化工具 |
 | Git | v2.x | 版本控制系统 |
 | Maven | v3.8+ | 项目构建与管理 |
+| [Swagger](https://swagger.io/) | 3.0.2 | API 文档自动生成与可视化，包含完整的API接口、请求参数、响应格式及异常处理说明，访问地址：[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) |
+| [SchemaSpy](https://schemaspy.org/) | 6.2.4 | 数据库结构可视化文档生成工具 |
 
 ---
 
@@ -117,6 +119,13 @@ USE `attendance_system`;
 # 导入表结构与初始数据
 mysql -u root -p attendance_system < backend/src/main/resources/schema.sql
 ```
+
+#### 2.1 数据库可视化文档
+系统使用SchemaSpy工具生成数据库可视化文档，位于 `doc/v1.1.0-beta/database/SchemaSpy/` 目录下，完全替代了手写维护的数据库文档，包含：
+- 表关系图（ER图）
+- 各表字段详情
+- 数据库结构总览
+访问 `doc/v1.1.0-beta/database/SchemaSpy/index.html` 查看完整的数据库结构可视化界面。
 
 #### 3. 启动后端服务
 ```bash
@@ -178,7 +187,13 @@ attendance-system/
 │       └── vite.config.js               # Vite 配置
 ├── doc/                               # 项目文档
 │   ├── api.md                          # API 接口文档
-│   ├── database.md                      # 数据库设计文档
+│   ├── v1.1.0-beta/database/SchemaSpy/ # SchemaSpy工具生成的数据库可视化文档
+│   │   ├── index.html                  # 数据库结构总览
+│   │   ├── diagrams/                   # 表关系图
+│   │   │   ├── summary/                # 概要关系图
+│   │   │   ├── tables/                 # 单表详细关系图
+│   │   │   └── orphans/                # 无关联表
+│   │   └── tables/                     # 各表详细信息
 │   └── plan.md                          # 开发计划
 ├── .gitignore
 ├── .gitattributes
@@ -211,7 +226,6 @@ attendance-system/
 | [RabbitMQ](https://www.rabbitmq.com/) | 🟡 待集成 | 消息队列，异步处理 |
 | [Spring Cloud](https://spring.io/projects/spring-cloud) | 🟡 待集成 | 微服务架构扩展 |
 | [JUnit 5](https://junit.org/junit5/) | 🟡 待集成 | 单元测试 |
-| [Swagger](https://swagger.io/) | 🟡 待集成 | API 文档自动生成 |
 
 ---
 
@@ -228,7 +242,7 @@ attendance-system/
 ### 开发规范
 - 代码遵循 ESLint 与 Prettier 配置
 - 提交信息请使用清晰的语言（英文或中文）
-- 涉及数据库变更请同步更新 `schema.sql` 及文档
+- 涉及数据库变更请同步更新 `schema.sql` 及SchemaSpy生成的可视化文档
 - 新功能请编写相应的单元测试
 
 ---

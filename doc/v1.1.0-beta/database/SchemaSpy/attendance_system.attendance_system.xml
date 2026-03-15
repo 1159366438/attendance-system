@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="attendance_system" schema="attendance_system" type="MySQL - 8.0.44">
+   <tables>
+      <table catalog="attendance_system" name="department" numRows="4" remarks="部门表" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="部门ID，主键" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="部门名称" size="100" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="true" remarks="部门描述" size="65535" type="TEXT" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="3" name="parent_id" nullable="true" remarks="父部门ID，顶级部门为0" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="manager_id" nullable="true" remarks="部门负责人ID，关联user表" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="5" name="create_time" nullable="false" remarks="创建时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="6" name="update_time" nullable="false" remarks="更新时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="7" name="is_deleted" nullable="false" remarks="逻辑删除标识，0-未删除，1-已删除" size="3" type="TINYINT" typeCode="-6"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_manager_id" unique="false">
+            <column ascending="true" name="manager_id"/>
+         </index>
+         <index name="idx_parent_id" unique="false">
+            <column ascending="true" name="parent_id"/>
+         </index>
+         <index name="uk_name_parent" unique="true">
+            <column ascending="true" name="name"/>
+            <column ascending="true" name="parent_id"/>
+         </index>
+      </table>
+      <table catalog="attendance_system" name="permission" numRows="8" remarks="权限表" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="权限ID，主键" size="10" type="INT UNSIGNED" typeCode="4">
+            <child catalog="attendance_system" column="permission_id" foreignKey="fk_role_permission_permission" implied="false" onDeleteCascade="true" table="role_permission"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="权限名称" size="100" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="code" nullable="false" remarks="权限代码，如 user:create, department:view" size="100" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="description" nullable="true" remarks="权限描述" size="65535" type="TEXT" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="4" name="parent_id" nullable="true" remarks="父权限ID，顶级权限为0" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="5" name="level" nullable="false" remarks="权限层级" size="3" type="TINYINT" typeCode="-6"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="6" name="sort_order" nullable="false" remarks="排序序号" size="10" type="INT" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="7" name="create_time" nullable="false" remarks="创建时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="8" name="update_time" nullable="false" remarks="更新时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="9" name="is_deleted" nullable="false" remarks="逻辑删除标识，0-未删除，1-已删除" size="3" type="TINYINT" typeCode="-6"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_parent_id" unique="false">
+            <column ascending="true" name="parent_id"/>
+         </index>
+         <index name="uk_code" unique="true">
+            <column ascending="true" name="code"/>
+         </index>
+      </table>
+      <table catalog="attendance_system" name="punch_record" numRows="4" remarks="打卡记录表" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="记录ID，主键" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="用户ID，外键关联user.id" size="10" type="INT UNSIGNED" typeCode="4">
+            <parent catalog="attendance_system" column="id" foreignKey="fk_punch_record_user" implied="false" onDeleteCascade="true" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="check_in_time" nullable="false" remarks="打卡时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="check_in_type" nullable="false" remarks="打卡类型：1-上班 2-下班 3-加班" size="3" type="TINYINT UNSIGNED" typeCode="-6"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="check_in_status" nullable="false" remarks="打卡状态：1-正常 2-迟到 3-早退 4-旷工" size="3" type="TINYINT UNSIGNED" typeCode="-6"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="check_in_location" nullable="true" remarks="打卡地点" size="100" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="6" name="create_time" nullable="false" remarks="记录创建时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="7" name="update_time" nullable="false" remarks="记录更新时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_check_in_time" unique="false">
+            <column ascending="true" name="check_in_time"/>
+         </index>
+         <index name="idx_user_id" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+      </table>
+      <table catalog="attendance_system" name="role" numRows="4" remarks="角色表" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="角色ID，主键" size="10" type="INT UNSIGNED" typeCode="4">
+            <child catalog="attendance_system" column="role_id" foreignKey="fk_role_permission_role" implied="false" onDeleteCascade="true" table="role_permission"/>
+            <child catalog="attendance_system" column="role_id" foreignKey="fk_user_role_role" implied="false" onDeleteCascade="true" table="user_role"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="角色名称" size="50" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="description" nullable="true" remarks="角色描述" size="65535" type="TEXT" typeCode="-1"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="3" name="create_time" nullable="false" remarks="创建时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="update_time" nullable="false" remarks="更新时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="5" name="is_deleted" nullable="false" remarks="逻辑删除标识，0-未删除，1-已删除" size="3" type="TINYINT" typeCode="-6"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="uk_name" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table catalog="attendance_system" name="role_permission" numRows="8" remarks="角色权限关联表" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="关联ID，主键" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="role_id" nullable="false" remarks="角色ID，关联role表" size="10" type="INT UNSIGNED" typeCode="4">
+            <parent catalog="attendance_system" column="id" foreignKey="fk_role_permission_role" implied="false" onDeleteCascade="true" table="role"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="permission_id" nullable="false" remarks="权限ID，关联permission表" size="10" type="INT UNSIGNED" typeCode="4">
+            <parent catalog="attendance_system" column="id" foreignKey="fk_role_permission_permission" implied="false" onDeleteCascade="true" table="permission"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="3" name="create_time" nullable="false" remarks="创建时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="update_time" nullable="false" remarks="更新时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_permission_id" unique="false">
+            <column ascending="true" name="permission_id"/>
+         </index>
+         <index name="idx_role_id" unique="false">
+            <column ascending="true" name="role_id"/>
+         </index>
+         <index name="uk_role_permission" unique="true">
+            <column ascending="true" name="role_id"/>
+            <column ascending="true" name="permission_id"/>
+         </index>
+      </table>
+      <table catalog="attendance_system" name="user" numRows="3" remarks="用户表" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="用户ID，主键" size="10" type="INT UNSIGNED" typeCode="4">
+            <child catalog="attendance_system" column="user_id" foreignKey="fk_punch_record_user" implied="false" onDeleteCascade="true" table="punch_record"/>
+            <child catalog="attendance_system" column="user_id" foreignKey="fk_user_role_user" implied="false" onDeleteCascade="true" table="user_role"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="username" nullable="false" remarks="用户名，唯一" size="50" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="$2a$10$NQVgZc5sQB7FvHMRxJrwkedBqMTMtwL0C2YdytKE.Ur9eyo9ydwYm" digits="0" id="2" name="password" nullable="false" remarks="BCrypt加密密码，默认123456" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="age" nullable="true" remarks="年龄" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="avatar" nullable="true" remarks="头像URL" size="255" type="VARCHAR" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="5" name="gender" nullable="true" remarks="性别（0-未知 1-男 2-女）" size="3" type="TINYINT" typeCode="-6"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="6" name="create_time" nullable="false" remarks="创建时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_username" unique="true">
+            <column ascending="true" name="username"/>
+         </index>
+      </table>
+      <table catalog="attendance_system" name="user_role" numRows="3" remarks="用户角色关联表" type="TABLE">
+         <column autoUpdated="true" defaultValue="null" digits="0" id="0" name="id" nullable="false" remarks="关联ID，主键" size="10" type="INT UNSIGNED" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="user_id" nullable="false" remarks="用户ID，关联user表" size="10" type="INT UNSIGNED" typeCode="4">
+            <parent catalog="attendance_system" column="id" foreignKey="fk_user_role_user" implied="false" onDeleteCascade="true" table="user"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="role_id" nullable="false" remarks="角色ID，关联role表" size="10" type="INT UNSIGNED" typeCode="4">
+            <parent catalog="attendance_system" column="id" foreignKey="fk_user_role_role" implied="false" onDeleteCascade="true" table="role"/>
+         </column>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="3" name="create_time" nullable="false" remarks="创建时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="CURRENT_TIMESTAMP" digits="0" id="4" name="update_time" nullable="false" remarks="更新时间" size="19" type="TIMESTAMP" typeCode="93"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PRIMARY" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="idx_role_id" unique="false">
+            <column ascending="true" name="role_id"/>
+         </index>
+         <index name="idx_user_id" unique="false">
+            <column ascending="true" name="user_id"/>
+         </index>
+         <index name="uk_user_role" unique="true">
+            <column ascending="true" name="user_id"/>
+            <column ascending="true" name="role_id"/>
+         </index>
+      </table>
+   </tables>
+</database>
