@@ -35,7 +35,7 @@
 #### 手动修复（适用于所有版本）
 1. 登录 MySQL 数据库，切换到考勤系统数据库：
    ```sql
-   USE `mydatabase`;
+   USE `attendance_system`;
    ```
 2. 确认当前 `user` 表中 `admin` 用户的密码哈希值：
    ```sql
@@ -99,7 +99,7 @@ server:
 ### 现象
 - 启动后端时出现如下错误之一：
   - `Access denied for user 'root'@'localhost'`
-  - `Unknown database 'mydatabase'`
+  - `Unknown database 'attendance_system'`
   - `Communications link failure`
 
 ### 原因
@@ -117,24 +117,24 @@ server:
    ```yaml
    spring:
      datasource:
-       url: jdbc:mysql://localhost:3306/mydatabase?useSSL=false&serverTimezone=UTC
+       url: jdbc:mysql://localhost:3306/attendance_system?useSSL=false&serverTimezone=UTC
        username: root
        password: yourpassword
    ```
    - 将 `yourpassword` 替换为你的 MySQL 密码。
-   - 若数据库名称不是 `mydatabase`，请修改 `url` 中的数据库名。
+   - 若数据库名称不是 `attendance_system`，请修改 `url` 中的数据库名。
 
 3. **创建数据库（如果不存在）**  
    登录 MySQL 并执行：
    ```sql
-   CREATE DATABASE IF NOT EXISTS `mydatabase` 
+   CREATE DATABASE IF NOT EXISTS `attendance_system` 
      DEFAULT CHARACTER SET utf8mb4 
      COLLATE utf8mb4_unicode_ci;
    ```
 
 4. **导入表结构**（如果尚未导入）：
    ```bash
-   mysql -u root -p mydatabase < backend/src/main/resources/schema.sql
+   mysql -u root -p attendance_system < backend/src/main/resources/schema.sql
    ```
 
 ---

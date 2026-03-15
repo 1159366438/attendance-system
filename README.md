@@ -108,14 +108,14 @@ cd attendance-system
 mysql -u root -p
 ```
 ```sql
-CREATE DATABASE IF NOT EXISTS `mydatabase` 
+CREATE DATABASE IF NOT EXISTS `attendance_system` 
   DEFAULT CHARACTER SET utf8mb4 
   COLLATE utf8mb4_unicode_ci;
-USE `mydatabase`;
+USE `attendance_system`;
 ```
 ```bash
 # 导入表结构与初始数据
-mysql -u root -p mydatabase < backend/src/main/resources/schema.sql
+mysql -u root -p attendance_system < backend/src/main/resources/schema.sql
 ```
 
 #### 3. 启动后端服务
