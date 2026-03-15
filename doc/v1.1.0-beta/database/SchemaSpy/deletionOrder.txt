@@ -1,0 +1,7 @@
+department
+user_role
+role_permission
+punch_record
+permission
+user
+role
