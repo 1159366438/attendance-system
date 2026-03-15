@@ -52,20 +52,18 @@ import { usePunchStore, useUserStore } from '../../store'
 import { formatDate } from '../../utils'
 import type { PunchRecord } from '../../types'
 import { ElMessage } from 'element-plus'
-import { PUNCH_CONSTANTS } from '../../constants/punchConstants'
-import { RECORD_CARD_CONSTANTS } from '../../constants/punchRecordConstants'
-import { TABLE_CONSTANTS } from '../../constants/table'
+import { APP_CONSTANTS, TABLE_CONSTANTS } from '../../constants'
 
 // Store
 const punchStore = usePunchStore()
 const userStore = useUserStore()
 
 // Labels
-const dateLabel = RECORD_CARD_CONSTANTS.COLUMN_HEADERS.DATE()
-const nameLabel = RECORD_CARD_CONSTANTS.COLUMN_HEADERS.NAME()
-const timeLabel = RECORD_CARD_CONSTANTS.COLUMN_HEADERS.TIME()
-const locationLabel = RECORD_CARD_CONSTANTS.COLUMN_HEADERS.LOCATION()
-const noRecordsText = RECORD_CARD_CONSTANTS.MESSAGES.NO_RECORDS()
+const dateLabel = APP_CONSTANTS.RECORD_CARD.COLUMN_HEADERS.DATE()
+const nameLabel = APP_CONSTANTS.RECORD_CARD.COLUMN_HEADERS.NAME()
+const timeLabel = APP_CONSTANTS.RECORD_CARD.COLUMN_HEADERS.TIME()
+const locationLabel = APP_CONSTANTS.RECORD_CARD.COLUMN_HEADERS.LOCATION()
+const noRecordsText = APP_CONSTANTS.RECORD_CARD.MESSAGES.NO_RECORDS()
 
 // Computed properties
 const tableData = computed<PunchRecord[]>(() => punchStore.pagination.records || [])
@@ -112,11 +110,11 @@ const formatTimeField = (dateValue: Date | string | undefined): string => {
 const formatUserId = (userId: number | undefined): string => {
   if (typeof userId !== 'number') return '-'
   // 如果需要显示用户名而非ID，可以在这里查询用户信息
-  return `${RECORD_CARD_CONSTANTS.MESSAGES.USER_PREFIX()}${userId}`
+  return `${APP_CONSTANTS.RECORD_CARD.MESSAGES.USER_PREFIX()}${userId}`
 }
 
 const locationFormatter = (_row: PunchRecord, _column: unknown, cellValue: string): string => {
-  return cellValue || RECORD_CARD_CONSTANTS.MESSAGES.UNKNOWN_LOCATION()
+  return cellValue || APP_CONSTANTS.RECORD_CARD.MESSAGES.UNKNOWN_LOCATION()
 }
 
 // 分页大小改变事件
@@ -142,7 +140,7 @@ const loadPunchRecords = async (page: number, size: number) => {
     const userId = userStore.userInfo.userId || 1
     const success = await punchStore.fetchPunchRecords(userId, page, size)
     if (success) {
-      ElMessage.success(PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_SUCCESS())
+      ElMessage.success(APP_CONSTANTS.PUNCH.MESSAGES.FETCH_RECORDS_SUCCESS())
       console.log('获取打卡记录成功:', {
         total: punchStore.pagination.total,
         currentPage: punchStore.pagination.page,
@@ -152,7 +150,7 @@ const loadPunchRecords = async (page: number, size: number) => {
     // 其他错误已在axios拦截器中统一处理
   } catch (err) {
     console.error('获取打卡记录失败:', err)
-    ElMessage.error(PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR())
+    ElMessage.error(APP_CONSTANTS.PUNCH.MESSAGES.FETCH_RECORDS_ERROR())
     return false
   }
 }

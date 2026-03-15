@@ -7,15 +7,15 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Layout from './layouts/Layout.vue'
-import { ROUTE_CONSTANTS } from './constants/routeConstants'
+import { APP_CONSTANTS } from './constants/appConstants'
 
 const route = useRoute()
 
 // 检查当前页面是否为认证相关页面（如登录页、注册页），这些页面不需要Layout
 const isAuthPage = computed(() => {
-  return route.path.startsWith(ROUTE_CONSTANTS.PATHS.AUTH.LOGIN) || 
-         route.path.startsWith(ROUTE_CONSTANTS.PATHS.AUTH.REGISTER) || 
-         route.path === ROUTE_CONSTANTS.PATHS.PAGES.HOME
+  return route.path.startsWith(APP_CONSTANTS.ROUTE.PATHS.AUTH.LOGIN) || 
+         route.path.startsWith(APP_CONSTANTS.ROUTE.PATHS.AUTH.REGISTER) || 
+         route.path === APP_CONSTANTS.ROUTE.PATHS.PAGES.HOME
 })
 </script>
 

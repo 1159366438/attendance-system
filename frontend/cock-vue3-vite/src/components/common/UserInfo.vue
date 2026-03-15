@@ -1,17 +1,20 @@
 <template>
-  <!-- 新增外层容器：作为定位参考（核心！） -->
+  <!-- 用户信息组件容器 -->
   <div class="user-header-container">
-    <!-- 标题头：左上角定位 -->
+    <!-- 当前菜单标题 -->
     <h2 class="current-menu">{{ currentMenuText }}</h2>
     
     <div class="user-info">
-      <!-- 刷新时间 -->
+      <!-- 当前时间显示 -->
       <span class="refresh-time">{{ currentTime }}</span>
-      <!-- 用户信息 -->
+      <!-- 用户信息区域 -->
       <div class="user-box">
+        <!-- 用户头像 -->
         <el-avatar :src="userInfo.avatar" class="avatar"></el-avatar>
+        <!-- 用户名 -->
         <span class="user-name">{{ userInfo.name }}</span>
-        <el-button link class="logout-btn" @click="emit(EVENT_CONSTANTS.USER.LOGOUT)">
+        <!-- 登出按钮 -->
+        <el-button link class="logout-btn" @click="handleLogout">
           {{ logoutText }}
         </el-button>
       </div>
@@ -24,26 +27,29 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useUserStore } from '../../store'
 import { formatDate } from '../../utils'
 import { APP_CONFIG } from '../../config/appConfig'
-import { USER_CONSTANTS } from '../../constants/userConstants'
-import { EVENT_CONSTANTS } from '../../constants/appArchitectureConstants'
+import { APP_CONSTANTS, MESSAGE_CONSTANTS, EVENT_CONSTANTS } from '../../constants'
 import { ElMessage } from 'element-plus'
-import { MESSAGE_CONSTANTS } from '../../constants/messages'
 
+/**
+ * 用户信息显示组件
+ * 显示当前用户信息，包括头像、姓名和登出按钮
+ */
 
 // 接收父组件传递的菜单文本
 const props = withDefaults(defineProps<{
-  currentMenuText: string;
+  currentMenuText: string;  // 当前菜单文本
 }>(), {
-  currentMenuText: USER_CONSTANTS.DEFAULT_VALUES.MENU_TEXT
+  currentMenuText: APP_CONSTANTS.USER.DEFAULT_VALUES.MENU_TEXT  // 默认菜单文本
 });
 
-// 定义事件
-const emit = defineEmits([EVENT_CONSTANTS.USER.LOGOUT])
+// 定义组件事件
+const emit = defineEmits([EVENT_CONSTANTS.USER.LOGOUT])  // 用户登出事件
 
 // 计算属性
-const logoutText = computed(() => USER_CONSTANTS.BUTTONS.LOGOUT())
+const logoutText = computed(() => APP_CONSTANTS.USER.BUTTONS.LOGOUT())  // 登出按钮文本
 
-
+// 响应式数据
+const currentTime = ref('')  // 当前时间显示
 
 /**
  * 获取用户信息
@@ -52,20 +58,23 @@ const logoutText = computed(() => USER_CONSTANTS.BUTTONS.LOGOUT())
 const userStore = useUserStore()
 
 // 响应式数据
-const currentTime = ref('')
-const userInfo = computed(() => userStore.userInfo)
+const userInfo = computed(() => userStore.userInfo)     // 用户信息计算属性
 
 /**
  * 更新时间函数
- * 格式化当前时间为 YYYY-MM-DD HH:mm:ss 格式
+ * 格式化当前时间为指定格式并更新显示
  */
 const updateTime = () => {
-  currentTime.value = formatDate(new Date(), 'datetime')
+  currentTime.value = formatDate(new Date(), 'datetime')  // 更新当前时间显示
 };
 
+/**
+ * 获取用户信息
+ * 从状态管理中获取用户信息并处理可能的错误
+ */
 const getUserInfo = async () => {
   try {
-    await userStore.fetchUserInfo()
+    await userStore.fetchUserInfo()  // 获取用户信息
     // 错误已在axios拦截器中统一处理
   } catch (error) {
     // 兜底错误处理，防止错误冒泡
@@ -75,19 +84,32 @@ const getUserInfo = async () => {
   }
 };
 
+/**
+ * 处理登出事件
+ * 触发登出事件，由父组件处理具体逻辑
+ */
+const handleLogout = () => {
+  // 触发登出事件
+  emit(EVENT_CONSTANTS.USER.LOGOUT)
+}
 
-// 生命周期：挂载时初始化
+// 组件挂载时的初始化逻辑
 onMounted(() => {
   // 初始化时间和用户信息
-  updateTime()
-  getUserInfo()
-  // 每秒更新时间
+  updateTime()      // 初始化时间显示
+  getUserInfo()     // 获取用户信息
+  
+  // 设置定时器，定期更新时间显示
   const timer = setInterval(updateTime, APP_CONFIG.UI.TIMING.AUTO_UPDATE_INTERVAL)
-  // 卸载时清除定时器
-  onUnmounted(() => clearInterval(timer))
+  
+  // 组件卸载时清理定时器，防止内存泄漏
+  onUnmounted(() => {
+    clearInterval(timer)  // 清除时间更新定时器
+  })
 })
 </script>
 
 <style scoped>
+/* 导入用户信息组件的样式 */
 @import '../../assets/css/user-info.css';
 </style>

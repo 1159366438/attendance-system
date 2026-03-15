@@ -60,10 +60,8 @@ import { ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '../store'
 import UserInfo from '../components/common/UserInfo.vue'
-import { getMenuText, type MenuText, MENU_KEYS} from '../constants/menuConstants'
+import { APP_CONSTANTS, LAYOUT_CONSTANTS, getMenuText, type MenuText, MENU_KEYS } from '../constants'
 import { ElMessage } from 'element-plus'
-import { LAYOUT_CONSTANTS } from '../constants/layoutConstants'
-import { ROUTE_CONSTANTS } from '../constants/routeConstants'
 
 import {
   Document,
@@ -71,6 +69,8 @@ import {
   Location,
   Setting,
 } from '@element-plus/icons-vue'
+
+
 
 const route = useRoute()
 const router = useRouter()
@@ -92,15 +92,15 @@ const navigatorFourText = computed(() => getMenuText(LAYOUT_CONSTANTS.NAVIGATION
 
 // 根据路由路径获取对应的菜单键
 const getMenuKeyByPath = (path: string) => {
-  if (path === ROUTE_CONSTANTS.PATHS.PAGES.PUNCH) return LAYOUT_CONSTANTS.MENU_INDEXES.PUNCH
-  if (path === ROUTE_CONSTANTS.PATHS.PAGES.RECORD) return LAYOUT_CONSTANTS.MENU_INDEXES.RECORD
+  if (path === APP_CONSTANTS.ROUTE.PATHS.PAGES.PUNCH) return LAYOUT_CONSTANTS.MENU_INDEXES.PUNCH
+  if (path === APP_CONSTANTS.ROUTE.PATHS.PAGES.RECORD) return LAYOUT_CONSTANTS.MENU_INDEXES.RECORD
   return LAYOUT_CONSTANTS.MENU_INDEXES.PUNCH // 默认返回打卡页面
 }
 
 // 根据路由路径获取对应的菜单文本
 const getMenuTextByPath = (path: string) => {
-  if (path === ROUTE_CONSTANTS.PATHS.PAGES.PUNCH) return getMenuText(MENU_KEYS.MAIN.TODAY)
-  if (path === ROUTE_CONSTANTS.PATHS.PAGES.RECORD) return getMenuText(MENU_KEYS.MAIN.RECORD)
+  if (path === APP_CONSTANTS.ROUTE.PATHS.PAGES.PUNCH) return getMenuText(MENU_KEYS.MAIN.TODAY)
+  if (path === APP_CONSTANTS.ROUTE.PATHS.PAGES.RECORD) return getMenuText(MENU_KEYS.MAIN.RECORD)
   return getMenuText(MENU_KEYS.MAIN.TODAY) // 默认返回打卡文本
 }
 
@@ -118,9 +118,9 @@ const handleMenuSelect = (key: string) => {
   // console.log('切换到菜单：', key)
   // 根据菜单key跳转到对应路由
   if (key === LAYOUT_CONSTANTS.MENU_INDEXES.PUNCH) {
-    router.push(ROUTE_CONSTANTS.PATHS.PAGES.PUNCH)
+    router.push(APP_CONSTANTS.ROUTE.PATHS.PAGES.PUNCH)
   } else if (key === LAYOUT_CONSTANTS.MENU_INDEXES.RECORD) {
-    router.push(ROUTE_CONSTANTS.PATHS.PAGES.RECORD)
+    router.push(APP_CONSTANTS.ROUTE.PATHS.PAGES.RECORD)
   }
 }
 
@@ -144,7 +144,7 @@ const handleLogout = async () => {
     if (result.success) {
       ElMessage.success(result.message)
       // 跳转到登录页
-      router.push(ROUTE_CONSTANTS.PATHS.AUTH.LOGIN)
+      router.push(APP_CONSTANTS.ROUTE.PATHS.AUTH.LOGIN)
     } else {
       ElMessage.error(result.message)
     }

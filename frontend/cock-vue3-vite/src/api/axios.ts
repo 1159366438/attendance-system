@@ -3,10 +3,8 @@
  */
 import axios from 'axios'
 import { APP_CONFIG } from '../config/appConfig'
-import { STATUS_CODES } from '../constants/statusCodes'
+import { STATUS_CODES, API_ERROR_MESSAGES, MESSAGE_CONSTANTS } from '../constants'
 import { ElMessage } from 'element-plus'
-import { API_ERROR_MESSAGES } from '../constants/apiErrorMessages'
-import { MESSAGE_CONSTANTS } from '../constants/messages'
 
 // 创建 axios 实例
 const service = axios.create({

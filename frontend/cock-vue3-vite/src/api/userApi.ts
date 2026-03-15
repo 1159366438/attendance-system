@@ -1,36 +1,62 @@
+/**
+ * 用户相关API接口封装
+ * 提供与用户管理相关的所有后端接口调用方法
+ */
+
 import service from './axios'
-import { ROUTE_CONSTANTS } from '../constants/routeConstants'
+import { APP_CONSTANTS } from '../constants'
 
 // 用户相关接口封装
 export const userApi = {
-  // 获取用户信息
+  /**
+   * 获取用户信息
+   * @param userId - 可选的用户ID，如果不传则获取当前用户信息
+   * @returns Promise - 包含用户信息的响应
+   */
   getUserInfo: (userId?: number) => {
-    const params = userId ? { userId } : {}
-    return service.get(ROUTE_CONSTANTS.PATHS.API.USER.INFO, { params })
+    const params = userId ? { userId } : {} // 如果提供了userId，则作为参数传递
+    return service.get(APP_CONSTANTS.ROUTE.PATHS.API.USER.INFO, { params })
   },
   
-  // 用户登录
+  /**
+   * 用户登录
+   * @param username - 用户名
+   * @param password - 密码
+   * @returns Promise - 登录结果响应
+   */
   login: (username: string, password: string) => {
-    return service.post(ROUTE_CONSTANTS.PATHS.API.USER.LOGIN, {
-      username,
-      password
+    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.USER.LOGIN, {
+      username,  // 用户名
+      password   // 密码
     })
   },
   
-  // 用户注册
+  /**
+   * 用户注册
+   * @param username - 用户名
+   * @param password - 密码
+   * @param confirmPassword - 确认密码
+   * @param age - 年龄（可选）
+   * @param avatar - 头像（可选）
+   * @param gender - 性别（可选）
+   * @returns Promise - 注册结果响应
+   */
   register: (username: string, password: string, confirmPassword: string, age?: number, avatar?: string, gender?: number) => {
-    return service.post(ROUTE_CONSTANTS.PATHS.API.USER.REGISTER, {
-      username,
-      password,
-      confirmPassword,
-      age,
-      avatar,
-      gender
+    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.USER.REGISTER, {
+      username,        // 用户名
+      password,        // 密码
+      confirmPassword, // 确认密码
+      age,             // 年龄
+      avatar,          // 头像
+      gender           // 性别
     })
   },
   
-  // 用户登出
+  /**
+   * 用户登出
+   * @returns Promise - 登出结果响应
+   */
   logout: () => {
-    return service.post(ROUTE_CONSTANTS.PATHS.API.USER.LOGOUT)
+    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.USER.LOGOUT)
   }
 }

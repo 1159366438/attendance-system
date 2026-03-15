@@ -27,11 +27,9 @@ import { ref, onMounted, computed } from 'vue'
 import { CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { usePunchStore, useUserStore } from '../../store'
 import { formatDate } from '../../utils'
-import { PUNCH_CONSTANTS, PUNCH_CARD_CONSTANTS } from '../../constants/punchConstants'
-import { getMenuText, MENU_KEYS } from '../../constants/menuConstants'
+import { APP_CONSTANTS, getMenuText, MENU_KEYS } from '../../constants'
 import { ElMessage } from 'element-plus'
 import { APP_CONFIG } from '../../config/appConfig'
-import { I18N_FALLBACKS } from '../../constants/i18nFallbacks'
 
 // 响应式数据
 const todayDate = ref('')
@@ -39,10 +37,10 @@ const punchStore = usePunchStore()
 const userStore = useUserStore()
 const isPunched = computed(() => punchStore.isPunched)
 const punchedTime = computed(() => punchStore.punchedTime)
-const todayText = getMenuText(MENU_KEYS.MAIN.TODAY, I18N_FALLBACKS.MENU.TODAY)
-const punchStatusText = computed(() => isPunched.value ? PUNCH_CARD_CONSTANTS.STATUS.PUNCHED() : PUNCH_CARD_CONSTANTS.STATUS.UNPUNCHED())
-const punchButtonText = PUNCH_CARD_CONSTANTS.TEXTS.PUNCH_NOW()
-const alreadyPunchedText = PUNCH_CARD_CONSTANTS.TEXTS.ALREADY_PUNCHED()
+const todayText = getMenuText(MENU_KEYS.MAIN.TODAY, APP_CONSTANTS.I18N_FALLBACKS.MENU.TODAY)
+const punchStatusText = computed(() => isPunched.value ? APP_CONSTANTS.PUNCH_CARD.STATUS.PUNCHED() : APP_CONSTANTS.PUNCH_CARD.STATUS.UNPUNCHED())
+const punchButtonText = APP_CONSTANTS.PUNCH_CARD.TEXTS.PUNCH_NOW()
+const alreadyPunchedText = APP_CONSTANTS.PUNCH_CARD.TEXTS.ALREADY_PUNCHED()
 
 // 格式化今日日期
 const formatTodayDate = () => {
@@ -56,18 +54,18 @@ const handlePunchIn = async () => {
     await userStore.fetchUserInfo()
   }
   
-  const username = userStore.userInfo.name || PUNCH_CARD_CONSTANTS.MESSAGES.UNKNOWN_USER()
+  const username = userStore.userInfo.name || APP_CONSTANTS.PUNCH_CARD.MESSAGES.UNKNOWN_USER()
   const userId = userStore.userInfo.userId || 1
   try {
     // 调用store中的打卡方法（已封装API调用）
     const success = await punchStore.punchIn(username, userId)
     
     if (success) {
-      ElMessage.success(PUNCH_CONSTANTS.MESSAGES.SUCCESS())
+      ElMessage.success(APP_CONSTANTS.PUNCH.MESSAGES.SUCCESS())
     }
     // 其他错误已在axios拦截器中统一处理
   } catch (error) {
-    ElMessage.error(PUNCH_CONSTANTS.MESSAGES.ERROR())
+    ElMessage.error(APP_CONSTANTS.PUNCH.MESSAGES.ERROR())
     // 开发调试时可以启用日志
     // console.error('打卡失败:', error)
   }

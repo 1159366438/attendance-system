@@ -41,8 +41,8 @@
         <el-form-item prop="age" :label="ageLabel" v-if="showAgeField">
           <el-input-number 
             v-model="registerForm.age" 
-            :min="USER_CONSTANTS.AGE_LIMITS.MIN" 
-            :max="USER_CONSTANTS.AGE_LIMITS.MAX" 
+            :min="APP_CONSTANTS.USER.AGE_LIMITS.MIN" 
+            :max="APP_CONSTANTS.USER.AGE_LIMITS.MAX" 
             :placeholder="agePlaceholder"
             class="full-width"
           />
@@ -70,9 +70,9 @@
         
         <el-form-item prop="gender" :label="genderLabel" v-if="showGenderField">
           <el-radio-group v-model="registerForm.gender">
-            <el-radio :label="USER_CONSTANTS.GENDER.MALE">{{ maleLabel }}</el-radio>
-            <el-radio :label="USER_CONSTANTS.GENDER.FEMALE">{{ femaleLabel }}</el-radio>
-            <el-radio :label="USER_CONSTANTS.GENDER.UNKNOWN">{{ unknownLabel }}</el-radio>
+            <el-radio :value="APP_CONSTANTS.USER.GENDER.MALE">{{ maleLabel }}</el-radio>
+            <el-radio :value="APP_CONSTANTS.USER.GENDER.FEMALE">{{ femaleLabel }}</el-radio>
+            <el-radio :value="APP_CONSTANTS.USER.GENDER.UNKNOWN">{{ unknownLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         
@@ -105,17 +105,9 @@ import { User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../store'
 import { ElMessage } from 'element-plus'
-import { MESSAGE_CONSTANTS } from '../constants/messages'
-import { LOGIN_CONSTANTS } from '../constants/login'
-import { ROUTE_CONSTANTS } from '../constants/routeConstants'
-import { USER_CONSTANTS } from '../constants/userConstants'
-import { STORAGE_VALUES } from '../constants/storageValues'
-import { BOOLEAN_CONSTANTS } from '../constants/booleans'
-import { FORM_VALIDATION_CONSTANTS } from '../constants/formValidation'
+import { APP_CONSTANTS, MESSAGE_CONSTANTS } from '../constants'
 
-// 导入样式文件
-import '../assets/css/login.css'
-import '../assets/css/register.css'
+
 
 // 路由和状态管理
 const router = useRouter()
@@ -128,10 +120,10 @@ const registerForm = reactive({
   confirmPassword: '',
   age: undefined as number | undefined,
   avatar: '',
-  gender: USER_CONSTANTS.GENDER.UNKNOWN as number | undefined,
+  gender: APP_CONSTANTS.USER.GENDER.UNKNOWN as number | undefined,
 })
-const acceptTerms = ref(BOOLEAN_CONSTANTS.FALSE)
-const loading = ref(BOOLEAN_CONSTANTS.FALSE)
+const acceptTerms = ref(APP_CONSTANTS.BOOLEAN.FALSE)
+const loading = ref(APP_CONSTANTS.BOOLEAN.FALSE)
 const registerFormRef = ref()
 
 // 可用头像列表
@@ -144,38 +136,38 @@ const availableAvatars = [
 ]
 
 // 计算属性
-const registerTitle = computed(() => LOGIN_CONSTANTS.TEXTS.REGISTER_TITLE())
-const usernameLabel = computed(() => LOGIN_CONSTANTS.TEXTS.USERNAME_LABEL())
-const passwordLabel = computed(() => LOGIN_CONSTANTS.TEXTS.PASSWORD_LABEL())
-const confirmPasswordLabel = computed(() => LOGIN_CONSTANTS.TEXTS.CONFIRM_PASSWORD_LABEL())
-const ageLabel = computed(() => LOGIN_CONSTANTS.TEXTS.AGE_LABEL())
-const avatarLabel = computed(() => LOGIN_CONSTANTS.TEXTS.AVATAR_LABEL())
-const genderLabel = computed(() => LOGIN_CONSTANTS.TEXTS.GENDER_LABEL())
-const maleLabel = computed(() => LOGIN_CONSTANTS.TEXTS.MALE_LABEL())
-const femaleLabel = computed(() => LOGIN_CONSTANTS.TEXTS.FEMALE_LABEL())
-const unknownLabel = computed(() => LOGIN_CONSTANTS.TEXTS.UNKNOWN_LABEL())
-const usernamePlaceholder = computed(() => LOGIN_CONSTANTS.TEXTS.USERNAME_PLACEHOLDER())
-const passwordPlaceholder = computed(() => LOGIN_CONSTANTS.TEXTS.PASSWORD_PLACEHOLDER())
-const confirmPasswordPlaceholder = computed(() => LOGIN_CONSTANTS.TEXTS.CONFIRM_PASSWORD_PLACEHOLDER())
-const agePlaceholder = computed(() => LOGIN_CONSTANTS.TEXTS.AGE_PLACEHOLDER())
+  const registerTitle = computed(() => APP_CONSTANTS.LOGIN.TEXTS.REGISTER_TITLE())
+  const usernameLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.USERNAME_LABEL())
+  const passwordLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.PASSWORD_LABEL())
+  const confirmPasswordLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.CONFIRM_PASSWORD_LABEL())
+  const ageLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.AGE_LABEL())
+  const avatarLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.AVATAR_LABEL())
+  const genderLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.GENDER_LABEL())
+  const maleLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.MALE_LABEL())
+  const femaleLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.FEMALE_LABEL())
+  const unknownLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.UNKNOWN_LABEL())
+  const usernamePlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.USERNAME_PLACEHOLDER())
+  const passwordPlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.PASSWORD_PLACEHOLDER())
+  const confirmPasswordPlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.CONFIRM_PASSWORD_PLACEHOLDER())
+  const agePlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.AGE_PLACEHOLDER())
 
-const acceptTermsLabel = computed(() => LOGIN_CONSTANTS.TEXTS.ACCEPT_TERMS())
-const registerButtonLabel = computed(() => LOGIN_CONSTANTS.TEXTS.REGISTER_BUTTON())
-const backToLoginLabel = computed(() => LOGIN_CONSTANTS.TEXTS.BACK_TO_LOGIN())
+  const acceptTermsLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.ACCEPT_TERMS())
+  const registerButtonLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.REGISTER_BUTTON())
+  const backToLoginLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.BACK_TO_LOGIN())
 
 // 显示选项
-const showAgeField = computed(() => LOGIN_CONSTANTS.FEATURE_FLAGS.SHOW_AGE_FIELD())
-const showAvatarField = computed(() => LOGIN_CONSTANTS.FEATURE_FLAGS.SHOW_AVATAR_FIELD())
-const showGenderField = computed(() => LOGIN_CONSTANTS.FEATURE_FLAGS.SHOW_GENDER_FIELD())
+const showAgeField = computed(() => APP_CONSTANTS.LOGIN.FEATURE_FLAGS.SHOW_AGE_FIELD())
+const showAvatarField = computed(() => APP_CONSTANTS.LOGIN.FEATURE_FLAGS.SHOW_AVATAR_FIELD())
+const showGenderField = computed(() => APP_CONSTANTS.LOGIN.FEATURE_FLAGS.SHOW_GENDER_FIELD())
 
 // 表单验证规则
 const validateUsername = (_rule: any, value: any, callback: any) => {
   if (!value) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.USERNAME_REQUIRED()))
-  } else if (value.length < USER_CONSTANTS.USERNAME.MIN_LENGTH) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.USERNAME_TOO_SHORT()))
-  } else if (value.length > USER_CONSTANTS.USERNAME.MAX_LENGTH) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.USERNAME_TOO_LONG()))
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.USERNAME_REQUIRED()))
+  } else if (value.length < APP_CONSTANTS.USER.USERNAME.MIN_LENGTH) {
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.USERNAME_TOO_SHORT()))
+  } else if (value.length > APP_CONSTANTS.USER.USERNAME.MAX_LENGTH) {
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.USERNAME_TOO_LONG()))
   } else {
     callback()
   }
@@ -183,9 +175,9 @@ const validateUsername = (_rule: any, value: any, callback: any) => {
 
 const validatePassword = (_rule: any, value: any, callback: any) => {
   if (!value) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.PASSWORD_REQUIRED()))
-  } else if (value.length < USER_CONSTANTS.PASSWORD.MIN_LENGTH) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.PASSWORD_TOO_SHORT()))
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.PASSWORD_REQUIRED()))
+  } else if (value.length < APP_CONSTANTS.USER.PASSWORD.MIN_LENGTH) {
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.PASSWORD_TOO_SHORT()))
   } else {
     callback()
   }
@@ -193,9 +185,9 @@ const validatePassword = (_rule: any, value: any, callback: any) => {
 
 const validateConfirmPassword = (_rule: any, value: any, callback: any) => {
   if (!value) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.CONFIRM_PASSWORD_REQUIRED()))
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.CONFIRM_PASSWORD_REQUIRED()))
   } else if (value !== registerForm.password) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.PASSWORD_MISMATCH()))
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.PASSWORD_MISMATCH()))
   } else {
     callback()
   }
@@ -203,9 +195,9 @@ const validateConfirmPassword = (_rule: any, value: any, callback: any) => {
 
 const validateGender = (_rule: any, value: any, callback: any) => {
   if (value === undefined || value === null) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.GENDER_REQUIRED()))
-  } else if (![USER_CONSTANTS.GENDER.UNKNOWN, USER_CONSTANTS.GENDER.MALE, USER_CONSTANTS.GENDER.FEMALE].includes(value)) {
-    callback(new Error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.GENDER_INVALID()))
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.GENDER_REQUIRED()))
+  } else if (![APP_CONSTANTS.USER.GENDER.UNKNOWN, APP_CONSTANTS.USER.GENDER.MALE, APP_CONSTANTS.USER.GENDER.FEMALE].includes(value)) {
+    callback(new Error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.GENDER_INVALID()))
   } else {
     callback()
   }
@@ -213,20 +205,20 @@ const validateGender = (_rule: any, value: any, callback: any) => {
 
 const registerRules = reactive({
   username: [
-    { validator: validateUsername, trigger: FORM_VALIDATION_CONSTANTS.TRIGGERS.BLUR },
-    { min: USER_CONSTANTS.USERNAME.MIN_LENGTH, max: USER_CONSTANTS.USERNAME.MAX_LENGTH, message: LOGIN_CONSTANTS.VALIDATION_MESSAGES.USERNAME_LENGTH_RANGE(), trigger: FORM_VALIDATION_CONSTANTS.TRIGGERS.CHANGE }
+    { validator: validateUsername, trigger: APP_CONSTANTS.FORM_VALIDATION.TRIGGERS.BLUR },
+    { min: APP_CONSTANTS.USER.USERNAME.MIN_LENGTH, max: APP_CONSTANTS.USER.USERNAME.MAX_LENGTH, message: APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.USERNAME_LENGTH_RANGE(), trigger: APP_CONSTANTS.FORM_VALIDATION.TRIGGERS.CHANGE }
   ],
   password: [
-    { validator: validatePassword, trigger: FORM_VALIDATION_CONSTANTS.TRIGGERS.BLUR }
+    { validator: validatePassword, trigger: APP_CONSTANTS.FORM_VALIDATION.TRIGGERS.BLUR }
   ],
   confirmPassword: [
-    { validator: validateConfirmPassword, trigger: FORM_VALIDATION_CONSTANTS.TRIGGERS.BLUR }
+    { validator: validateConfirmPassword, trigger: APP_CONSTANTS.FORM_VALIDATION.TRIGGERS.BLUR }
   ],
   age: [
-    { type: USER_CONSTANTS.FORM_TYPES.NUMBER, min: USER_CONSTANTS.AGE_LIMITS.MIN, max: USER_CONSTANTS.AGE_LIMITS.MAX, message: LOGIN_CONSTANTS.VALIDATION_MESSAGES.AGE_RANGE(), trigger: FORM_VALIDATION_CONSTANTS.TRIGGERS.CHANGE }
+    { type: APP_CONSTANTS.USER.FORM_TYPES.NUMBER, min: APP_CONSTANTS.USER.AGE_LIMITS.MIN, max: APP_CONSTANTS.USER.AGE_LIMITS.MAX, message: APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.AGE_RANGE(), trigger: APP_CONSTANTS.FORM_VALIDATION.TRIGGERS.CHANGE }
   ],
   gender: [
-    { validator: validateGender, trigger: FORM_VALIDATION_CONSTANTS.TRIGGERS.CHANGE }
+    { validator: validateGender, trigger: APP_CONSTANTS.FORM_VALIDATION.TRIGGERS.CHANGE }
   ]
 })
 
@@ -235,13 +227,13 @@ const handleRegister = async () => {
   try {
     // 检查是否同意条款
     if (!acceptTerms.value) {
-      ElMessage.warning(LOGIN_CONSTANTS.VALIDATION_MESSAGES.TERMS_NOT_ACCEPTED())
+      ElMessage.warning(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.TERMS_NOT_ACCEPTED())
       return
     }
     
     // 表单验证
     await registerFormRef.value.validate()
-    loading.value = BOOLEAN_CONSTANTS.TRUE
+    loading.value = APP_CONSTANTS.BOOLEAN.TRUE
     
     // 调用用户存储的注册方法
     const result = await userStore.register(
@@ -257,18 +249,18 @@ const handleRegister = async () => {
       ElMessage.success(MESSAGE_CONSTANTS.USER_INFO.REGISTER_SUCCESS())
       
       // 设置认证状态
-      localStorage.setItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN, STORAGE_VALUES.AUTH_STATUS.LOGGED_IN)
+      localStorage.setItem(APP_CONSTANTS.USER.STORAGE_KEYS.IS_LOGGED_IN, APP_CONSTANTS.STORAGE.AUTH_STATUS.LOGGED_IN)
       
       // 注册成功后跳转到登录页，让用户登录
-      router.push({ path: ROUTE_CONSTANTS.PATHS.AUTH.LOGIN })
+      router.push({ path: APP_CONSTANTS.ROUTE.PATHS.AUTH.LOGIN })
     } else {
-      ElMessage.error(result.message || LOGIN_CONSTANTS.VALIDATION_MESSAGES.REGISTRATION_FAILED())
+      ElMessage.error(result.message || APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.REGISTRATION_FAILED())
     }
   } catch (error) {
     console.error('Registration error:', error)
-    ElMessage.error(LOGIN_CONSTANTS.VALIDATION_MESSAGES.VALIDATION_FAILED())
+    ElMessage.error(APP_CONSTANTS.LOGIN.VALIDATION_MESSAGES.VALIDATION_FAILED())
   } finally {
-    loading.value = BOOLEAN_CONSTANTS.FALSE
+    loading.value = APP_CONSTANTS.BOOLEAN.FALSE
   }
 }
 
@@ -285,6 +277,11 @@ const getAvatarUrl = (avatar: string) => {
 
 // 返回登录页面
 const handleBackToLogin = () => {
-  router.push({ path: ROUTE_CONSTANTS.PATHS.AUTH.LOGIN })
+  router.push({ path: APP_CONSTANTS.ROUTE.PATHS.AUTH.LOGIN })
 }
 </script>
+
+<style scoped>
+@import '../assets/css/login.css';
+@import '../assets/css/register.css';
+</style>

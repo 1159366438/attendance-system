@@ -4,28 +4,24 @@
 import { defineStore } from 'pinia'
 import { punchApi } from '../../api/punchApi'
 import type { PunchRecord } from '../../types'
-import { PUNCH_STORE_CONSTANTS, PUNCH_CONSTANTS } from '../../constants/punchConstants'
-import { TABLE_CONSTANTS } from '../../constants/table'
-import { BOOLEAN_CONSTANTS } from '../../constants/booleans'
-import { STORE_NAMES } from '../../constants/appArchitectureConstants'
-import { STATUS_CODES } from '../../constants/statusCodes'
-import { USER_CONSTANTS } from '../../constants/userConstants'
-import { MESSAGE_CONSTANTS } from '../../constants/messages'
+
+
+import { STATUS_CODES, MESSAGE_CONSTANTS, STORE_NAMES, APP_CONSTANTS } from '../../constants'
 
 
 export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
   state: () => ({
-    isPunched: PUNCH_STORE_CONSTANTS.INITIAL_STATE.IS_PUNCHED,
-    punchedTime: PUNCH_STORE_CONSTANTS.INITIAL_STATE.PUNCHED_TIME,
+    isPunched: APP_CONSTANTS.PUNCH_STORE.INITIAL_STATE.IS_PUNCHED,
+    punchedTime: APP_CONSTANTS.PUNCH_STORE.INITIAL_STATE.PUNCHED_TIME,
     pagination: {
       records: [] as PunchRecord[],
-      total: PUNCH_STORE_CONSTANTS.PAGINATION.TOTAL,
-      page: PUNCH_STORE_CONSTANTS.PAGINATION.PAGE,
-      size: TABLE_CONSTANTS.PAGINATION.DEFAULT_SIZE,
-      pages: PUNCH_STORE_CONSTANTS.PAGINATION.PAGES
+      total: APP_CONSTANTS.PUNCH_STORE.PAGINATION.TOTAL,
+      page: APP_CONSTANTS.PUNCH_STORE.PAGINATION.PAGE,
+      size: APP_CONSTANTS.TABLE.PAGINATION.DEFAULT_SIZE,
+      pages: APP_CONSTANTS.PUNCH_STORE.PAGINATION.PAGES
     },
-    loading: PUNCH_STORE_CONSTANTS.INITIAL_STATE.LOADING,
-    error: PUNCH_STORE_CONSTANTS.INITIAL_STATE.ERROR
+    loading: APP_CONSTANTS.PUNCH_STORE.INITIAL_STATE.LOADING,
+    error: APP_CONSTANTS.PUNCH_STORE.INITIAL_STATE.ERROR
   }),
   
   getters: {
@@ -40,7 +36,7 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
   
   actions: {
     async punchIn(username: string, userId: string | number) {
-      this.loading = BOOLEAN_CONSTANTS.TRUE
+      this.loading = APP_CONSTANTS.BOOLEAN.TRUE
       this.error = ''
       try {
         // 准备打卡数据
@@ -63,19 +59,19 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
              case STATUS_CODES.BUSINESS.AUTH_FAILED:
              case 401:
                // 认证失败
-               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
-               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+               localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.IS_LOGGED_IN)
+               localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.AUTH_TOKEN)
                throw new Error(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED())
                
              case STATUS_CODES.BUSINESS.PERMISSION_DENIED:
              case 403:
                // 权限不足
-               throw new Error(PUNCH_CONSTANTS.MESSAGES.FAILED())
+               throw new Error(APP_CONSTANTS.PUNCH.MESSAGES.FAILED())
                
              case STATUS_CODES.BUSINESS.RESOURCE_NOT_FOUND:
              case 404:
                // 用户不存在
-               throw new Error(PUNCH_CONSTANTS.MESSAGES.INVALID_USER())
+               throw new Error(APP_CONSTANTS.PUNCH.MESSAGES.INVALID_USER())
                
              case STATUS_CODES.BUSINESS.SERVER_ERROR:
              case 500:
@@ -84,30 +80,30 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
                
              default:
                // 其他业务错误
-               throw new Error(res.data.msg || res.data.message || PUNCH_CONSTANTS.MESSAGES.ERROR())
+               throw new Error(res.data.msg || res.data.message || APP_CONSTANTS.PUNCH.MESSAGES.ERROR())
            }
          }
         
         // 打卡成功后更新本地状态
-        this.isPunched = BOOLEAN_CONSTANTS.TRUE
+        this.isPunched = APP_CONSTANTS.BOOLEAN.TRUE
         const now = new Date()
         this.punchedTime = now.toLocaleTimeString('zh-CN', {
           hour: '2-digit',
           minute: '2-digit',
           second: '2-digit'
         })
-        return BOOLEAN_CONSTANTS.TRUE
+        return APP_CONSTANTS.BOOLEAN.TRUE
       } catch (error: any) {
-        this.error = error.message || PUNCH_CONSTANTS.MESSAGES.ERROR()
+        this.error = error.message || APP_CONSTANTS.PUNCH.MESSAGES.ERROR()
         // 错误已在axios拦截器中统一处理
-        return BOOLEAN_CONSTANTS.FALSE
+        return APP_CONSTANTS.BOOLEAN.FALSE
       } finally {
-        this.loading = BOOLEAN_CONSTANTS.FALSE
+        this.loading = APP_CONSTANTS.BOOLEAN.FALSE
       }
     },
     
-    async fetchPunchRecords(userId: string | number = PUNCH_STORE_CONSTANTS.DEFAULT_PARAMS.USER_ID, page: number = PUNCH_STORE_CONSTANTS.DEFAULT_PARAMS.PAGE, size: number = TABLE_CONSTANTS.PAGINATION.DEFAULT_SIZE) {
-      this.loading = BOOLEAN_CONSTANTS.TRUE
+    async fetchPunchRecords(userId: string | number = APP_CONSTANTS.PUNCH_STORE.DEFAULT_PARAMS.USER_ID, page: number = APP_CONSTANTS.PUNCH_STORE.DEFAULT_PARAMS.PAGE, size: number = APP_CONSTANTS.TABLE.PAGINATION.DEFAULT_SIZE) {
+      this.loading = APP_CONSTANTS.BOOLEAN.TRUE
       this.error = ''
       try {
         const res = await punchApi.getPunchRecords({ userId, page, size })
@@ -125,19 +121,19 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
              case STATUS_CODES.BUSINESS.AUTH_FAILED:
              case 401:
                // 认证失败
-               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
-               localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+               localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.IS_LOGGED_IN)
+               localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.AUTH_TOKEN)
                throw new Error(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED())
                
              case STATUS_CODES.BUSINESS.PERMISSION_DENIED:
              case 403:
                // 权限不足
-               throw new Error(PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR())
+               throw new Error(APP_CONSTANTS.PUNCH.MESSAGES.FETCH_RECORDS_ERROR())
                
              case STATUS_CODES.BUSINESS.RESOURCE_NOT_FOUND:
              case 404:
                // 用户不存在
-               throw new Error(PUNCH_CONSTANTS.MESSAGES.INVALID_USER())
+               throw new Error(APP_CONSTANTS.PUNCH.MESSAGES.INVALID_USER())
                
              case STATUS_CODES.BUSINESS.SERVER_ERROR:
              case 500:
@@ -146,7 +142,7 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
                
              default:
                // 其他业务错误
-               throw new Error(res.data.msg || res.data.message || PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR())
+               throw new Error(res.data.msg || res.data.message || APP_CONSTANTS.PUNCH.MESSAGES.FETCH_RECORDS_ERROR())
            }
          }
         
@@ -155,28 +151,28 @@ export const usePunchStore = defineStore(STORE_NAMES.PUNCH, {
           const responseData = res.data.data;
           this.pagination = {
             records: responseData.records || [],
-            total: responseData.total || PUNCH_STORE_CONSTANTS.FALLBACK_VALUES.TOTAL,
-            page: responseData.page || PUNCH_STORE_CONSTANTS.FALLBACK_VALUES.PAGE,
-            size: responseData.size || TABLE_CONSTANTS.PAGINATION.DEFAULT_SIZE,
-            pages: responseData.pages || PUNCH_STORE_CONSTANTS.FALLBACK_VALUES.PAGES
+            total: responseData.total || APP_CONSTANTS.PUNCH_STORE.FALLBACK_VALUES.TOTAL,
+            page: responseData.page || APP_CONSTANTS.PUNCH_STORE.FALLBACK_VALUES.PAGE,
+            size: responseData.size || APP_CONSTANTS.TABLE.PAGINATION.DEFAULT_SIZE,
+            pages: responseData.pages || APP_CONSTANTS.PUNCH_STORE.FALLBACK_VALUES.PAGES
           };
         } else {
           // 如果没有返回数据，使用默认值
           this.pagination = {
             records: [],
-            total: PUNCH_STORE_CONSTANTS.FALLBACK_VALUES.TOTAL,
-            page: PUNCH_STORE_CONSTANTS.FALLBACK_VALUES.PAGE,
-            size: TABLE_CONSTANTS.PAGINATION.DEFAULT_SIZE,
-            pages: PUNCH_STORE_CONSTANTS.FALLBACK_VALUES.PAGES
+            total: APP_CONSTANTS.PUNCH_STORE.FALLBACK_VALUES.TOTAL,
+            page: APP_CONSTANTS.PUNCH_STORE.FALLBACK_VALUES.PAGE,
+            size: APP_CONSTANTS.TABLE.PAGINATION.DEFAULT_SIZE,
+            pages: APP_CONSTANTS.PUNCH_STORE.FALLBACK_VALUES.PAGES
           };
         }
-        return BOOLEAN_CONSTANTS.TRUE; // 成功返回 true
+        return APP_CONSTANTS.BOOLEAN.TRUE; // 成功返回 true
       } catch (error: any) {
-        this.error = error.message || PUNCH_CONSTANTS.MESSAGES.FETCH_RECORDS_ERROR()
+        this.error = error.message || APP_CONSTANTS.PUNCH.MESSAGES.FETCH_RECORDS_ERROR()
         // 错误已在axios拦截器中统一处理
-        return BOOLEAN_CONSTANTS.FALSE; // 异常返回 false
+        return APP_CONSTANTS.BOOLEAN.FALSE; // 异常返回 false
       } finally {
-        this.loading = BOOLEAN_CONSTANTS.FALSE
+        this.loading = APP_CONSTANTS.BOOLEAN.FALSE
       }
     }
   }

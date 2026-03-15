@@ -1,36 +1,40 @@
 /**
  * 用户状态管理
+ * 管理用户相关的全局状态，包括用户信息、认证状态等
  */
 import { defineStore } from 'pinia'
 import { userApi } from '../../api/userApi'
 import type { UserInfo } from '../../types'
-import { USER_CONSTANTS } from '../../constants/userConstants'
-import { STATUS_CODES } from '../../constants/statusCodes'
-
-import { BOOLEAN_CONSTANTS } from '../../constants/booleans'
-import { MESSAGE_CONSTANTS } from '../../constants/messages'
-import { STORE_NAMES } from '../../constants/appArchitectureConstants'
+import { APP_CONSTANTS, STATUS_CODES, MESSAGE_CONSTANTS, STORE_NAMES } from '../../constants'
 // import { t } from '../../locales'  // 移除未使用的导入
 
 export const useUserStore = defineStore(STORE_NAMES.USER, {
+  // 定义用户状态
   state: () => ({
     userInfo: {
-      name: '',
-      avatar: '',
-      userId: USER_CONSTANTS.DEFAULT_VALUES.USER_ID // 默认用户ID
+      name: '',                                    // 用户名
+      avatar: '',                                  // 用户头像
+      userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID // 默认用户ID
     } as UserInfo,
-    loading: BOOLEAN_CONSTANTS.FALSE,
-    error: ''
+    loading: APP_CONSTANTS.BOOLEAN.FALSE,          // 加载状态
+    error: ''                                      // 错误信息
   }),
   
+  // 定义计算属性
   getters: {
+    // 检查用户是否已登录
     isLoggedIn: (state) => !!state.userInfo.name
   },
   
+  // 定义状态修改方法
   actions: {
+    /**
+     * 异步获取用户信息
+     * 从后端API获取当前用户的信息并更新本地状态
+     */
     async fetchUserInfo() {
-      this.loading = BOOLEAN_CONSTANTS.TRUE
-      this.error = ''
+      this.loading = APP_CONSTANTS.BOOLEAN.TRUE    // 设置加载状态为true
+      this.error = ''                             // 清空之前的错误信息
       try {
         const res = await userApi.getUserInfo(Number(this.userInfo.userId))
         // 开发调试时可以启用日志
@@ -48,8 +52,8 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
             case STATUS_CODES.BUSINESS.AUTH_FAILED:
             case 401:
               // 认证失败，可能token过期
-              localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
-              localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+              localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.IS_LOGGED_IN)
+              localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.AUTH_TOKEN)
               throw new Error(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED())
               
             case STATUS_CODES.BUSINESS.SERVER_ERROR:
@@ -67,19 +71,19 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
           // 后端返回的数据包装在data.data中
           const userData = res.data.data;
           this.userInfo.name = userData.username
-          this.userInfo.userId = userData.id || USER_CONSTANTS.DEFAULT_VALUES.USER_ID
+          this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
           this.userInfo.avatar = userData.avatar || '' // 如果有头像字段
         }
       } catch (error: any) {
         // 错误已在axios拦截器中统一处理
         this.error = error.message || MESSAGE_CONSTANTS.USER_INFO.FETCH_FAILED()
       } finally {
-        this.loading = BOOLEAN_CONSTANTS.FALSE
+        this.loading = APP_CONSTANTS.BOOLEAN.FALSE
       }
     },
     
     async login(username: string, password: string) {
-      this.loading = BOOLEAN_CONSTANTS.TRUE
+      this.loading = APP_CONSTANTS.BOOLEAN.TRUE
       this.error = ''
       try {
         // 调用真实的登录API
@@ -114,14 +118,14 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         if (res.data && res.data.data) {
           const userData = res.data.data.user || res.data.data
           this.userInfo.name = userData.username
-          this.userInfo.userId = userData.id || USER_CONSTANTS.DEFAULT_VALUES.USER_ID
+          this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
         } else {
           this.userInfo.name = username
-          this.userInfo.userId = USER_CONSTANTS.DEFAULT_VALUES.USER_ID
+          this.userInfo.userId = APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
         }
         
         return {
-          success: BOOLEAN_CONSTANTS.TRUE,
+          success: APP_CONSTANTS.BOOLEAN.TRUE,
           message: MESSAGE_CONSTANTS.USER_INFO.LOGIN_SUCCESS(),
           data: { username, userId: this.userInfo.userId }
         }
@@ -129,22 +133,22 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         // 检查是否是认证失败错误
         if (error.message && (error.message.includes(MESSAGE_CONSTANTS.USER_INFO.INVALID_CREDENTIALS()) || error.message.includes(MESSAGE_CONSTANTS.USER_INFO.AUTH_FAILED()))) {
           // 清除可能存在的无效认证信息
-          localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
-          localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+          localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.IS_LOGGED_IN)
+          localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.AUTH_TOKEN)
         }
         
         return {
-          success: BOOLEAN_CONSTANTS.FALSE,
+          success: APP_CONSTANTS.BOOLEAN.FALSE,
           message: error.message || MESSAGE_CONSTANTS.USER_INFO.LOGIN_FAILED(),
           error
         }
       } finally {
-        this.loading = BOOLEAN_CONSTANTS.FALSE
+        this.loading = APP_CONSTANTS.BOOLEAN.FALSE
       }
     },
     
     async register(username: string, password: string, confirmPassword: string, age?: number, avatar?: string, gender?: number) {
-      this.loading = BOOLEAN_CONSTANTS.TRUE
+      this.loading = APP_CONSTANTS.BOOLEAN.TRUE
       this.error = ''
       try {
         // 调用真实的注册API
@@ -179,23 +183,23 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         if (res.data && res.data.data) {
           const userData = res.data.data
           this.userInfo.name = userData.username
-          this.userInfo.userId = userData.id || USER_CONSTANTS.DEFAULT_VALUES.USER_ID
+          this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
           this.userInfo.avatar = userData.avatar || ''
         }
         
         return {
-          success: BOOLEAN_CONSTANTS.TRUE,
+          success: APP_CONSTANTS.BOOLEAN.TRUE,
           message: MESSAGE_CONSTANTS.USER_INFO.REGISTER_SUCCESS(),
           data: { username, userId: this.userInfo.userId }
         }
       } catch (error: any) {
         return {
-          success: BOOLEAN_CONSTANTS.FALSE,
+          success: APP_CONSTANTS.BOOLEAN.FALSE,
           message: error.message || MESSAGE_CONSTANTS.USER_INFO.REGISTER_FAILED(),
           error
         }
       } finally {
-        this.loading = BOOLEAN_CONSTANTS.FALSE
+        this.loading = APP_CONSTANTS.BOOLEAN.FALSE
       }
     },
     
@@ -223,15 +227,15 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         this.userInfo = {
           name: '',
           avatar: '',
-          userId: USER_CONSTANTS.DEFAULT_VALUES.USER_ID
+          userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
         }
         
         // 清除认证状态
-        localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.IS_LOGGED_IN)
+        localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.IS_LOGGED_IN)
         /* // 暂时注释掉token相关功能
-        localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.AUTH_TOKEN)
+        localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.AUTH_TOKEN)
         */
-        localStorage.removeItem(USER_CONSTANTS.STORAGE_KEYS.REMEMBERED_USERNAME)
+        localStorage.removeItem(APP_CONSTANTS.USER.STORAGE_KEYS.REMEMBERED_USERNAME)
         
         return {
           success: true,

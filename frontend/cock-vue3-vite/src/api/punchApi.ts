@@ -1,15 +1,28 @@
+/**
+ * 打卡相关API接口封装
+ * 提供与打卡功能相关的所有后端接口调用方法
+ */
+
 import service from './axios'
-import { ROUTE_CONSTANTS } from '../constants/routeConstants'
+import { APP_CONSTANTS } from '../constants'
 
 // 打卡相关接口封装
 export const punchApi = {
-  // 获取打卡记录
+  /**
+   * 获取打卡记录
+   * @param params - 查询参数，包括用户ID、页码和每页大小
+   * @returns Promise - 包含打卡记录的响应
+   */
   getPunchRecords: (params: { userId: string | number; page?: number; size?: number } = { userId: 1 }) => {
-    return service.get(ROUTE_CONSTANTS.PATHS.API.PUNCH.RECORD, { params })
+    return service.get(APP_CONSTANTS.ROUTE.PATHS.API.PUNCH.RECORD, { params })
   },
   
-  // 打卡接口
+  /**
+   * 打卡接口
+   * @param data - 打卡数据，包括用户名、打卡时间和用户ID
+   * @returns Promise - 打卡结果响应
+   */
   punchIn: (data: { username: string; punchTime: string; userId: string | number }) => {
-    return service.post(ROUTE_CONSTANTS.PATHS.API.PUNCH.IN, data)
+    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.PUNCH.IN, data)
   }
 }
