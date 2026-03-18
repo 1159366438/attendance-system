@@ -1,6 +1,8 @@
 /**
  * 应用全局配置
  * 集中管理所有硬编码值和配置参数
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 export const APP_CONFIG = {

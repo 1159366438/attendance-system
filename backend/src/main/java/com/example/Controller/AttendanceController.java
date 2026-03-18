@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController // 标识为REST接口，返回JSON数据
-@RequestMapping("/api/attendance") // 匹配前端url的前缀 /api/input
+@RequestMapping("/api/attendance") // 匹配前端url的前缀 /api/attendance
 @CrossOrigin // 解决前后端分离的跨域问题（必加，否则前端请求会被拦截）
 @Validated // 开启参数校验
 @Tag(name = "考勤管理", description = "考勤相关的API接口，包括考勤打卡、获取考勤记录等功能")
@@ -57,7 +57,7 @@ public class AttendanceController {
              @ApiResponse(responseCode = "400", description = "用户ID不能为空或参数错误"),
              @ApiResponse(responseCode = "500", description = "获取考勤记录失败")
      })
-     @GetMapping("/record")
+     @GetMapping("/records")
      public ResponseResult<Map<String, Object>> getAttendanceRecords(
              @Parameter(description = "用户ID", required = true) @RequestParam("userId") Integer userId,
              @Parameter(description = "页码，默认为1") @RequestParam(defaultValue = "" + AppConstants.Page.DEFAULT_PAGE_NUM) int page,
@@ -96,7 +96,7 @@ public class AttendanceController {
                @ApiResponse(responseCode = "404", description = "用户不存在"),
                @ApiResponse(responseCode = "500", description = "考勤打卡失败")
        })
-       @PostMapping("/in")
+       @PostMapping("/records")
        public ResponseResult<String> attendanceIn(@RequestBody AttendanceRequest attendanceRequest) {
         logger.info("考勤打卡请求: userId={}", attendanceRequest.getUserId());
 

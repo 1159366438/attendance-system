@@ -69,6 +69,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 部门管理页面
+ * 提供部门增删改查功能
+ * @author Attendance System Team
+ * @since 2026-03-18
+ */
+
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 

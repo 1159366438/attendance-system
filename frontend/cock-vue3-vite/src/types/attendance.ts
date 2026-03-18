@@ -1,5 +1,8 @@
 /**
  * 打卡相关类型定义
+ * 定义考勤打卡相关的类型接口
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 // 打卡记录类型

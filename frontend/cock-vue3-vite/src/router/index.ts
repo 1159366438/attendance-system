@@ -1,3 +1,10 @@
+/**
+ * 路由配置文件
+ * 定义应用的所有路由规则
+ * @author Attendance System Team
+ * @since 2026-03-15
+ */
+
 import { createRouter, createWebHistory } from 'vue-router'
 import AttendancePunchPage from '../pages/home/AttendancePunchPage.vue'
 import AttendanceRecordPage from '../pages/home/AttendanceRecordPage.vue'

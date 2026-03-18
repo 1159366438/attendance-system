@@ -1,5 +1,8 @@
 /**
  * 日期时间工具函数
+ * 提供日期格式化和其他日期相关功能
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 /**

@@ -1,5 +1,8 @@
 /**
  * 国际化资源管理
+ * 管理应用的多语言资源
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 export const zhCN = {

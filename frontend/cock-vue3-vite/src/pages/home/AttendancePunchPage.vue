@@ -5,6 +5,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 考勤打卡页面
+ * 考勤打卡功能入口页面
+ * @author Attendance System Team
+ * @since 2026-03-18
+ */
+
 import AttendancePunchCard from '../../components/page/AttendancePunchCard.vue'
 </script>
 

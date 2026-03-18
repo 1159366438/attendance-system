@@ -102,6 +102,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 组织架构页面
+ * 提供组织架构树形展示、部门员工管理功能
+ * @author Attendance System Team
+ * @since 2026-03-18
+ */
+
 import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { t } from '../locales'

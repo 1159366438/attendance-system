@@ -1,6 +1,8 @@
 /**
  * 存储相关常量
  * 管理应用中使用的存储相关常量值
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 export const STORAGE_VALUES = {

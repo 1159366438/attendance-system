@@ -1,6 +1,8 @@
 /**
  * 表格相关常量
  * 管理表格中使用的各种常量值
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 export const TABLE_CONSTANTS = {

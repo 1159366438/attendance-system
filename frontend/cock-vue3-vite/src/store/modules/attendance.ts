@@ -1,5 +1,8 @@
 /**
- * 考勤状态管理
+ * 考勤状态管理模块
+ * 管理考勤状态、考勤记录、考勤操作等
+ * @author Attendance System Team
+ * @since 2026-03-18
  */
 import { defineStore } from 'pinia'
 import { attendanceApi } from '../../api/attendanceApi'

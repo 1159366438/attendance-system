@@ -1,5 +1,8 @@
 /**
  * Axios 实例配置
+ * 配置API请求实例、拦截器和错误处理
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 import axios from 'axios'
 import { APP_CONFIG } from '../config/appConfig'

@@ -4,6 +4,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 应用根组件
+ * 负责根据路由判断是否显示布局组件
+ * @author Attendance System Team
+ * @since 2026-03-15
+ */
+
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Layout from './layouts/Layout.vue'

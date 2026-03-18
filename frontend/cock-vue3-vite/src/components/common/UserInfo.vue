@@ -33,6 +33,8 @@ import { ElMessage } from 'element-plus'
 /**
  * 用户信息显示组件
  * 显示当前用户信息，包括头像、姓名和登出按钮
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 // 接收父组件传递的菜单文本

@@ -1,3 +1,10 @@
+/**
+ * 应用主入口文件
+ * 初始化Vue应用、Pinia状态管理和路由
+ * @author Attendance System Team
+ * @since 2026-03-15
+ */
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'

@@ -1,5 +1,8 @@
 /**
  * ID生成工具函数
+ * 提供ID生成相关功能
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 /**

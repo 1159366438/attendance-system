@@ -19,19 +19,6 @@ export const userApi = {
   },
   
   /**
-   * 用户登录
-   * @param username - 用户名
-   * @param password - 密码
-   * @returns Promise - 登录结果响应
-   */
-  login: (username: string, password: string) => {
-    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.USER.LOGIN, {
-      username,  // 用户名
-      password   // 密码
-    })
-  },
-  
-  /**
    * 用户注册
    * @param username - 用户名
    * @param password - 密码
@@ -50,13 +37,5 @@ export const userApi = {
       avatar,          // 头像
       gender           // 性别
     })
-  },
-  
-  /**
-   * 用户登出
-   * @returns Promise - 登出结果响应
-   */
-  logout: () => {
-    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.USER.LOGOUT)
   }
 }

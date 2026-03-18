@@ -47,6 +47,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 考勤记录卡片
+ * 展示考勤记录表格和分页功能
+ * @author Attendance System Team
+ * @since 2026-03-18
+ */
+
 import { onMounted, computed, onErrorCaptured, ref } from 'vue'
 import { useAttendanceStore, useUserStore } from '../../store'
 import { formatDate } from '../../utils'

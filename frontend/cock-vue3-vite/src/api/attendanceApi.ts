@@ -14,7 +14,7 @@ export const attendanceApi = {
    * @returns Promise - 包含打卡记录的响应
    */
   getAttendanceRecords: (params: { userId: string | number; page?: number; size?: number } = { userId: 1 }) => {
-    return service.get(APP_CONSTANTS.ROUTE.PATHS.API.ATTENDANCE.RECORD, { params })
+    return service.get(APP_CONSTANTS.ROUTE.PATHS.API.ATTENDANCE.RECORDS, { params })
   },
   
   /**
@@ -23,6 +23,6 @@ export const attendanceApi = {
    * @returns Promise - 考勤打卡结果响应
    */
   attendanceIn: (data: { username: string; attendanceTime: string; userId: string | number }) => {
-    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.ATTENDANCE.IN, data)
+    return service.post(APP_CONSTANTS.ROUTE.PATHS.API.ATTENDANCE.RECORDS, data)
   }
 }

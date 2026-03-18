@@ -1,6 +1,8 @@
 /**
  * 状态码常量
  * 管理API响应和业务操作的状态码常量
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 export const STATUS_CODES = {

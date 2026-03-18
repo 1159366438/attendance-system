@@ -1,6 +1,8 @@
 /**
  * 菜单相关常量
  * 管理菜单中使用的各种常量值，包括键值、文本和工具函数
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 import { t } from '../locales'

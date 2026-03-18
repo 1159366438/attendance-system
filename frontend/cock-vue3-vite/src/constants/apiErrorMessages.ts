@@ -1,6 +1,8 @@
 /**
  * API错误消息常量
  * 管理API响应中使用的各种错误消息文本
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 import { t } from '../locales'

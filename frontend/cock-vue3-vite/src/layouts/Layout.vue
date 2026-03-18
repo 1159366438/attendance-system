@@ -69,6 +69,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 应用布局组件
+ * 提供主界面布局、菜单导航和用户信息显示
+ * @author Attendance System Team
+ * @since 2026-03-15
+ */
+
 import { ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '../store'

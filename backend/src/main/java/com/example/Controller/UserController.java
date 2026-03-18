@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController // 标识为REST接口，返回JSON数据
-@RequestMapping("/api/user") // 匹配前端url的前缀 /api/input
+@RequestMapping("/api") // 匹配前端url的前缀 /api/input
 @CrossOrigin // 解决前后端分离的跨域问题（必加，否则前端请求会被拦截）
 @Validated // 开启参数校验
 @Tag(name = "用户管理", description = "用户相关的API接口，包括登录、注册、获取用户信息等功能")
@@ -59,7 +59,7 @@ public class UserController {
              @ApiResponse(responseCode = "404", description = "用户不存在"),
              @ApiResponse(responseCode = "500", description = "获取用户信息失败")
      })
-     @GetMapping("/info")
+     @GetMapping("/users/me")
      public ResponseResult<User> getUserInfo(@Parameter(description = "用户ID，可选参数") @RequestParam(required = false) Integer userId) {
         logger.info("获取用户信息请求成功，用户ID: {}", userId);
         
@@ -208,7 +208,7 @@ public class UserController {
                  @ApiResponse(responseCode = "400", description = "注册参数错误（用户名已存在、密码不符合要求等）"),
                  @ApiResponse(responseCode = "500", description = "注册失败")
          })
-         @PostMapping("/register")
+         @PostMapping("/users")
         public ResponseResult<User> register(@RequestBody RegisterRequest registerRequest) {
          logger.info("用户注册请求: username={}", registerRequest.getUsername());
          

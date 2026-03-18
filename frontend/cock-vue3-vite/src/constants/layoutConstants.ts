@@ -1,6 +1,8 @@
 /**
  * 布局相关常量
  * 管理应用中使用的布局和菜单相关常量
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 import { t } from '../locales'

@@ -1,6 +1,8 @@
 /**
  * 通用消息常量
  * 存放系统中常用的提示信息
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 import { t } from '../locales'
 

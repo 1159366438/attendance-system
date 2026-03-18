@@ -1,5 +1,8 @@
 /**
  * 性能优化工具函数
+ * 提供防抖、节流等性能优化功能
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 /**

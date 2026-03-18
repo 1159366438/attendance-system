@@ -23,6 +23,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 考勤打卡卡片
+ * 提供考勤打卡功能和状态显示
+ * @author Attendance System Team
+ * @since 2026-03-18
+ */
+
 import { ref, onMounted, computed } from 'vue'
 import { CircleCheck, CircleClose } from '@element-plus/icons-vue'
 import { useAttendanceStore, useUserStore } from '../../store'

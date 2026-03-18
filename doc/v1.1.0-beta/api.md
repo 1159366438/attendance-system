@@ -21,28 +21,53 @@
 ## 接口概览
 
 ### 用户相关接口
-- `GET /api/user/info` - 获取用户信息
-- `POST /api/user/login` - 用户登录
-- `POST /api/user/logout` - 用户登出
-- `POST /api/user/register` - 用户注册
+- `GET /api/users/me` - 获取当前登录用户信息（原 `/api/user/info`）
+- `POST /api/users` - 用户注册（原 `/api/user/register`）
+- `POST /api/auth/login` - 用户登录（原 `/api/user/login`）
+- `POST /api/auth/logout` - 用户登出（原 `/api/user/logout`）
 
 ### 打卡相关接口
-- `GET /api/attendance/record` - 获取打卡记录（分页）
-- `POST /api/attendance/in` - 上班打卡
+- `GET /api/attendance/records` - 获取打卡记录（分页，原 `/api/attendance/record`）
+- `POST /api/attendance/records` - 打卡（原 `/api/attendance/in`）
 
 ### 部门管理接口
-- `GET /api/department/list` - 获取部门列表
-- `POST /api/department/create` - 创建部门
-- `PUT /api/department/update` - 更新部门信息
-- `DELETE /api/department/delete` - 删除部门
+- `GET /api/departments` - 获取部门列表（原 `/api/department/list`）
+- `POST /api/departments` - 创建部门（原 `/api/department/create`）
+- `PUT /api/departments/{id}` - 更新指定部门（原 `/api/department/update`）
+- `DELETE /api/departments/{id}` - 删除指定部门（原 `/api/department/delete`）
 
 ### 权限管理接口
-- `GET /api/role/list` - 获取角色列表
-- `POST /api/role/assign` - 分配用户角色
-- `POST /api/role/check-permission` - 权限验证
-- `GET /api/role/user-roles` - 获取用户角色
+- `GET /api/roles` - 获取角色列表（原 `/api/role/list`）
+- `GET /api/users/{userId}/roles` - 获取指定用户的角色（原 `/api/role/user-roles`）
+- `POST /api/users/{userId}/roles` - 为用户分配角色（原 `/api/role/assign`）
+- `POST /api/permissions/check` - 权限验证（原 `/api/role/check-permission`）
 
 ---
+
+
+✨ RESTful 风格接口概览
+用户相关接口
+方法	路径	说明
+GET	/api/users/me	获取当前登录用户信息（原 /user/info）
+POST	/api/users	用户注册（原 /user/register）
+POST	/api/auth/login	用户登录（分离到 auth 模块）
+POST	/api/auth/logout	用户登出
+打卡相关接口
+方法	路径	说明
+GET	/api/attendance/records	获取打卡记录（分页，原 /attendance/record）
+POST	/api/attendance/records	打卡（通过请求体区分上班/下班，原 /attendance/in）
+部门管理接口
+方法	路径	说明
+GET	/api/departments	获取部门列表（原 /department/list）
+POST	/api/departments	创建部门（原 /department/create）
+PUT	/api/departments/{id}	更新指定部门（原 /department/update）
+DELETE	/api/departments/{id}	删除指定部门（原 /department/delete）
+权限管理接口
+方法	路径	说明
+GET	/api/roles	获取角色列表（原 /role/list）
+GET	/api/users/{userId}/roles	获取指定用户的角色（原 /role/user-roles）
+POST	/api/users/{userId}/roles	为用户分配角色（原 /role/assign）
+POST	/api/permissions/check	权限验证（原 /role/check-permission，建议用 POST 传递权限标识）
 
 ## 附录
 

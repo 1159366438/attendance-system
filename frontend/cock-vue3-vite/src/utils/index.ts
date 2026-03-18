@@ -1,6 +1,8 @@
 /**
  * 工具函数入口文件
  * 统一导出所有工具函数
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 export * from './date'

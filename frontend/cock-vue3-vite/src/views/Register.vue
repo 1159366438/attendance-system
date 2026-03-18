@@ -100,6 +100,13 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 注册页面
+ * 处理用户注册逻辑，包括表单验证、注册和路由跳转
+ * @author Attendance System Team
+ * @since 2026-03-18
+ */
+
 import { ref, reactive, computed } from 'vue'
 import { User, Lock } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'

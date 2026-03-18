@@ -1,9 +1,12 @@
 /**
- * 用户状态管理
- * 管理用户相关的全局状态，包括用户信息、认证状态等
+ * 用户状态管理模块
+ * 管理用户登录状态、用户信息、权限等
+ * @author Attendance System Team
+ * @since 2026-03-18
  */
 import { defineStore } from 'pinia'
 import { userApi } from '../../api/userApi'
+import { authApi } from '../../api/authApi'
 import type { UserInfo } from '../../types'
 import { APP_CONSTANTS, STATUS_CODES, MESSAGE_CONSTANTS, STORE_NAMES } from '../../constants'
 // import { t } from '../../locales'  // 移除未使用的导入
@@ -87,7 +90,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
       this.error = ''
       try {
         // 调用真实的登录API
-        const res = await userApi.login(username, password)
+        const res = await authApi.login(username, password)
         
         // 检查响应状态
         if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
@@ -206,7 +209,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
     async logout() {
       try {
         // 调用真实的登出API
-        const res = await userApi.logout()
+        const res = await authApi.logout()
         
         // 检查响应状态
         if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {

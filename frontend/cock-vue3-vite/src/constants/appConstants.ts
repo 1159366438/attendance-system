@@ -1,6 +1,8 @@
 /**
  * 应用主要常量
  * 整合应用中使用的主要常量值，减少文件数量，提高可维护性
+ * @author Attendance System Team
+ * @since 2026-03-15
  */
 
 import { t } from '../locales'
@@ -165,14 +167,13 @@ export const APP_CONSTANTS = {
       // API 路由
       API: {
         USER: {
-          INFO: '/user/info',
-          LOGIN: '/user/login',
-          LOGOUT: '/user/logout',
-          REGISTER: '/user/register',
+          INFO: '/users/me',
+          LOGIN: '/auth/login',
+          LOGOUT: '/auth/logout',
+          REGISTER: '/users',
         },
         ATTENDANCE: {
-          RECORD: '/attendance/record',
-          IN: '/attendance/in',
+          RECORDS: '/attendance/records',
         }
       }
     },

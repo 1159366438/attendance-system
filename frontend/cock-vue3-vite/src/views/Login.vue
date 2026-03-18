@@ -62,8 +62,10 @@ import { ElMessage } from 'element-plus'
 import { APP_CONSTANTS, MESSAGE_CONSTANTS } from '../constants'
 
 /**
- * 登录页面组件
+ * 登录页面
  * 处理用户登录逻辑，包括表单验证、认证和路由跳转
+ * @author Attendance System Team
+ * @since 2026-03-18
  */
 
 // 路由和状态管理
