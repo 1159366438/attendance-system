@@ -106,4 +106,56 @@ service.interceptors.response.use(
   }
 )
 
+// 定义错误处理函数
+const handleErrorMessage = (error: any) => {
+  let errorInfo = {
+    type: 'network',
+    code: -1,
+    msg: API_ERROR_MESSAGES.NETWORK.CONNECTION_FAILED(),
+    originalError: error
+  }
+  
+  if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+    // 请求超时
+    errorInfo.msg = API_ERROR_MESSAGES.NETWORK.TIMEOUT()
+    errorInfo.code = -2
+  } else if (error.message.includes('Network Error') || error.code === 'ERR_NETWORK') {
+    // 网络断开、后端服务没启动
+    errorInfo.msg = API_ERROR_MESSAGES.NETWORK.SERVER_UNAVAILABLE()
+    errorInfo.code = -3
+  } else if (error.response) {
+    // 服务器返回了HTTP错误状态码（4xx、5xx）
+    const status = error.response.status
+    errorInfo.code = status
+
+    console.error('服务器返回错误状态码:', status)
+    switch (status) {
+      case 400:
+        errorInfo.msg = API_ERROR_MESSAGES.HTTP.BAD_REQUEST()
+        break
+      case 401:
+        errorInfo.msg = API_ERROR_MESSAGES.HTTP.UNAUTHORIZED()
+        break
+      case 403:
+        errorInfo.msg = API_ERROR_MESSAGES.HTTP.FORBIDDEN()
+        break
+      case 404:
+        errorInfo.msg = API_ERROR_MESSAGES.HTTP.NOT_FOUND()
+        break
+      case 500:
+        errorInfo.msg = API_ERROR_MESSAGES.HTTP.SERVER_ERROR()
+        break
+      default:
+        errorInfo.msg = API_ERROR_MESSAGES.HTTP.DEFAULT_ERROR(status)
+    }
+  } else {
+    // 其他网络错误
+    console.error('网络错误:', error.message || error)
+  }
+  
+  return errorInfo
+}
+
+export { service, handleErrorMessage }
+
 export default service

@@ -21,5 +21,6 @@ CREATE TABLE IF NOT EXISTS `department` (
 INSERT IGNORE INTO `department` (`name`, `description`, `parent_id`, `manager_id`) VALUES
 ('技术部', '负责公司技术研发工作', 0, 1),
 ('人事部', '负责人力资源管理工作', 0, 2),
-('前端组', '负责前端开发工作', 1, 3),
-('后端组', '负责后端开发工作', 1, 4);
+('财务部', '负责公司财务管理工作', 0, NULL),
+('前端组', '负责前端开发工作', 1, 4),
+('后端组', '负责后端开发工作', 1, 7);

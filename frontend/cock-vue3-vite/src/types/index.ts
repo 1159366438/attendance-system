@@ -7,4 +7,5 @@
 
 export * from './user'
 export * from './attendance'
+export * from './department'
 export * from './api'

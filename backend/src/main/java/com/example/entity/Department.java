@@ -29,6 +29,11 @@ public class Department implements Serializable {
      */
     private Integer managerId;
 
+    /**
+     * 父部门ID
+     */
+    private Integer parentId;
+
 
 
     /**
@@ -54,7 +59,7 @@ public class Department implements Serializable {
 
     public static final String COL_MANAGER_ID = "manager_id";
 
-
+    public static final String COL_PARENT_ID = "parent_id";
 
     public static final String COL_CREATE_TIME = "create_time";
 
@@ -118,5 +123,13 @@ public class Department implements Serializable {
 
     public void setIsDeleted(Integer isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

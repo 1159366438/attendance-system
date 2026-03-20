@@ -84,4 +84,12 @@ public interface UserService {
      * @return 用户信息响应
      */
     ResponseResult<User> getUserInfoWithHandling(Integer userId);
+    
+    /**
+     * 根据部门ID获取员工列表
+     *
+     * @param departmentId 部门ID
+     * @return 员工列表
+     */
+    List<User> getUsersByDepartmentId(Integer departmentId);
 }

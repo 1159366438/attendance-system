@@ -1,16 +1,13 @@
-package com.example.entity;
+package com.example.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户实体类
+ * 用户数据传输对象（不包含敏感信息）
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-21
  */
-public class User implements Serializable {
-    private static final long serialVersionUID = 874813741216031059L;
-
+public class UserDTO {
     /**
      * 主键ID
      */
@@ -20,11 +17,6 @@ public class User implements Serializable {
      * 用户名
      */
     private String username;
-
-    /**
-     * 密码
-     */
-    private String password;
 
     /**
      * 年龄
@@ -76,32 +68,26 @@ public class User implements Serializable {
      */
     private String position;
 
-    public static final String COL_ID = "id";
+    // 构造函数
+    public UserDTO() {}
 
-    public static final String COL_USERNAME = "username";
+    // 从User实体构造UserDTO
+    public UserDTO(com.example.entity.User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.age = user.getAge();
+        this.avatar = user.getAvatar();
+        this.gender = user.getGender();
+        this.createTime = user.getCreateTime();
+        this.updateTime = user.getUpdateTime();
+        this.isDeleted = user.getIsDeleted();
+        this.departmentId = user.getDepartmentId();
+        this.email = user.getEmail();
+        this.phone = user.getPhone();
+        this.position = user.getPosition();
+    }
 
-    public static final String COL_PASSWORD = "password";
-
-    public static final String COL_AGE = "age";
-
-    public static final String COL_AVATAR = "avatar";
-
-    public static final String COL_GENDER = "gender";
-
-    public static final String COL_CREATE_TIME = "create_time";
-
-    public static final String COL_UPDATE_TIME = "update_time";
-
-    public static final String COL_IS_DELETED = "is_deleted";
-
-    public static final String COL_DEPARTMENT_ID = "department_id";
-
-    public static final String COL_EMAIL = "email";
-
-    public static final String COL_PHONE = "phone";
-
-    public static final String COL_POSITION = "position";
-
+    // Getter和Setter方法
     public Integer getId() {
         return id;
     }
@@ -116,14 +102,6 @@ public class User implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Integer getAge() {

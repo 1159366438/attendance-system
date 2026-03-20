@@ -114,4 +114,29 @@ public class ErrorCodeConstants {
         public static final int CONFIRM_PASSWORD_MISMATCH_CODE = 400;
         public static final String CONFIRM_PASSWORD_MISMATCH_MSG = "两次输入的密码不一致";
     }
+    
+    /**
+     * 部门管理相关错误码
+     */
+    public static class Department {
+        /** 部门名称不能为空 */
+        public static final int DEPARTMENT_NAME_EMPTY_CODE = 400;
+        public static final String DEPARTMENT_NAME_EMPTY_MSG = "部门名称不能为空";
+        
+        /** 部门不存在 */
+        public static final int DEPARTMENT_NOT_FOUND_CODE = 404;
+        public static final String DEPARTMENT_NOT_FOUND_MSG = "部门不存在";
+        
+        /** 部门操作失败 */
+        public static final int DEPARTMENT_OPERATION_FAILED_CODE = 500;
+        public static final String DEPARTMENT_OPERATION_FAILED_MSG = "部门操作失败";
+        
+        /** 获取部门员工失败 */
+        public static final int DEPARTMENT_GET_EMPLOYEES_FAILED_CODE = 500;
+        public static final String DEPARTMENT_GET_EMPLOYEES_FAILED_MSG = "获取部门员工失败";
+        
+        /** 获取子部门列表失败 */
+        public static final int DEPARTMENT_GET_CHILDREN_FAILED_CODE = 500;
+        public static final String DEPARTMENT_GET_CHILDREN_FAILED_MSG = "获取子部门列表失败";
+    }
 }

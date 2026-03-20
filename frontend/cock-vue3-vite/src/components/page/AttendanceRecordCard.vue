@@ -117,7 +117,7 @@ const formatTimeField = (dateValue: Date | string | undefined): string => {
 const formatUserId = (userId: number | undefined): string => {
   if (typeof userId !== 'number') return '-'
   // 如果需要显示用户名而非ID，可以在这里查询用户信息
-  return `${APP_CONSTANTS.RECORD_CARD.MESSAGES.USER_PREFIX()}${userId}`
+  return APP_CONSTANTS.RECORD_CARD.MESSAGES.USER_PREFIX() + userId
 }
 
 const locationFormatter = (_row: AttendanceRecord, _column: unknown, cellValue: string): string => {

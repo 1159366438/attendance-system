@@ -157,6 +157,8 @@ public class AppConstants {
         public static final String DEPARTMENT_DELETE_SUCCESS_MSG = "部门删除成功";
         public static final String DEPARTMENT_GET_LIST_SUCCESS_MSG = "获取部门列表成功";
         public static final String DEPARTMENT_GET_DETAIL_SUCCESS_MSG = "获取部门详情成功";
+        public static final String DEPARTMENT_GET_EMPLOYEES_SUCCESS_MSG = "获取部门员工成功";
+        public static final String DEPARTMENT_GET_CHILDREN_SUCCESS_MSG = "获取子部门列表成功";
         
         // 错误消息
         public static final String DEPARTMENT_NAME_EMPTY_MSG = "部门名称不能为空";
@@ -166,10 +168,14 @@ public class AppConstants {
         public static final String DEPARTMENT_DELETE_FAILED_MSG = "删除部门失败";
         public static final String DEPARTMENT_GET_LIST_FAILED_MSG = "获取部门列表失败";
         public static final String DEPARTMENT_GET_DETAIL_FAILED_MSG = "获取部门详情失败";
+        public static final String DEPARTMENT_GET_EMPLOYEES_FAILED_MSG = "获取部门员工失败";
+        public static final String DEPARTMENT_GET_CHILDREN_FAILED_MSG = "获取子部门列表失败";
         
         // 错误码
-        public static final int DEPARTMENT_NAME_EMPTY_CODE = 400;
-        public static final int DEPARTMENT_NOT_FOUND_CODE = 404;
-        public static final int DEPARTMENT_OPERATION_FAILED_CODE = 500;
+        public static final int DEPARTMENT_NAME_EMPTY_CODE = ErrorCodeConstants.Department.DEPARTMENT_NAME_EMPTY_CODE;
+        public static final int DEPARTMENT_NOT_FOUND_CODE = ErrorCodeConstants.Department.DEPARTMENT_NOT_FOUND_CODE;
+        public static final int DEPARTMENT_OPERATION_FAILED_CODE = ErrorCodeConstants.Department.DEPARTMENT_OPERATION_FAILED_CODE;
+        public static final int DEPARTMENT_GET_EMPLOYEES_FAILED_CODE = ErrorCodeConstants.Department.DEPARTMENT_GET_EMPLOYEES_FAILED_CODE;
+        public static final int DEPARTMENT_GET_CHILDREN_FAILED_CODE = ErrorCodeConstants.Department.DEPARTMENT_GET_CHILDREN_FAILED_CODE;
     }
 }

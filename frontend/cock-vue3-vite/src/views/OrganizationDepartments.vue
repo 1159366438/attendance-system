@@ -111,9 +111,9 @@
  * @since 2026-03-18
  */
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import departmentApi from '../api/departmentApi'
+import { useDepartmentStore } from '../store/modules/department'
 import { APP_CONSTANTS } from '../constants/appConstants'
 
 // 部门类型定义
@@ -127,9 +127,12 @@ interface Department {
   isDeleted?: number
 }
 
+// 使用部门store
+const departmentStore = useDepartmentStore()
+
 // 响应式数据
-const departments = ref<Department[]>([])
-const loading = ref(false)
+const departments = computed(() => departmentStore.allDepartments)
+const loading = computed(() => departmentStore.isLoading)
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
 const currentDepartment = ref<Partial<Department>>({
@@ -140,24 +143,19 @@ const currentDepartment = ref<Partial<Department>>({
 
 // 加载部门列表
 const loadDepartments = async () => {
-  loading.value = true
   try {
-    // 使用真实API获取部门列表
-    const response = await departmentApi.getDepartments({
+    // 使用store获取部门列表
+    const success = await departmentStore.fetchDepartments({
       page: 1,
       size: 100  // 获取所有部门
     })
     
-    if (response.data?.code === 200) {
-      departments.value = response.data.data?.records || []
-    } else {
-      ElMessage.error(response.data?.msg || APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.LOAD())
+    if (!success) {
+      ElMessage.error(APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.LOAD())
     }
   } catch (error) {
     console.error('获取部门列表失败:', error)
     ElMessage.error(APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.LOAD())
-  } finally {
-    loading.value = false
   }
 }
 
@@ -192,14 +190,14 @@ const deleteDepartment = async (id: number) => {
       }
     )
     
-    // 调用真实API删除部门
-    const response = await departmentApi.deleteDepartment(id)
+    // 调用store删除部门
+    const success = await departmentStore.deleteDepartment(id)
     
-    if (response.data?.code === 200) {
+    if (success) {
       ElMessage.success(APP_CONSTANTS.DEPARTMENT_MANAGEMENT.SUCCESS_MESSAGES.DELETE())
-      loadDepartments() // 重新加载部门列表
+      // loadDepartments() // 由于store已经更新了状态，无需重新加载
     } else {
-      ElMessage.error(response.data?.msg || APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.DELETE())
+      ElMessage.error(APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.DELETE())
     }
   } catch (error) {
     console.error('删除部门失败:', error)
@@ -217,43 +215,42 @@ const saveDepartment = async () => {
   }
   
   try {
-    let response
+    let success: boolean
     
     if (dialogTitle.value === APP_CONSTANTS.DEPARTMENT_MANAGEMENT.DIALOG_TITLES.ADD()) {
-      // 调用真实API创建部门
-      response = await departmentApi.createDepartment({
+      // 调用store创建部门
+      success = await departmentStore.createDepartment({
         name: currentDepartment.value.name,
         description: currentDepartment.value.description,
         managerId: currentDepartment.value.managerId
       })
     } else {
-      // 调用真实API更新部门
+      // 调用store更新部门
       if (!currentDepartment.value.id) {
         ElMessage.error(APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.EMPTY_ID())
         return
       }
       
-      response = await departmentApi.updateDepartment(currentDepartment.value.id, {
+      success = await departmentStore.updateDepartment(currentDepartment.value.id, {
         name: currentDepartment.value.name,
         description: currentDepartment.value.description,
         managerId: currentDepartment.value.managerId
       })
     }
     
-    if (response.data?.code === 200) {
+    if (success) {
       ElMessage.success(
         dialogTitle.value === APP_CONSTANTS.DEPARTMENT_MANAGEMENT.DIALOG_TITLES.ADD() 
           ? APP_CONSTANTS.DEPARTMENT_MANAGEMENT.SUCCESS_MESSAGES.ADD() 
           : APP_CONSTANTS.DEPARTMENT_MANAGEMENT.SUCCESS_MESSAGES.UPDATE()
       )
       dialogVisible.value = false
-      loadDepartments() // 重新加载部门列表
+      // loadDepartments() // 由于store已经更新了状态，无需重新加载
     } else {
       ElMessage.error(
-        response.data?.msg || 
-        (dialogTitle.value === APP_CONSTANTS.DEPARTMENT_MANAGEMENT.DIALOG_TITLES.ADD() 
+        dialogTitle.value === APP_CONSTANTS.DEPARTMENT_MANAGEMENT.DIALOG_TITLES.ADD() 
           ? APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.ADD() 
-          : APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.UPDATE())
+          : APP_CONSTANTS.DEPARTMENT_MANAGEMENT.ERROR_MESSAGES.UPDATE()
       )
     }
   } catch (error) {
@@ -280,4 +277,3 @@ onMounted(() => {
 <style scoped>
 @import '../assets/css/organization-departments.module.css';
 </style>
-

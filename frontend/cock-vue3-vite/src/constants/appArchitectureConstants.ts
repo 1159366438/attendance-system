@@ -14,6 +14,9 @@ export const APP_ARCHITECTURE_CONSTANTS = {
     // 考勤相关Store
     ATTENDANCE: 'attendance',
     
+    // 部门相关Store
+    DEPARTMENT: 'department',
+    
     // 其他业务Store
     OTHER: {
       SETTINGS: 'settings',

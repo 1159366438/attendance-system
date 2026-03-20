@@ -53,5 +53,25 @@ export const MESSAGE_CONSTANTS = {
     SERVER_ERROR: () => t('messages.serverError', '服务器内部错误，请稍后重试'),
     REQUEST_FAILED: () => t('messages.requestFailed', '请求失败'),
     UNKNOWN_ERROR: () => t('messages.unknownError', '未知错误')
+  },
+  
+  // 部门管理相关消息
+  DEPARTMENT: {
+    FETCH_LIST_SUCCESS: () => t('messages.department.fetchListSuccess', '获取部门列表成功'),
+    FETCH_LIST_ERROR: () => t('messages.department.fetchListError', '获取部门列表失败'),
+    FETCH_DETAIL_SUCCESS: () => t('messages.department.fetchDetailSuccess', '获取部门详情成功'),
+    FETCH_DETAIL_ERROR: () => t('messages.department.fetchDetailError', '获取部门详情失败'),
+    CREATE_SUCCESS: () => t('messages.department.createSuccess', '创建部门成功'),
+    CREATE_ERROR: () => t('messages.department.createError', '创建部门失败'),
+    UPDATE_SUCCESS: () => t('messages.department.updateSuccess', '更新部门成功'),
+    UPDATE_ERROR: () => t('messages.department.updateError', '更新部门失败'),
+    DELETE_SUCCESS: () => t('messages.department.deleteSuccess', '删除部门成功'),
+    DELETE_ERROR: () => t('messages.department.deleteError', '删除部门失败'),
+    FETCH_EMPLOYEES_SUCCESS: () => t('messages.department.fetchEmployeesSuccess', '获取部门员工成功'),
+    FETCH_EMPLOYEES_ERROR: () => t('messages.department.fetchEmployeesError', '获取部门员工失败'),
+    FETCH_CHILDREN_SUCCESS: () => t('messages.department.fetchChildrenSuccess', '获取子部门列表成功'),
+    FETCH_CHILDREN_ERROR: () => t('messages.department.fetchChildrenError', '获取子部门列表失败'),
+    NOT_FOUND: () => t('messages.department.notFound', '部门不存在'),
+    PARAM_ERROR: () => t('messages.department.paramError', '部门参数错误')
   }
 }

@@ -27,7 +27,7 @@ public interface DepartmentDao {
     /**
      * 根据条件查询部门
      */
-    List<Department> selectByCondition(@Param("name") String name);
+    List<Department> selectByCondition(@Param("name") String name, @Param("parentId") Integer parentId);
 
     /**
      * 新增部门
@@ -48,4 +48,14 @@ public interface DepartmentDao {
      * 统计部门数量
      */
     int countByCondition(@Param("name") String name);
+    
+    /**
+     * 根据条件统计部门数量
+     */
+    int countByConditionWithParent(@Param("name") String name, @Param("parentId") Integer parentId);
+    
+    /**
+     * 根据父部门ID查询子部门
+     */
+    List<Department> selectByParentId(@Param("parentId") Integer parentId);
 }

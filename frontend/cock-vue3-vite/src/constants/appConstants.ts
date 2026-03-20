@@ -177,10 +177,15 @@ export const APP_CONSTANTS = {
         },
         DEPARTMENT: {
           LIST: '/departments',
+          CHILDREN: '/departments/children',
           DETAIL: '/departments/',
+          DETAIL_BY_ID: (id: number) => `/departments/${id}`,
           CREATE: '/departments',
           UPDATE: '/departments/',
-          DELETE: '/departments/'
+          UPDATE_BY_ID: (id: number) => `/departments/${id}`,
+          DELETE_BY_ID: (id: number) => `/departments/${id}`,
+          EMPLOYEES: '/departments/',
+          EMPLOYEES_BY_ID: (id: number) => `/departments/${id}/employees`
         }
       }
     },
@@ -346,6 +351,7 @@ export const APP_CONSTANTS = {
       BUTTONS: {
         SUBMIT: '提交',
         CANCEL: '取消',
+        CONFIRM: '确认',
         SAVE: '保存',
         DELETE: '删除',
         EDIT: '编辑',
@@ -561,5 +567,106 @@ export const APP_CONSTANTS = {
       ID_COLUMN_WIDTH: '80px',
       ACTIONS_COLUMN_WIDTH: '200px',
     }
+  },
+
+  // 组织架构相关常量
+  ORGANIZATION_CHART: {
+    // 页面标题
+    PAGE_TITLE: () => t('organizationChart.pageTitle', '组织架构'),
+    
+    // 部门树面板
+    DEPT_TREE_PANEL: {
+      WIDTH: '300px',
+      BORDER_COLOR: '#dcdfe6',
+      PADDING: '15px',
+    },
+    
+    // 员工列表面板
+    EMPLOYEE_LIST_PANEL: {
+      BORDER_COLOR: '#dcdfe6',
+      PADDING: '15px',
+    },
+    
+    // 表格列宽
+    TABLE_COLUMNS: {
+      NAME_WIDTH: '150px',
+      EMAIL_WIDTH: '200px',
+      PHONE_WIDTH: '150px',
+      POSITION_WIDTH: '150px',
+      STATUS_WIDTH: '100px',
+      ACTIONS_WIDTH: '200px',
+    },
+    
+    // 按钮文本
+    BUTTONS: {
+      ADD_EMPLOYEE: () => t('organizationChart.addEmployeeButton', '添加员工'),
+      REFRESH: () => t('organizationChart.refreshButton', '刷新'),
+      EDIT: () => t('organizationChart.editButton', '编辑'),
+      DELETE: () => t('organizationChart.deleteButton', '删除'),
+      CONFIRM: () => t('organizationChart.confirmButton', '确认'),
+      CANCEL: () => t('organizationChart.cancelButton', '取消'),
+    },
+    
+    // 表格列标题
+    TABLE_HEADERS: {
+      EMPLOYEE_NAME: () => t('organizationChart.employeeNameHeader', '员工姓名'),
+      EMAIL: () => t('organizationChart.emailHeader', '邮箱'),
+      PHONE: () => t('organizationChart.phoneHeader', '电话'),
+      POSITION: () => t('organizationChart.positionHeader', '职位'),
+      STATUS: () => t('organizationChart.statusHeader', '状态'),
+      ACTIONS: () => t('organizationChart.actionsHeader', '操作'),
+    },
+    
+    // 状态文本
+    STATUS: {
+      ACTIVE: 'active',
+      INACTIVE: 'inactive',
+      ACTIVE_TEXT: () => t('organizationChart.activeStatus', '在职'),
+      INACTIVE_TEXT: () => t('organizationChart.inactiveStatus', '离职'),
+    },
+    
+    // 提示消息
+    MESSAGES: {
+      SELECT_DEPT_PROMPT: () => t('organizationChart.selectDeptPrompt', '请在左侧选择一个部门以查看员工信息'),
+      SELECT_DEPT: () => t('organizationChart.selectDept', '请选择部门'),
+      EMPLOYEES: () => t('organizationChart.employees', '员工列表'),
+      DEPARTMENT_TREE: () => t('organizationChart.departmentTree', '部门树'),
+      SEARCH_DEPARTMENT: () => t('organizationChart.searchDepartment', '搜索部门'),
+      LOAD_DEPT_ERROR: () => t('organizationChart.loadDeptError', '加载部门数据失败'),
+      LOAD_EMPLOYEE_ERROR: () => t('organizationChart.loadEmployeeError', '加载员工数据失败'),
+      DELETE_SUCCESS: () => t('organizationChart.deleteSuccess', '删除成功'),
+      DELETE_EMPLOYEE: () => t('organizationChart.deleteEmployee', '删除员工'),
+      CONFIRM_DELETE: (name: string) => t('organizationChart.confirmDelete', `确认删除员工 "${name}"?`),
+      NOT_IMPLEMENTED: () => t('organizationChart.notImplemented', '功能尚未实现'),
+      EDIT: (name: string) => t('organizationChart.edit', `编辑 ${name}`),
+    },
+    
+    // 样式相关
+    STYLES: {
+      CHART_PADDING: '20px',
+      CONTAINER_GAP: '20px',
+      CONTAINER_HEIGHT_OFFSET: '150px', // 用于计算高度: 100vh - 150px
+      PANEL_BORDER: '1px solid #dcdfe6',
+      PANEL_BORDER_RADIUS: '4px',
+      PANEL_BACKGROUND: '#fff',
+      EMPTY_STATE_COLOR: '#909399',
+      EMPTY_STATE_FONT_SIZE: '16px',
+      EMPTY_STATE_HEIGHT: '300px',
+    },
+    
+    // 响应式断点
+    RESPONSIVE: {
+      MOBILE_BREAKPOINT: '768px',
+      MOBILE_CONTAINER_FLEX_DIRECTION: 'column',
+      MOBILE_CONTAINER_HEIGHT: 'auto',
+      MOBILE_DEPT_TREE_MAX_HEIGHT: '300px',
+    },
+    
+    // 树形控件属性
+    TREE_PROPS: {
+      CHILDREN: 'children',
+      LABEL: 'label',
+      HAS_CHILDREN: 'hasChildren',
+    },
   },
 }

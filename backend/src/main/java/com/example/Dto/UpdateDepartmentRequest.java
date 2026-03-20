@@ -27,6 +27,11 @@ public class UpdateDepartmentRequest {
      */
     private Integer managerId;
 
+    /**
+     * 父部门ID
+     */
+    private Integer parentId;
+
     public Integer getId() {
         return id;
     }
@@ -57,5 +62,13 @@ public class UpdateDepartmentRequest {
 
     public void setManagerId(Integer managerId) {
         this.managerId = managerId;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

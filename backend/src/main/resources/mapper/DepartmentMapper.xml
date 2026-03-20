@@ -6,6 +6,7 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="description" property="description"/>
+        <result column="parent_id" property="parentId"/>
         <result column="manager_id" property="managerId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -13,7 +14,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, name, description, manager_id, create_time, update_time, is_deleted
+        id, name, description, parent_id, manager_id, create_time, update_time, is_deleted
     </sql>
 
     <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -39,6 +40,9 @@
         <if test="name != null and name != ''">
             AND name LIKE CONCAT('%', #{name}, '%')
         </if>
+        <if test="parentId != null">
+            AND parent_id = #{parentId}
+        </if>
         ORDER BY create_time DESC
     </select>
 
@@ -47,6 +51,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
             <if test="description != null">description,</if>
+            <if test="parentId != null">parent_id,</if>
             <if test="managerId != null">manager_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -55,6 +60,7 @@
         <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="description != null">#{description},</if>
+            <if test="parentId != null">#{parentId},</if>
             <if test="managerId != null">#{managerId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -67,6 +73,7 @@
         <set>
             <if test="name != null">name = #{name},</if>
             <if test="description != null">description = #{description},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="managerId != null">manager_id = #{managerId},</if>
             update_time = #{updateTime},
         </set>
@@ -79,12 +86,35 @@
         WHERE id = #{id,jdbcType=INTEGER}
     </update>
 
+    <select id="selectByParentId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM department
+        WHERE is_deleted = 0
+        <if test="parentId != null">
+            AND parent_id = #{parentId}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
     <select id="countByCondition" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM department
         WHERE is_deleted = 0
         <if test="name != null and name != ''">
             AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+    </select>
+
+    <select id="countByConditionWithParent" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM department
+        WHERE is_deleted = 0
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="parentId != null">
+            AND parent_id = #{parentId}
         </if>
     </select>
 </mapper>

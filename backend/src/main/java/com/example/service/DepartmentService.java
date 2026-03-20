@@ -49,8 +49,22 @@ public interface DepartmentService {
     PageResult<Department> getDepartmentList(QueryDepartmentRequest request);
     
     /**
+     * 根据部门ID获取员工列表
+     * @param departmentId 部门ID
+     * @return 员工列表
+     */
+    List<com.example.entity.User> getDepartmentEmployees(Integer departmentId);
+    
+    /**
      * 获取所有部门列表
      * @return 部门列表
      */
     List<Department> getAllDepartments();
+    
+    /**
+     * 获取子部门列表
+     * @param parentId 父部门ID，顶级部门为0或null
+     * @return 子部门列表
+     */
+    List<Department> getChildDepartments(Integer parentId);
 }

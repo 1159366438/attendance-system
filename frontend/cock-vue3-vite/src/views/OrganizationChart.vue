@@ -4,19 +4,23 @@
     <div class="chart-container">
       <!-- 左侧部门树 -->
       <div class="dept-tree-panel">
-        <h3>{{ t('organization.deptTree', '部门结构') }}</h3>
-        <el-input
-          v-model="searchDept"
-          :placeholder="t('organization.searchDept', '搜索部门')"
-          prefix-icon="Search"
-          clearable
-          class="search-input"
-        />
+        <div class="panel-header">
+          <h3>{{ APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.DEPARTMENT_TREE() }}</h3>
+          <el-input
+            v-model="searchDept"
+            :placeholder="APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.SEARCH_DEPARTMENT()"
+            prefix-icon="Search"
+            clearable
+            class="search-input"
+          />
+        </div>
         <el-tree
+          ref="deptTreeRef"
           :data="deptTreeData"
           :props="treeProps"
           node-key="id"
-          :default-expanded-keys="expandedKeys"
+          lazy
+          :load="loadChildNodes"
           :filter-node-method="filterNode"
           @node-click="handleDeptClick"
           class="dept-tree"
@@ -27,13 +31,13 @@
       <!-- 右侧员工列表 -->
       <div class="employee-list-panel">
         <div class="panel-header">
-          <h3>{{ currentDeptName ? `${currentDeptName} - ${t('organization.employees', '员工列表')}` : t('organization.selectDept', '请选择部门') }}</h3>
+          <h3>{{ currentDeptName ? currentDeptName + ' - ' + APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.EMPLOYEES() : APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.SELECT_DEPT() }}</h3>
           <div class="actions">
             <el-button type="primary" @click="addEmployee">
-              {{ t('organization.addEmployee', '添加员工') }}
+              {{ APP_CONSTANTS.ORGANIZATION_CHART.BUTTONS.ADD_EMPLOYEE() }}
             </el-button>
             <el-button @click="refreshEmployees">
-              {{ t('organization.refresh', '刷新') }}
+              {{ APP_CONSTANTS.ORGANIZATION_CHART.BUTTONS.REFRESH() }}
             </el-button>
           </div>
         </div>
@@ -48,53 +52,53 @@
           class="employee-table"
         >
           <el-table-column
-            prop="username"
-            :label="t('organization.employeeName', '员工姓名')"
-            width="150"
-          />
+          prop="username"
+          :label="t('organization.employeeName', '员工姓名')"
+          :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.NAME_WIDTH"
+        />
           <el-table-column
-            prop="email"
-            :label="t('organization.email', '邮箱')"
-            width="200"
-          />
-          <el-table-column
-            prop="phone"
-            :label="t('organization.phone', '电话')"
-            width="150"
-          />
-          <el-table-column
-            prop="position"
-            :label="t('organization.position', '职位')"
-            width="150"
-          />
-          <el-table-column
-            prop="status"
-            :label="t('organization.status', '状态')"
-            width="100"
-          >
-            <template #default="{ row }">
-              <el-tag :type="row.status === 'active' ? 'success' : 'info'">
-                {{ row.status === 'active' ? t('organization.active', '在职') : t('organization.inactive', '离职') }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column
-            :label="t('organization.actions', '操作')"
-            width="200"
-          >
-            <template #default="{ row }">
-              <el-button size="small" @click="editEmployee(row)">
-                {{ t('organization.edit', '编辑') }}
-              </el-button>
-              <el-button size="small" type="danger" @click="deleteEmployee(row)">
-                {{ t('organization.delete', '删除') }}
-              </el-button>
-            </template>
-          </el-table-column>
+          prop="email"
+          :label="t('organization.email', '邮箱')"
+          :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.EMAIL_WIDTH"
+        />
+        <el-table-column
+          prop="phone"
+          :label="t('organization.phone', '电话')"
+          :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.PHONE_WIDTH"
+        />
+        <el-table-column
+          prop="position"
+          :label="t('organization.position', '职位')"
+          :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.POSITION_WIDTH"
+        />
+        <el-table-column
+          prop="status"
+          :label="t('organization.status', '状态')"
+          :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.STATUS_WIDTH"
+        >
+          <template #default="{ row }">
+            <el-tag :type="row.status === APP_CONSTANTS.ORGANIZATION_CHART.STATUS.ACTIVE ? 'success' : 'info'">
+              {{ row.status === APP_CONSTANTS.ORGANIZATION_CHART.STATUS.ACTIVE ? t('organization.active', '在职') : t('organization.inactive', '离职') }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          :label="t('organization.actions', '操作')"
+          :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.ACTIONS_WIDTH"
+        >
+          <template #default="{ row }">
+            <el-button size="small" @click="editEmployee(row)">
+              {{ t('organization.edit', '编辑') }}
+            </el-button>
+            <el-button size="small" type="danger" @click="deleteEmployee(row)">
+              {{ t('organization.delete', '删除') }}
+            </el-button>
+          </template>
+        </el-table-column>
         </el-table>
 
         <div v-else class="empty-state">
-          {{ t('organization.selectDeptPrompt', '请在左侧选择一个部门以查看员工信息') }}
+          {{ APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.SELECT_DEPT_PROMPT() }}
         </div>
       </div>
     </div>
@@ -111,94 +115,82 @@
 
 import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useDepartmentStore } from '../store/modules/department'
 import { t } from '../locales'
 import { APP_CONSTANTS } from '../constants'
+import departmentApi from '../api/departmentApi'
 
-// 模拟部门数据
-const deptTreeData = ref([
-  {
-    id: 1,
-    label: t('organization.company', '公司总部'),
-    children: [
-      {
-        id: 2,
-        label: t('organization.hrDept', '人力资源部'),
-        children: [
-          { id: 5, label: t('organization.recruitmentGroup', '招聘组') },
-          { id: 6, label: t('organization.trainingGroup', '培训组') }
-        ]
-      },
-      {
-        id: 3,
-        label: t('organization.techDept', '技术部'),
-        children: [
-          { id: 7, label: t('organization.frontendGroup', '前端组') },
-          { id: 8, label: t('organization.backendGroup', '后端组') },
-          { id: 9, label: t('organization.qaGroup', '测试组') }
-        ]
-      },
-      {
-        id: 4,
-        label: t('organization.financeDept', '财务部'),
-      }
-    ]
+// 使用部门store
+const departmentStore = useDepartmentStore()
+
+// 部门树数据
+const deptTreeData = ref<any[]>([])
+
+// 初始化部门树 - 只加载顶级部门
+const loadDeptTree = async () => {
+  try {
+    // 只加载顶级部门（parentId为null或0）
+    const departmentsData = await departmentStore.loadDepartmentTree(null)
+    if (departmentsData) {
+      // 添加hasChildren属性以启用懒加载
+      deptTreeData.value = Array.isArray(departmentsData) ? departmentsData.map((dept: any) => ({
+        ...dept,
+        label: dept.name,
+        children: [],
+        hasChildren: true // 表示可能存在子节点，启用懒加载
+      })) : []
+    } else {
+      ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.LOAD_DEPT_ERROR())
+      deptTreeData.value = []
+    }
+  } catch (error: any) {
+    console.error('加载部门数据失败:', error)
+    ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.LOAD_DEPT_ERROR())
+    deptTreeData.value = []
   }
-])
+}
 
-// 模拟员工数据
+
+
+// 员工列表数据（通过API获取）
 const employeeList = ref<any[]>([])
 const currentDeptId = ref<number | null>(null)
 const currentDeptName = ref('')
 const employeeLoading = ref(false)
 const searchDept = ref('')
-const expandedKeys = ref([1])
+const deptTreeRef = ref()
 
 const treeProps = {
-  children: 'children',
-  label: 'label'
+  children: APP_CONSTANTS.ORGANIZATION_CHART.TREE_PROPS.CHILDREN,
+  label: APP_CONSTANTS.ORGANIZATION_CHART.TREE_PROPS.LABEL,
+  hasChildren: APP_CONSTANTS.ORGANIZATION_CHART.TREE_PROPS.HAS_CHILDREN
 }
 
-// 加载员工数据（模拟）
+// 加载员工数据（真实API）
 const loadEmployees = async (deptId: number) => {
   employeeLoading.value = true
   try {
-    // 模拟API调用
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    // 根据部门ID返回不同员工数据
-    const mockEmployees: Record<number, Array<{
-      id: number;
-      username: string;
-      email: string;
-      phone: string;
-      position: string;
-      status: string;
-    }>> = {
-      1: [
-        { id: 1, username: 'admin', email: 'admin@company.com', phone: '13800138001', position: 'Administrator', status: 'active' },
-        { id: 2, username: 'manager', email: 'manager@company.com', phone: '13800138002', position: 'Manager', status: 'active' }
-      ],
-      2: [
-        { id: 3, username: 'hr_zhang', email: 'zhang@hr.com', phone: '13800138003', position: 'HR Specialist', status: 'active' },
-        { id: 4, username: 'hr_li', email: 'li@hr.com', phone: '13800138004', position: 'HR Manager', status: 'active' }
-      ],
-      3: [
-        { id: 5, username: 'dev_wang', email: 'wang@tech.com', phone: '13800138005', position: 'Frontend Dev', status: 'active' },
-        { id: 6, username: 'dev_zhao', email: 'zhao@tech.com', phone: '13800138006', position: 'Backend Dev', status: 'active' },
-        { id: 7, username: 'qa_sun', email: 'sun@tech.com', phone: '13800138007', position: 'QA Engineer', status: 'active' }
-      ],
-      5: [
-        { id: 8, username: 'recruit_chen', email: 'chen@hr.com', phone: '13800138008', position: 'Recruiter', status: 'active' }
-      ],
-      7: [
-        { id: 9, username: 'front_yang', email: 'yang@tech.com', phone: '13800138009', position: 'Senior Frontend', status: 'active' },
-        { id: 10, username: 'front_liu', email: 'liu@tech.com', phone: '13800138010', position: 'Junior Frontend', status: 'active' }
-      ]
+    const response = await departmentApi.getDepartmentEmployees(deptId)
+    // 根据API响应结构处理数据
+    if (response && response.data && response.data.code === 200) {
+      // 对于员工列表，response.data.data就是用户数组
+      const employeesData = response.data.data || [];
+      // 转换用户数据为员工表格所需的格式
+      employeeList.value = Array.isArray(employeesData) ? employeesData.map((user: any) => ({
+        id: user.id,
+        username: user.username,
+        email: user.email || '', // 假设User实体中有email字段，否则使用空字符串
+        phone: user.phone || '', // 假设User实体中有phone字段，否则使用空字符串
+        position: user.position || '', // 假设User实体中有position字段，否则使用空字符串
+        status: user.isDeleted === 1 ? APP_CONSTANTS.ORGANIZATION_CHART.STATUS.INACTIVE : APP_CONSTANTS.ORGANIZATION_CHART.STATUS.ACTIVE  // 根据isDeleted字段判断状态
+      })) : [];
+    } else {
+      ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.LOAD_EMPLOYEE_ERROR())
+      employeeList.value = []
     }
-    
-    employeeList.value = mockEmployees[deptId] ?? []
-  } catch (error) {
-    ElMessage.error(t('organization.loadEmployeeError', '加载员工数据失败'))
+  } catch (error: any) {
+    console.error('加载员工数据失败:', error)
+    ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.LOAD_EMPLOYEE_ERROR())
     employeeList.value = []
   } finally {
     employeeLoading.value = false
@@ -218,6 +210,37 @@ const filterNode = (value: string, data: any) => {
   return data.label.includes(value)
 }
 
+// 懒加载子节点
+const loadChildNodes = (node: any, resolve: any) => {
+  // 如果是根节点或有子节点的节点，加载其子部门
+  if (!node || node.level === 0 || (node.data && node.data.hasChildren)) {
+    departmentStore.loadDepartmentTree(node.data ? node.data.id : null)
+      .then(childDepartments => {
+        if (childDepartments) {
+          // 为子部门添加必要的属性
+          const children = Array.isArray(childDepartments) ? childDepartments.map((dept: any) => ({
+            ...dept,
+            label: dept.name,
+            children: [],
+            hasChildren: true // 如果子部门还可能有子部门，继续标记为true
+          })) : []
+          
+          resolve(children)
+        } else {
+          console.error('加载子部门失败:')
+          resolve([])
+        }
+      })
+      .catch(error => {
+        console.error('加载子部门失败:', error)
+        ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.LOAD_DEPT_ERROR())
+        resolve([])
+      })
+  } else {
+    resolve([])
+  }
+}
+
 // 刷新员工列表
 const refreshEmployees = () => {
   if (currentDeptId.value) {
@@ -227,27 +250,27 @@ const refreshEmployees = () => {
 
 // 添加员工
 const addEmployee = () => {
-  ElMessage.info(t('organization.notImplemented', '功能尚未实现'))
+  ElMessage.info(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.NOT_IMPLEMENTED())
 }
 
 // 编辑员工
 const editEmployee = (row: any) => {
-  ElMessage.info(`${t('organization.edit')} ${row.username}`)
+  ElMessage.info(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.EDIT(row.username))
 }
 
 // 删除员工
 const deleteEmployee = async (row: any) => {
   try {
     await ElMessageBox.confirm(
-      `${t('organization.confirmDelete', '确认删除员工')} "${row.username}"?`,
-      t('organization.deleteEmployee', '删除员工'),
+      APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.CONFIRM_DELETE(row.username),
+      APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.DELETE_EMPLOYEE(),
       {
-        confirmButtonText: t('buttons.confirm', '确认'),
-        cancelButtonText: t('buttons.cancel', '取消'),
+        confirmButtonText: APP_CONSTANTS.ORGANIZATION_CHART.BUTTONS.CONFIRM(),
+        cancelButtonText: APP_CONSTANTS.ORGANIZATION_CHART.BUTTONS.CANCEL(),
         type: 'warning'
       }
     )
-    ElMessage.success(t('organization.deleteSuccess', '删除成功'))
+    ElMessage.success(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.DELETE_SUCCESS())
     // 实际应用中这里会调用API删除员工
     refreshEmployees()
   } catch {
@@ -257,90 +280,18 @@ const deleteEmployee = async (row: any) => {
 
 // 监听搜索框变化
 watch(searchDept, (val) => {
-  // 在实际应用中，这里会调用el-tree的过滤方法
+  // 调用el-tree的过滤方法
+  if (deptTreeRef.value) {
+    deptTreeRef.value.filter(val)
+  }
 })
 
 onMounted(() => {
-  // 初始化时可以加载某个默认部门的数据
+  // 初始化时加载部门树
+  loadDeptTree()
 })
 </script>
 
 <style scoped>
-.organization-chart {
-  padding: 20px;
-}
-
-.chart-container {
-  display: flex;
-  gap: 20px;
-  height: calc(100vh - 150px);
-}
-
-.dept-tree-panel {
-  width: 300px;
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
-  padding: 15px;
-  background-color: #fff;
-  overflow-y: auto;
-}
-
-.dept-tree-panel h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
-.search-input {
-  margin-bottom: 15px;
-}
-
-.dept-tree {
-  max-height: calc(100% - 60px);
-  overflow-y: auto;
-}
-
-.employee-list-panel {
-  flex: 1;
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
-  padding: 15px;
-  background-color: #fff;
-  overflow-y: auto;
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.panel-header h3 {
-  margin: 0;
-}
-
-.employee-table {
-  min-height: 300px;
-}
-
-.empty-state {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-  color: #909399;
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  .chart-container {
-    flex-direction: column;
-    height: auto;
-  }
-  
-  .dept-tree-panel {
-    width: 100%;
-    max-height: 300px;
-  }
-}
+@import '../assets/css/organization-chart.module.css';
 </style>

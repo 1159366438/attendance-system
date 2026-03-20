@@ -1,0 +1,98 @@
+/* 组织架构页面样式 */
+.organization-chart {
+  padding: var(--chart-padding, 20px);
+}
+
+.chart-container {
+  display: flex;
+  gap: var(--container-gap, 20px);
+  height: calc(100vh - var(--container-height-offset, 150px));
+}
+
+.dept-tree-panel {
+  width: var(--dept-panel-width, 300px);
+  border: var(--panel-border, 1px solid #dcdfe6);
+  border-radius: var(--panel-border-radius, 4px);
+  padding: var(--panel-padding, 15px);
+  background-color: var(--panel-background, #fff);
+  overflow-y: auto;
+}
+
+.dept-tree-panel h3 {
+  margin-top: 0;
+  margin-bottom: var(--section-spacing, 15px);
+}
+
+.search-input {
+  margin-bottom: var(--section-spacing, 15px);
+}
+
+.dept-tree {
+  max-height: calc(100% - 60px);
+  overflow-y: auto;
+}
+
+.employee-list-panel {
+  flex: 1;
+  border: var(--panel-border, 1px solid #dcdfe6);
+  border-radius: var(--panel-border-radius, 4px);
+  padding: var(--panel-padding, 15px);
+  background-color: var(--panel-background, #fff);
+  overflow-y: auto;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--section-spacing, 20px);
+}
+
+.panel-header h3 {
+  margin: 0;
+}
+
+.employee-table {
+  min-height: var(--empty-state-height, 300px);
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: var(--empty-state-height, 300px);
+  color: var(--empty-state-color, #909399);
+  font-size: var(--empty-state-font-size, 16px);
+}
+
+@media (max-width: var(--mobile-breakpoint, 768px)) {
+  .chart-container {
+    flex-direction: var(--mobile-flex-direction, column);
+    height: var(--mobile-height, auto);
+  }
+  
+  .dept-tree-panel {
+    width: 100%;
+    max-height: var(--mobile-max-height, 300px);
+  }
+}
+
+/* 定义默认值，但可以通过JavaScript动态设置 */
+:root {
+  --chart-padding: 20px;
+  --container-gap: 20px;
+  --container-height-offset: 150px;
+  --dept-panel-width: 300px;
+  --panel-border: 1px solid #dcdfe6;
+  --panel-border-radius: 4px;
+  --panel-background: #fff;
+  --panel-padding: 15px;
+  --section-spacing: 15px;
+  --empty-state-height: 300px;
+  --empty-state-color: #909399;
+  --empty-state-font-size: 16px;
+  --mobile-breakpoint: 768px;
+  --mobile-flex-direction: column;
+  --mobile-height: auto;
+  --mobile-max-height: 300px;
+}

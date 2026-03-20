@@ -13,48 +13,78 @@
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
         <result property="gender" column="gender" jdbcType="TINYINT"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="departmentId" column="department_id" jdbcType="INTEGER"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <!-- 查询单个 -->
     <select id="queryById" resultMap="BaseResultMap">
         select
-            id, username, password, age, avatar, gender, create_time
+            id, username, password, age, avatar, gender, create_time, update_time, department_id, email, phone, position, is_deleted
         from user
-        where id = #{id}
+        where id = #{id} and is_deleted = 0
     </select>
 
     <!-- 查询所有 -->
     <select id="queryAll" resultMap="BaseResultMap">
         select
-            id, username, password, age, avatar, gender, create_time
+            id, username, password, age, avatar, gender, create_time, update_time, department_id, email, phone, position, is_deleted
         from user
+        where is_deleted = 0
     </select>
 
     <!-- 根据用户名查询 -->
     <select id="queryByUsername" resultMap="BaseResultMap">
         select
-            id, username, password, age, avatar, gender, create_time
+            id, username, password, age, avatar, gender, create_time, update_time, department_id, email, phone, position, is_deleted
         from user
-        where username = #{username}
+        where username = #{username} and is_deleted = 0
     </select>
 
     <!-- 新增 -->
     <insert id="insert" parameterType="com.example.entity.User">
-        insert into user (id, username, password, age, avatar, gender, create_time)
-        values (#{id}, #{username}, #{password}, #{age}, #{avatar}, #{gender}, #{createTime})
+        insert into user (id, username, password, age, avatar, gender, department_id, email, phone, position, is_deleted)
+        values (#{id}, #{username}, #{password}, #{age}, #{avatar}, #{gender}, #{departmentId}, #{email}, #{phone}, #{position}, #{isDeleted})
     </insert>
 
     <!-- 修改 -->
     <update id="update" parameterType="com.example.entity.User">
         update user
-        set username = #{username}, password = #{password}, age = #{age}, avatar = #{avatar}, gender = #{gender}, create_time = #{createTime}
+        set 
+            username = #{username},
+            password = #{password},
+            age = #{age},
+            avatar = #{avatar},
+            gender = #{gender},
+            department_id = #{departmentId},
+            email = #{email},
+            phone = #{phone},
+            position = #{position},
+            is_deleted = #{isDeleted},
+            update_time = CURRENT_TIMESTAMP
         where id = #{id}
     </update>
 
-    <!-- 删除 -->
-    <delete id="deleteById" parameterType="java.lang.Integer">
-        delete from user
+    <!-- 删除（逻辑删除） -->
+    <update id="deleteById" parameterType="java.lang.Integer">
+        update user
+        set 
+            is_deleted = 1,
+            update_time = CURRENT_TIMESTAMP
         where id = #{id}
-    </delete>
+    </update>
+
+    <!-- 根据部门ID查询用户列表 -->
+    <select id="getUsersByDepartmentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+            id, username, password, age, avatar, gender, create_time, update_time, department_id, email, phone, position, is_deleted
+        from user
+        where department_id = #{departmentId} and is_deleted = 0
+        order by create_time desc
+    </select>
 
 </mapper>

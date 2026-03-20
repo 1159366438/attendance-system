@@ -22,6 +22,11 @@ public class QueryDepartmentRequest {
      */
     private Long size;
 
+    /**
+     * 父部门ID
+     */
+    private Integer parentId;
+
     public String getName() {
         return name;
     }
@@ -44,5 +49,13 @@ public class QueryDepartmentRequest {
 
     public void setSize(Long size) {
         this.size = size;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

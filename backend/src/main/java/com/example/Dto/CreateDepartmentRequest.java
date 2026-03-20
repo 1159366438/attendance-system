@@ -22,6 +22,11 @@ public class CreateDepartmentRequest {
      */
     private Integer managerId;
 
+    /**
+     * 父部门ID
+     */
+    private Integer parentId;
+
     public String getName() {
         return name;
     }
@@ -44,5 +49,13 @@ public class CreateDepartmentRequest {
 
     public void setManagerId(Integer managerId) {
         this.managerId = managerId;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

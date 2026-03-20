@@ -10,9 +10,11 @@ import com.example.common.ResponseResult;
 import com.example.dto.CreateDepartmentRequest;
 import com.example.dto.QueryDepartmentRequest;
 import com.example.dto.UpdateDepartmentRequest;
+import com.example.dto.UserDTO;
 import com.example.entity.Department;
 import com.example.service.DepartmentService;
 import com.example.constants.AppConstants;
+import com.example.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/departments")
@@ -213,6 +216,73 @@ public class DepartmentController {
         } catch (Exception e) {
             logger.error("删除部门失败", e);
             return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Department.DEPARTMENT_DELETE_FAILED_MSG + ": " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 根据部门ID获取员工列表
+     * <p>
+     * 该接口用于获取指定部门下的所有员工信息
+     * </p>
+     *
+     * @param id 部门ID
+     * @return 部门员工列表
+     * @since 1.0.0
+     */
+    @Operation(summary = "获取部门员工", description = "根据部门ID获取该部门下的员工列表")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取部门员工成功"),
+            @ApiResponse(responseCode = "404", description = "部门不存在"),
+            @ApiResponse(responseCode = "500", description = "获取部门员工失败")
+    })
+    @GetMapping("/{id}/employees")
+    public ResponseResult<List<UserDTO>> getDepartmentEmployees(@Parameter(description = "部门ID") @PathVariable Integer id) {
+        logger.info("获取部门员工请求: departmentId={}", id);
+
+        try {
+            // 首先检查部门是否存在
+            Department department = departmentService.getDepartmentById(id);
+            if (department == null) {
+                return ResponseResult.error(AppConstants.Department.DEPARTMENT_NOT_FOUND_CODE, AppConstants.Department.DEPARTMENT_NOT_FOUND_MSG);
+            }
+            
+            // 调用服务层获取部门员工
+            List<User> employees = departmentService.getDepartmentEmployees(id);
+            // 转换为DTO，排除敏感信息
+            List<UserDTO> employeeDTOs = employees.stream()
+                .map(UserDTO::new)
+                .collect(java.util.stream.Collectors.toList());
+            return ResponseResult.success(employeeDTOs);
+        } catch (Exception e) {
+            logger.error("获取部门员工失败", e);
+            return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Department.DEPARTMENT_GET_EMPLOYEES_FAILED_MSG + ": " + e.getMessage());
+        }
+    }
+    
+    /**
+     * 获取子部门列表（用于懒加载树形结构）
+     * <p>
+     * 该接口用于获取指定父部门下的子部门列表，支持懒加载树形结构
+     * </p>
+     *
+     * @param parentId 父部门ID，顶级部门为0或null
+     * @return 子部门列表
+     * @since 1.0.0
+     */
+    @Operation(summary = "获取子部门列表", description = "根据父部门ID获取子部门列表，用于懒加载树形结构")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取子部门列表成功")
+    })
+    @GetMapping("/children")
+    public ResponseResult<List<Department>> getChildDepartments(Integer parentId) {
+        logger.info("获取子部门列表请求: parentId={}", parentId);
+
+        try {
+            List<Department> childDepartments = departmentService.getChildDepartments(parentId);
+            return ResponseResult.success(childDepartments);
+        } catch (Exception e) {
+            logger.error("获取子部门列表失败", e);
+            return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Department.DEPARTMENT_GET_CHILDREN_FAILED_MSG + ": " + e.getMessage());
         }
     }
 }

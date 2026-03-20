@@ -8,6 +8,7 @@ package com.example.service.impl;
 
 import com.example.common.ResponseResult;
 import com.example.constants.AppConstants;
+import com.example.constants.DatabaseConstants;
 import com.example.dao.UserDao;
 import com.example.dto.RegisterRequest;
 import com.example.entity.User;
@@ -145,7 +146,7 @@ public class UserServiceImpl implements UserService {
             newUser.setGender(registerRequest.getGender());
         } else {
             // 默认性别值为0（未知）
-            newUser.setGender(0);
+            newUser.setGender(DatabaseConstants.Gender.UNKNOWN);
         }
         
         // 设置创建时间
@@ -192,4 +193,9 @@ public class UserServiceImpl implements UserService {
         return null; // 登录失败
         }
      */
+    
+    @Override
+    public List<User> getUsersByDepartmentId(Integer departmentId) {
+        return userDao.getUsersByDepartmentId(departmentId);
+    }
 }
