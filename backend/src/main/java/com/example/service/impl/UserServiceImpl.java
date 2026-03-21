@@ -11,6 +11,7 @@ import com.example.constants.AppConstants;
 import com.example.constants.DatabaseConstants;
 import com.example.dao.UserDao;
 import com.example.dto.RegisterRequest;
+import com.example.dto.UserDTO;
 import com.example.entity.User;
 import com.example.service.UserService;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseResult<User> getUserInfoWithHandling(Integer userId) {
+    public ResponseResult<UserDTO> getUserInfoWithHandling(Integer userId) {
         try {
             // 如果没有提供userId参数，则默认返回用户ID为1的信息（仅为演示）
             // 在实际应用中，这里应该从认证信息中获取当前登录用户的ID
@@ -96,16 +97,11 @@ public class UserServiceImpl implements UserService {
             User user = queryById(targetUserId);
             
             if (user != null) {
-                // 创建一个新的用户对象，不包含密码字段，以确保安全性
-                User userWithoutPassword = new User();
-                userWithoutPassword.setId(user.getId());
-                userWithoutPassword.setUsername(user.getUsername());
-                userWithoutPassword.setAge(user.getAge());
-                userWithoutPassword.setAvatar(user.getAvatar());
-                userWithoutPassword.setCreateTime(user.getCreateTime());
+                // 使用UserDTO返回用户信息，确保不包含敏感字段
+                UserDTO userDTO = new UserDTO(user);
                 logger.info("成功获取用户信息，用户ID: {}, 用户名: {}, 年龄: {}, 头像: {}",
-                        userWithoutPassword.getId(), userWithoutPassword.getUsername(), userWithoutPassword.getAge(), userWithoutPassword.getAvatar());
-                return ResponseResult.success(userWithoutPassword);
+                        userDTO.getId(), userDTO.getUsername(), userDTO.getAge(), userDTO.getAvatar());
+                return ResponseResult.success(userDTO);
             } else {
                 logger.warn("用户不存在，用户ID: {}", targetUserId);
                 return ResponseResult.error(AppConstants.Error.USER_NOT_EXIST_CODE, AppConstants.Error.USER_NOT_EXIST_MSG);
@@ -197,5 +193,43 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUsersByDepartmentId(Integer departmentId) {
         return userDao.getUsersByDepartmentId(departmentId);
+    }
+    
+    @Override
+    public ResponseResult<UserDTO> updateUserInfo(Integer userId, User updateData) {
+        try {
+            logger.info("更新用户信息请求，用户ID: {}, 更新数据: username={}, age={}, gender={}, avatar={}", 
+                userId, updateData.getUsername(), updateData.getAge(), updateData.getGender(), updateData.getAvatar());
+            
+            // 首先检查用户是否存在
+            User existingUser = userDao.queryById(userId);
+            if (existingUser == null) {
+                logger.warn("尝试更新不存在的用户，用户ID: {}", userId);
+                return ResponseResult.error(AppConstants.Error.USER_NOT_EXIST_CODE, AppConstants.Error.USER_NOT_EXIST_MSG);
+            }
+            
+            // 更新用户信息
+            existingUser.setUsername(updateData.getUsername() != null ? updateData.getUsername() : existingUser.getUsername());
+            existingUser.setAge(updateData.getAge() != null ? updateData.getAge() : existingUser.getAge());
+            existingUser.setGender(updateData.getGender() != null ? updateData.getGender() : existingUser.getGender());
+            existingUser.setAvatar(updateData.getAvatar() != null ? updateData.getAvatar() : existingUser.getAvatar());
+            
+            // 执行更新操作
+            int result = userDao.update(existingUser);
+            
+            if (result > 0) {
+                // 返回更新后的用户信息（不包含密码），使用UserDTO
+                UserDTO updatedUser = new UserDTO(existingUser);
+                
+                logger.info("用户信息更新成功，用户ID: {}", userId);
+                return ResponseResult.success(updatedUser);
+            } else {
+                logger.error("用户信息更新失败，用户ID: {}", userId);
+                return ResponseResult.error(AppConstants.Error.UPDATE_USER_INFO_FAILED_CODE, AppConstants.Error.UPDATE_USER_INFO_FAILED_MSG);
+            }
+        } catch (Exception e) {
+            logger.error("更新用户信息时发生异常，用户ID: {}", userId, e);
+            return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Error.SERVER_ERROR_MSG);
+        }
     }
 }

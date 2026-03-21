@@ -9,6 +9,7 @@ package com.example.controller;
 import com.example.common.ResponseResult;
 import com.example.constants.AppConstants;
 import com.example.dto.RegisterRequest;
+import com.example.dto.UserDTO;
 import com.example.entity.User;
 import com.example.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +49,7 @@ public class UserController {
      * 该接口用于获取用户的个人信息
      * </p>
      *
-     * @return User对象，表示查询到的用户信息
+     * @return UserDTO对象，表示查询到的用户信息（不包含敏感信息）
      * @since 1.0.0
      */
     @Operation(summary = "获取用户信息", description = "根据用户ID获取用户的基本信息")
@@ -57,7 +59,7 @@ public class UserController {
              @ApiResponse(responseCode = "500", description = "获取用户信息失败")
      })
      @GetMapping("/users/me")
-     public ResponseResult<User> getUserInfo(@Parameter(description = "用户ID，可选参数") @RequestParam(required = false) Integer userId) {
+     public ResponseResult<UserDTO> getUserInfo(@Parameter(description = "用户ID，可选参数") @RequestParam(required = false) Integer userId) {
         logger.info("获取用户信息请求成功，用户ID: {}", userId);
         
         // 委托给服务层处理业务逻辑
@@ -145,5 +147,38 @@ public class UserController {
      }
      
      return ResponseResult.success(null);
+ }
+ 
+ /**
+  * 更新用户信息接口
+  * <p>
+  * 该接口用于更新用户的个人信息
+  * </p>
+  *
+  * @param userId 用户ID
+  * @param updateData 更新的数据
+  * @return 标准响应格式，包含更新后的用户信息（不包含敏感信息）
+  * @since 1.2.0
+  */
+ @Operation(summary = "更新用户信息", description = "更新当前登录用户的信息")
+ @ApiResponses({
+         @ApiResponse(responseCode = "200", description = "更新用户信息成功"),
+         @ApiResponse(responseCode = "400", description = "更新参数错误"),
+         @ApiResponse(responseCode = "404", description = "用户不存在"),
+         @ApiResponse(responseCode = "500", description = "更新用户信息失败")
+ })
+ @PutMapping("/users/me")
+ public ResponseResult<UserDTO> updateUserInfo(@RequestParam Integer userId, @RequestBody User updateData) {
+     logger.info("更新用户信息请求: userId={}", userId);
+     
+     try {
+         // 调用更新用户信息业务逻辑
+         ResponseResult<UserDTO> updateResult = userService.updateUserInfo(userId, updateData);
+         
+         return updateResult;
+     } catch (Exception e) {
+         logger.error("更新用户信息失败", e);
+         return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Error.SERVER_ERROR_MSG);
+     }
  }
 }

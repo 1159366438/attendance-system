@@ -49,23 +49,9 @@
         </el-form-item>
         
         <el-form-item prop="avatar" :label="avatarLabel" v-if="showAvatarField">
-          <div class="avatar-selection">
-            <div class="selected-avatar-preview">
-              <img v-if="registerForm.avatar" :src="getAvatarUrl(registerForm.avatar)" :alt="'Selected Avatar'" class="selected-avatar" />
-              <el-icon v-else class="avatar-placeholder">
-                <User />
-              </el-icon>
-            </div>
-            <div class="avatar-options">
-              <span class="avatar-option" 
-                    v-for="(avatar, index) in availableAvatars" 
-                    :key="index"
-                    :class="{ selected: registerForm.avatar === avatar }"
-                    @click="selectAvatar(avatar)">
-                <img :src="getAvatarUrl(avatar)" :alt="`Avatar ${index + 1}`" class="option-avatar" />
-              </span>
-            </div>
-          </div>
+          <AvatarSelector 
+            v-model="registerForm.avatar"
+          />
         </el-form-item>
         
         <el-form-item prop="gender" :label="genderLabel" v-if="showGenderField">
@@ -113,6 +99,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../store'
 import { ElMessage } from 'element-plus'
 import { APP_CONSTANTS, MESSAGE_CONSTANTS } from '../constants'
+import AvatarSelector from '../components/common/AvatarSelector.vue'
 
 
 
@@ -133,15 +120,6 @@ const acceptTerms = ref(APP_CONSTANTS.BOOLEAN.FALSE)
 const loading = ref(APP_CONSTANTS.BOOLEAN.FALSE)
 const registerFormRef = ref()
 
-// 可用头像列表
-const availableAvatars = [
-  'https://ui-avatars.com/api/?name=A&background=0ea5e9&color=fff&size=128',
-  'https://ui-avatars.com/api/?name=B&background=8b5cf6&color=fff&size=128',
-  'https://ui-avatars.com/api/?name=C&background=ec4899&color=fff&size=128',
-  'https://ui-avatars.com/api/?name=D&background=f97316&color=fff&size=128',
-  'https://ui-avatars.com/api/?name=E&background=22c55e&color=fff&size=128'
-]
-
 // 计算属性
   const registerTitle = computed(() => APP_CONSTANTS.LOGIN.TEXTS.REGISTER_TITLE())
   const usernameLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.USERNAME_LABEL())
@@ -157,6 +135,7 @@ const availableAvatars = [
   const passwordPlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.PASSWORD_PLACEHOLDER())
   const confirmPasswordPlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.CONFIRM_PASSWORD_PLACEHOLDER())
   const agePlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.AGE_PLACEHOLDER())
+  const avatarPlaceholder = computed(() => APP_CONSTANTS.LOGIN.TEXTS.AVATAR_PLACEHOLDER())
 
   const acceptTermsLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.ACCEPT_TERMS())
   const registerButtonLabel = computed(() => APP_CONSTANTS.LOGIN.TEXTS.REGISTER_BUTTON())
@@ -271,16 +250,7 @@ const handleRegister = async () => {
   }
 }
 
-// 选择头像
-const selectAvatar = (avatar: string) => {
-  registerForm.avatar = avatar
-}
 
-// 获取头像URL
-const getAvatarUrl = (avatar: string) => {
-  // 直接返回头像URL
-  return avatar
-}
 
 // 返回登录页面
 const handleBackToLogin = () => {

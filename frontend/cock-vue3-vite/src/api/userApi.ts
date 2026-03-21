@@ -19,6 +19,16 @@ export const userApi = {
   },
   
   /**
+   * 更新用户信息
+   * @param userId - 用户ID
+   * @param data - 用户信息更新数据
+   * @returns Promise - 更新结果响应
+   */
+  updateUserInfo: (userId: number, data: { username?: string; age?: number; gender?: number; avatar?: string; email?: string; phone?: string }) => {
+    return service.put(APP_CONSTANTS.ROUTE.PATHS.API.USER.INFO + '?userId=' + userId, data)
+  },
+  
+  /**
    * 用户注册
    * @param username - 用户名
    * @param password - 密码

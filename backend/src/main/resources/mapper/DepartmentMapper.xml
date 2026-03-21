@@ -29,7 +29,7 @@
         <include refid="Base_Column_List"/>
         FROM department
         WHERE is_deleted = 0
-        ORDER BY create_time DESC
+        ORDER BY id ASC
     </select>
 
     <select id="selectByCondition" resultMap="BaseResultMap">
@@ -43,7 +43,7 @@
         <if test="parentId != null">
             AND parent_id = #{parentId}
         </if>
-        ORDER BY create_time DESC
+        ORDER BY id ASC
     </select>
 
     <insert id="insert" parameterType="com.example.entity.Department" useGeneratedKeys="true" keyProperty="id">
@@ -94,7 +94,7 @@
         <if test="parentId != null">
             AND parent_id = #{parentId}
         </if>
-        ORDER BY create_time DESC
+        ORDER BY id ASC
     </select>
 
     <select id="countByCondition" resultType="java.lang.Integer">

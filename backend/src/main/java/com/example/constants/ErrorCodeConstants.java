@@ -67,6 +67,10 @@ public class ErrorCodeConstants {
         /** 注册失败 */
         public static final int REGISTER_FAILED_CODE = 500;
         public static final String REGISTER_FAILED_MSG = "注册失败";
+        
+        /** 更新用户信息失败 */
+        public static final int UPDATE_USER_INFO_FAILED_CODE = 500;
+        public static final String UPDATE_USER_INFO_FAILED_MSG = "更新用户信息失败";
     }
     
     /**

@@ -108,6 +108,9 @@ public class AppConstants {
         public static final int REGISTER_FAILED_CODE = ErrorCodeConstants.User.REGISTER_FAILED_CODE;
         public static final String REGISTER_FAILED_MSG = ErrorCodeConstants.User.REGISTER_FAILED_MSG;
         
+        public static final int UPDATE_USER_INFO_FAILED_CODE = ErrorCodeConstants.User.UPDATE_USER_INFO_FAILED_CODE;
+        public static final String UPDATE_USER_INFO_FAILED_MSG = ErrorCodeConstants.User.UPDATE_USER_INFO_FAILED_MSG;
+        
         // 考勤相关错误码
         public static final int USER_ID_EMPTY_CODE = ErrorCodeConstants.Attendance.USER_ID_EMPTY_CODE;
         public static final String USER_ID_EMPTY_MSG = ErrorCodeConstants.Attendance.USER_ID_EMPTY_MSG;

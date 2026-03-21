@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.common.ResponseResult;
 import com.example.dto.RegisterRequest;
+import com.example.dto.UserDTO;
 import com.example.entity.User;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public interface UserService {
      * @param userId 用户ID
      * @return 用户信息响应
      */
-    ResponseResult<User> getUserInfoWithHandling(Integer userId);
+    ResponseResult<UserDTO> getUserInfoWithHandling(Integer userId);
     
     /**
      * 根据部门ID获取员工列表
@@ -92,4 +93,13 @@ public interface UserService {
      * @return 员工列表
      */
     List<User> getUsersByDepartmentId(Integer departmentId);
+    
+    /**
+     * 更新用户信息
+     *
+     * @param userId 用户ID
+     * @param updateData 更新的数据
+     * @return 更新结果响应
+     */
+    ResponseResult<UserDTO> updateUserInfo(Integer userId, User updateData);
 }

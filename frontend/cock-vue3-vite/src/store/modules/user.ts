@@ -15,9 +15,12 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
   // 定义用户状态
   state: () => ({
     userInfo: {
+      id: undefined,                               // 用户ID
       name: '',                                    // 用户名
       avatar: '',                                  // 用户头像
-      userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID // 默认用户ID
+      userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID, // 默认用户ID
+      age: undefined,                              // 年龄
+      gender: undefined                            // 性别
     } as UserInfo,
     loading: APP_CONSTANTS.BOOLEAN.FALSE,          // 加载状态
     error: ''                                      // 错误信息
@@ -73,9 +76,14 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         if (res.data && res.data.data) {
           // 后端返回的数据包装在data.data中
           const userData = res.data.data;
+          this.userInfo.id = userData.id
           this.userInfo.name = userData.username
           this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
           this.userInfo.avatar = userData.avatar || '' // 如果有头像字段
+          this.userInfo.age = userData.age
+          this.userInfo.gender = userData.gender
+          this.userInfo.email = userData.email || ''
+          this.userInfo.phone = userData.phone || ''
         }
       } catch (error: any) {
         // 错误已在axios拦截器中统一处理
@@ -120,8 +128,14 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         // 如果登录成功，更新用户信息
         if (res.data && res.data.data) {
           const userData = res.data.data.user || res.data.data
-          this.userInfo.name = userData.username
-          this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
+          this.userInfo.id = userData.id
+            this.userInfo.name = userData.username
+            this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
+            this.userInfo.avatar = userData.avatar || ''
+            this.userInfo.age = userData.age
+            this.userInfo.gender = userData.gender
+            this.userInfo.email = userData.email || ''
+            this.userInfo.phone = userData.phone || ''
         } else {
           this.userInfo.name = username
           this.userInfo.userId = APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
@@ -185,9 +199,14 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         // 如果注册成功，可以自动登录用户
         if (res.data && res.data.data) {
           const userData = res.data.data
+          this.userInfo.id = userData.id
           this.userInfo.name = userData.username
           this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
           this.userInfo.avatar = userData.avatar || ''
+          this.userInfo.age = userData.age
+          this.userInfo.gender = userData.gender
+          this.userInfo.email = userData.email || ''
+          this.userInfo.phone = userData.phone || ''
         }
         
         return {
@@ -228,9 +247,14 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         
         // 清空本地用户信息
         this.userInfo = {
+          id: undefined,
           name: '',
           avatar: '',
-          userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
+          userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID,
+          age: undefined,
+          gender: undefined,
+          email: undefined,
+          phone: undefined
         }
         
         // 清除认证状态
@@ -251,6 +275,70 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
           message: error.message || MESSAGE_CONSTANTS.USER_INFO.LOGOUT_FAILED(),
           error
         }
+      }
+    },
+    
+    /**
+     * 更新用户信息
+     * 通过API更新用户信息并同步到本地状态
+     */
+    async updateUserInfo(userData: { username?: string; age?: number; gender?: number; avatar?: string; email?: string; phone?: string }) {
+      this.loading = APP_CONSTANTS.BOOLEAN.TRUE
+      this.error = ''
+      try {
+        // 调用更新用户信息API
+        const res = await userApi.updateUserInfo(this.userInfo.id as number, userData)
+        
+        // 检查响应状态
+        if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
+          // 根据后端返回码进行精确错误处理
+          switch (res.data.code) {
+            case STATUS_CODES.BUSINESS.PARAM_ERROR:
+            case 400:
+              // 参数错误
+              throw new Error(MESSAGE_CONSTANTS.USER_INFO.PARAM_ERROR())
+              
+            case STATUS_CODES.BUSINESS.VALIDATION_ERROR:
+            case 422:
+              // 验证错误
+              throw new Error(MESSAGE_CONSTANTS.USER_INFO.VALIDATION_ERROR())
+              
+            case STATUS_CODES.BUSINESS.SERVER_ERROR:
+            case 500:
+              // 服务器错误
+              throw new Error(MESSAGE_CONSTANTS.COMMON.SERVER_ERROR())
+              
+            default:
+              // 其他业务错误
+              throw new Error(res.data.msg || res.data.message || MESSAGE_CONSTANTS.USER_INFO.UPDATE_FAILED())
+          }
+        }
+        
+        // 如果更新成功，同步到本地状态
+        if (res.data && res.data.data) {
+          const updatedUserData = res.data.data
+          this.userInfo.name = updatedUserData.username
+          this.userInfo.avatar = updatedUserData.avatar || ''
+          this.userInfo.age = updatedUserData.age
+          this.userInfo.gender = updatedUserData.gender
+          this.userInfo.email = updatedUserData.email || ''
+          this.userInfo.phone = updatedUserData.phone || ''
+        }
+        
+        return {
+          success: APP_CONSTANTS.BOOLEAN.TRUE,
+          message: MESSAGE_CONSTANTS.USER_INFO.UPDATE_SUCCESS(),
+          data: res.data?.data || userData
+        }
+      } catch (error: any) {
+        this.error = error.message || MESSAGE_CONSTANTS.USER_INFO.UPDATE_FAILED()
+        return {
+          success: APP_CONSTANTS.BOOLEAN.FALSE,
+          message: error.message || MESSAGE_CONSTANTS.USER_INFO.UPDATE_FAILED(),
+          error
+        }
+      } finally {
+        this.loading = APP_CONSTANTS.BOOLEAN.FALSE
       }
     }
   }

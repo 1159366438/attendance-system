@@ -102,6 +102,14 @@ export const APP_CONSTANTS = {
     AVATAR: {
       DEFAULT_SIZE: 80,
       OPTION_SIZE: 50,
+      DEFAULT_AVATARS: [
+        'https://ui-avatars.com/api/?name=A&background=409EFF&color=fff&size=128',
+        'https://ui-avatars.com/api/?name=B&background=67C23A&color=fff&size=128',
+        'https://ui-avatars.com/api/?name=C&background=E6A23C&color=fff&size=128',
+        'https://ui-avatars.com/api/?name=D&background=F56C6C&color=fff&size=128',
+        'https://ui-avatars.com/api/?name=E&background=909399&color=fff&size=128'
+      ],
+      DEFAULT_AVATAR_INDEX: 0,
     },
 
     // 表单验证类型
@@ -135,6 +143,55 @@ export const APP_CONSTANTS = {
     // 按钮文本
     BUTTONS: {
       LOGOUT: () => '退出登录',
+      CANCEL: () => '取消',
+      SAVE: () => '保存',
+    },
+
+    // 模态框相关
+    MODAL: {
+      WIDTH: '50%',
+      TITLE: () => '编辑用户信息',
+    },
+
+    // 表单标签
+    FORM_LABELS: {
+      USERNAME: () => '用户名',
+      AGE: () => '年龄',
+      GENDER: () => '性别',
+      AVATAR: () => '头像',
+      EMAIL: () => '邮箱',
+      PHONE: () => '电话',
+    },
+
+    // 表单占位符
+    FORM_PLACEHOLDERS: {
+      USERNAME: () => '请输入用户名',
+      AGE: () => '请输入年龄',
+      AVATAR: () => '请输入头像链接',
+      EMAIL: () => '请输入邮箱',
+      PHONE: () => '请输入电话',
+    },
+
+    // 验证相关
+    VALIDATION: {
+      USERNAME_REQUIRED: () => '请输入用户名',
+      USERNAME_LENGTH: () => '用户名长度必须在3-50个字符之间',
+      AGE_MIN: 1,
+      AGE_MAX: 120,
+      AGE_RANGE: () => '年龄必须在1-120之间',
+    },
+
+    // 性别选项
+    GENDER_OPTIONS: {
+      MALE: () => '男',
+      FEMALE: () => '女',
+      UNKNOWN: () => '未知',
+    },
+
+    // 消息提示
+    MESSAGES: {
+      UPDATE_SUCCESS: () => '用户信息更新成功',
+      UPDATE_FAILED: () => '用户信息更新失败',
     },
   },
 
