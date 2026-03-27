@@ -5,9 +5,12 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * 考勤记录数据访问对象
+ * 考勤记录数据访问接口
+ * 定义对考勤记录表进行数据库操作的方法
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 //@Mapper
 public interface AttendanceRecordDao {

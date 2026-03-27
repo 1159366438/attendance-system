@@ -66,6 +66,7 @@ import { APP_CONSTANTS, MESSAGE_CONSTANTS } from '../constants'
  * 处理用户登录逻辑，包括表单验证、认证和路由跳转
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 
 // 路由和状态管理

@@ -4,8 +4,11 @@ import java.util.Date;
 
 /**
  * 用户数据传输对象（不包含敏感信息）
+ * 用于在不同层级之间安全传输用户信息
+ * 
  * @author Attendance System Team
- * @since 2026-03-21
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class UserDTO {
     /**

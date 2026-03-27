@@ -3,6 +3,7 @@
  * 初始化Vue应用、Pinia状态管理和路由
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 import { createApp } from 'vue'

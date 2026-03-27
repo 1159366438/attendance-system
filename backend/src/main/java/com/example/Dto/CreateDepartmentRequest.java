@@ -1,10 +1,12 @@
 package com.example.dto;
 
 /**
- * 创建部门请求参数类
- *
+ * 创建部门请求数据传输对象
+ * 封装创建部门时提交的相关信息
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class CreateDepartmentRequest {
     /**

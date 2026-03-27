@@ -3,6 +3,7 @@
  * 提供ID生成相关功能
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 /**

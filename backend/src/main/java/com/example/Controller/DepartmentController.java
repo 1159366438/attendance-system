@@ -2,8 +2,11 @@ package com.example.controller;
 
 /**
  * 部门管理控制器
+ * 提供部门增删改查等管理功能
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import com.example.common.ResponseResult;

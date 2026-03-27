@@ -2,8 +2,11 @@ package com.example.controller;
 
 /**
  * 考勤控制器
+ * 提供考勤记录、打卡等考勤管理相关功能
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import com.example.common.ResponseResult;
@@ -80,15 +83,15 @@ public class AttendanceController {
     }
 
     /**
-      * 考勤打卡接口
-      * <p>
-      * 该接口用于处理用户的考勤打卡请求，保存考勤记录
-      * </p>
-      *
-      * @param attendanceRequest 考勤请求参数，包含用户名和考勤时间
-      * @return 标准响应格式
-      * @since 1.0.0
-      */
+     * 用户考勤打卡接口
+     * <p>
+     * 该接口用于处理用户的考勤打卡请求，保存考勤记录
+     * </p>
+     *
+     * @param attendanceRequest 考勤请求参数，包含用户名和考勤时间
+     * @return 标准响应格式
+     * @since v1.1.0-alpha.1
+     */
       @Operation(summary = "用户考勤打卡", description = "用户进行考勤打卡操作")
        @ApiResponses({
                @ApiResponse(responseCode = "200", description = "考勤打卡成功"),

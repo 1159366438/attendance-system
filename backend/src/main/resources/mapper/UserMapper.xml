@@ -87,4 +87,13 @@
         order by create_time desc
     </select>
 
+    <!-- 查询未分配部门的用户列表 -->
+    <select id="getUnassignedUsers" resultMap="BaseResultMap">
+        select
+            id, username, password, age, avatar, gender, create_time, update_time, department_id, email, phone, position, is_deleted
+        from user
+        where department_id IS NULL and is_deleted = 0
+        order by create_time desc
+    </select>
+
 </mapper>

@@ -3,6 +3,7 @@
  * 管理应用架构中使用的各种常量值，包括Store名称和事件名称
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 export const APP_ARCHITECTURE_CONSTANTS = {

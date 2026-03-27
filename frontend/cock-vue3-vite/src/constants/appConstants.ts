@@ -3,6 +3,7 @@
  * 整合应用中使用的主要常量值，减少文件数量，提高可维护性
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 import { t } from '../locales'
@@ -228,6 +229,8 @@ export const APP_CONSTANTS = {
           LOGIN: '/auth/login',
           LOGOUT: '/auth/logout',
           REGISTER: '/users',
+          ASSIGN_TO_DEPARTMENT: '/users/department',
+          UNASSIGNED: '/users/unassigned',
         },
         ATTENDANCE: {
           RECORDS: '/attendance/records',
@@ -674,6 +677,26 @@ export const APP_CONSTANTS = {
       ACTIONS: () => t('organizationChart.actionsHeader', '操作'),
     },
     
+    // 表格列相关国际化文本
+    TABLE: {
+      HEADERS: {
+        EMPLOYEE_NAME: () => t('organization.employeeName', '员工姓名'),
+        EMAIL: () => t('organization.email', '邮箱'),
+        PHONE: () => t('organization.phone', '电话'),
+        POSITION: () => t('organization.position', '职位'),
+        STATUS: () => t('organization.status', '状态'),
+        ACTIONS: () => t('organization.actions', '操作'),
+      },
+      STATUS: {
+        ACTIVE: () => t('organization.active', '在职'),
+        INACTIVE: () => t('organization.inactive', '离职'),
+      },
+      ACTIONS: {
+        EDIT: () => t('organization.edit', '编辑'),
+        DELETE: () => t('organization.delete', '删除'),
+      }
+    },
+    
     // 状态文本
     STATUS: {
       ACTIVE: 'active',
@@ -693,9 +716,13 @@ export const APP_CONSTANTS = {
       LOAD_EMPLOYEE_ERROR: () => t('organizationChart.loadEmployeeError', '加载员工数据失败'),
       DELETE_SUCCESS: () => t('organizationChart.deleteSuccess', '删除成功'),
       DELETE_EMPLOYEE: () => t('organizationChart.deleteEmployee', '删除员工'),
-      CONFIRM_DELETE: (name: string) => t('organizationChart.confirmDelete', `确认删除员工 "${name}"?`),
+      CONFIRM_DELETE: (name: string) => t('organizationChart.confirmDelete', `确认删除员工 "${name}"?`, { name }),
       NOT_IMPLEMENTED: () => t('organizationChart.notImplemented', '功能尚未实现'),
-      EDIT: (name: string) => t('organizationChart.edit', `编辑 ${name}`),
+      EDIT: (name: string) => t('organizationChart.edit', `编辑 ${name}`, { name }),
+      NO_UNASSIGNED_EMPLOYEES: () => t('organizationChart.noUnassignedEmployees', '没有未分配部门的员工'),
+      EMPLOYEE_ADD_SUCCESS: () => t('organizationChart.employeeAddSuccess', '员工添加成功'),
+      EMPLOYEE_ADD_FAILED: () => t('organizationChart.employeeAddFailed', '员工添加失败'),
+      FETCH_UNASSIGNED_FAILED: () => t('organizationChart.fetchUnassignedFailed', '获取未分配员工失败'),
     },
     
     // 样式相关
@@ -724,6 +751,21 @@ export const APP_CONSTANTS = {
       CHILDREN: 'children',
       LABEL: 'label',
       HAS_CHILDREN: 'hasChildren',
+    },
+    
+    // 对话框相关
+    DIALOGS: {
+      ADD_EMPLOYEE_TITLE: () => t('organizationChart.addEmployeeDialogTitle', '添加员工'),
+    },
+    
+    // 表单相关
+    FORM: {
+      LABELS: {
+        SELECT_EMPLOYEE: () => t('organizationChart.selectEmployeeLabel', '选择员工'),
+      },
+      PLACEHOLDERS: {
+        SELECT_EMPLOYEE: () => t('organizationChart.selectEmployeePlaceholder', '请选择要添加的员工'),
+      },
     },
   },
 }

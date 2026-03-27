@@ -2,8 +2,11 @@ package com.example.constants;
 
 /**
  * 数据库相关常量类
+ * 定义数据库操作相关的常量值
+ * 
  * @author Attendance System Team
- * @since 2026-03-21
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class DatabaseConstants {
     

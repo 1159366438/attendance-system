@@ -109,6 +109,7 @@
  * 提供部门增删改查功能
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 
 import { ref, onMounted, computed } from 'vue'

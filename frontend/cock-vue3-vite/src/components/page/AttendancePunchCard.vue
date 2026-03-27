@@ -28,6 +28,7 @@
  * 提供考勤打卡功能和状态显示
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 
 import { ref, onMounted, computed } from 'vue'
@@ -57,12 +58,12 @@ const formatTodayDate = () => {
 // 考勤操作
 const handleAttendanceIn = async () => {
   // 确保用户信息已加载
-  if (!userStore.userInfo.name) {
+  if (!userStore.userInfo.username) {
     await userStore.fetchUserInfo()
   }
   
-  const username = userStore.userInfo.name || APP_CONSTANTS.ATTENDANCE_CARD.MESSAGES.UNKNOWN_USER()
-  const userId = userStore.userInfo.userId || 1
+  const username = userStore.userInfo.username || APP_CONSTANTS.ATTENDANCE_CARD.MESSAGES.UNKNOWN_USER()
+  const userId = userStore.userInfo.userId
   try {
     // 调用store中的考勤方法（已封装API调用）
     const success = await punchStore.attendanceIn(username, userId)

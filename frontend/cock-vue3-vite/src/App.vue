@@ -9,6 +9,7 @@
  * 负责根据路由判断是否显示布局组件
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 import { computed } from 'vue'

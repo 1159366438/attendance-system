@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 考勤记录服务接口
+ * 考勤记录业务逻辑接口
+ * 定义考勤记录管理相关的业务逻辑方法
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public interface AttendanceRecordService {
 

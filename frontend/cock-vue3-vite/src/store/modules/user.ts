@@ -3,6 +3,7 @@
  * 管理用户登录状态、用户信息、权限等
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 import { defineStore } from 'pinia'
 import { userApi } from '../../api/userApi'
@@ -15,10 +16,9 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
   // 定义用户状态
   state: () => ({
     userInfo: {
-      id: undefined,                               // 用户ID
-      name: '',                                    // 用户名
-      avatar: '',                                  // 用户头像
-      userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID, // 默认用户ID
+      username: undefined,                         // 用户名
+      avatar: undefined,                           // 用户头像
+      userId: undefined,                           // 用户ID
       age: undefined,                              // 年龄
       gender: undefined                            // 性别
     } as UserInfo,
@@ -29,7 +29,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
   // 定义计算属性
   getters: {
     // 检查用户是否已登录
-    isLoggedIn: (state) => !!state.userInfo.name
+    isLoggedIn: (state) => !!state.userInfo.username
   },
   
   // 定义状态修改方法
@@ -42,7 +42,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
       this.loading = APP_CONSTANTS.BOOLEAN.TRUE    // 设置加载状态为true
       this.error = ''                             // 清空之前的错误信息
       try {
-        const res = await userApi.getUserInfo(Number(this.userInfo.userId))
+        const res = await userApi.getUserInfo(this.userInfo.userId || 1)
         // 开发调试时可以启用日志
         console.log('获取用户信息接口响应:', res)
         
@@ -76,9 +76,8 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         if (res.data && res.data.data) {
           // 后端返回的数据包装在data.data中
           const userData = res.data.data;
-          this.userInfo.id = userData.id
-          this.userInfo.name = userData.username
-          this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
+          this.userInfo.username = userData.username
+          this.userInfo.userId = userData.id
           this.userInfo.avatar = userData.avatar || '' // 如果有头像字段
           this.userInfo.age = userData.age
           this.userInfo.gender = userData.gender
@@ -128,17 +127,16 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         // 如果登录成功，更新用户信息
         if (res.data && res.data.data) {
           const userData = res.data.data.user || res.data.data
-          this.userInfo.id = userData.id
-            this.userInfo.name = userData.username
-            this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
+            this.userInfo.username = userData.username
+            this.userInfo.userId = userData.id
             this.userInfo.avatar = userData.avatar || ''
             this.userInfo.age = userData.age
             this.userInfo.gender = userData.gender
             this.userInfo.email = userData.email || ''
             this.userInfo.phone = userData.phone || ''
         } else {
-          this.userInfo.name = username
-          this.userInfo.userId = APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
+          this.userInfo.username = username
+          this.userInfo.userId = undefined
         }
         
         return {
@@ -199,9 +197,8 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         // 如果注册成功，可以自动登录用户
         if (res.data && res.data.data) {
           const userData = res.data.data
-          this.userInfo.id = userData.id
-          this.userInfo.name = userData.username
-          this.userInfo.userId = userData.id || APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID
+          this.userInfo.username = userData.username
+          this.userInfo.userId = userData.id
           this.userInfo.avatar = userData.avatar || ''
           this.userInfo.age = userData.age
           this.userInfo.gender = userData.gender
@@ -247,10 +244,9 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         
         // 清空本地用户信息
         this.userInfo = {
-          id: undefined,
-          name: '',
-          avatar: '',
-          userId: APP_CONSTANTS.USER.DEFAULT_VALUES.USER_ID,
+          username: undefined,
+          avatar: undefined,
+          userId: undefined,
           age: undefined,
           gender: undefined,
           email: undefined,
@@ -287,7 +283,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
       this.error = ''
       try {
         // 调用更新用户信息API
-        const res = await userApi.updateUserInfo(this.userInfo.id as number, userData)
+        const res = await userApi.updateUserInfo(this.userInfo.userId as number, userData)
         
         // 检查响应状态
         if (res.data && res.data.code !== STATUS_CODES.BUSINESS.SUCCESS) {
@@ -317,7 +313,7 @@ export const useUserStore = defineStore(STORE_NAMES.USER, {
         // 如果更新成功，同步到本地状态
         if (res.data && res.data.data) {
           const updatedUserData = res.data.data
-          this.userInfo.name = updatedUserData.username
+          this.userInfo.username = updatedUserData.username
           this.userInfo.avatar = updatedUserData.avatar || ''
           this.userInfo.age = updatedUserData.age
           this.userInfo.gender = updatedUserData.gender

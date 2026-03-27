@@ -52,6 +52,7 @@
  * 展示考勤记录表格和分页功能
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 
 import { onMounted, computed, onErrorCaptured, ref } from 'vue'
@@ -141,10 +142,10 @@ const handleCurrentChange = async (page: number) => {
 const loadAttendanceRecords = async (page: number, size: number) => {
   try {
     // 确保用户信息已加载
-    if (!userStore.userInfo.name) {
+    if (!userStore.userInfo.username) {
       await userStore.fetchUserInfo()
     }
-    const userId = userStore.userInfo.userId || 1
+    const userId = userStore.userInfo.userId
     const success = await attendanceStore.fetchAttendanceRecords(userId, page, size)
     if (success) {
       ElMessage.success(APP_CONSTANTS.ATTENDANCE.MESSAGES.FETCH_RECORDS_SUCCESS())
@@ -165,7 +166,7 @@ const loadAttendanceRecords = async (page: number, size: number) => {
 // Lifecycle
 onMounted(async () => {
   // 确保用户信息已加载
-  if (!userStore.userInfo.name) {
+  if (!userStore.userInfo.username) {
     await userStore.fetchUserInfo()
   }
   await loadAttendanceRecords(currentPageRef.value, pageSizeRef.value)

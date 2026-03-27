@@ -1,9 +1,12 @@
 package com.example.service.impl;
 
 /**
- * 考勤记录服务实现类
+ * 考勤记录业务逻辑实现类
+ * 实现考勤记录管理相关的业务逻辑
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import com.example.common.ResponseResult;

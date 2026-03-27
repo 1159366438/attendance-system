@@ -1,10 +1,12 @@
 package com.example.dto;
 
 /**
- * 用户注册请求参数类
- *
+ * 用户注册请求数据传输对象
+ * 封装用户注册时提交的相关信息
+ * 
  * @author Attendance System Team
- * @since 2026-03-14
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class RegisterRequest {
     /**

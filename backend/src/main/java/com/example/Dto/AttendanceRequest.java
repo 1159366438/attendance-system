@@ -1,9 +1,12 @@
 package com.example.dto;
 
 /**
- * 考勤请求参数类
+ * 考勤请求数据传输对象
+ * 封装考勤打卡时提交的相关信息
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class AttendanceRequest {
     /**

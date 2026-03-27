@@ -5,8 +5,11 @@ import java.util.Date;
 
 /**
  * 用户实体类
+ * 对应数据库中的用户表，封装用户相关信息
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class User implements Serializable {
     private static final long serialVersionUID = 874813741216031059L;

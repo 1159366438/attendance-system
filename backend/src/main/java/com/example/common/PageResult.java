@@ -4,8 +4,11 @@ import java.util.List;
 
 /**
  * 分页结果类
+ * 定义分页查询结果的统一格式
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class PageResult<T> {
     /**

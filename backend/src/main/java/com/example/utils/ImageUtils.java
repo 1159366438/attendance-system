@@ -7,9 +7,10 @@ import java.util.Base64;
 import java.util.UUID;
 
 /**
- * 图像处理工具类
+ * 图片处理工具类
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class ImageUtils {
     

@@ -1,9 +1,12 @@
 package com.example;
 
-/*
-  考勤系统启动类
-  @author Attendance System Team
- * @since 2026-03-13
+/**
+ * 考勤系统启动类
+ * 系统的主入口点，负责初始化Spring Boot应用
+ * 
+ * @author Attendance System Team
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import org.mybatis.spring.annotation.MapperScan;

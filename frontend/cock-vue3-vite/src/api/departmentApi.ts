@@ -3,6 +3,7 @@
  * 提供部门增删改查等操作接口
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 import { service } from './axios'
 import { APP_CONSTANTS } from '../constants'
@@ -70,6 +71,14 @@ const departmentApi = {
   getChildDepartments: (parentId: number | null) => {
     const params = parentId !== null ? { parentId } : {}
     return service.get(APP_CONSTANTS.ROUTE.PATHS.API.DEPARTMENT.CHILDREN, { params })
+  },
+
+  /**
+   * 获取未分配部门的员工
+   * @returns Promise - 包含未分配部门员工列表的响应
+   */
+  getUnassignedEmployees: () => {
+    return service.get(APP_CONSTANTS.ROUTE.PATHS.API.USER.UNASSIGNED)
   }
 }
 

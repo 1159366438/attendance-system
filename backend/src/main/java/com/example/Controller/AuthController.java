@@ -2,13 +2,17 @@ package com.example.controller;
 
 /**
  * 认证控制器
+ * 提供用户登录、注册等认证相关接口
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import com.example.common.ResponseResult;
 import com.example.constants.AppConstants;
 import com.example.dto.LoginRequest;
+import com.example.dto.UserDTO;
 import com.example.entity.User;
 import com.example.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,8 +51,8 @@ public class AuthController {
      * </p>
      *
      * @param loginRequest 登录请求参数，包含用户名和密码
-     * @return 标准响应格式，包含用户信息和认证令牌
-     * @since 1.0.0
+     * @return 标准响应格式，包含用户信息（不包含敏感信息）和认证令牌
+     * @since v1.1.0-alpha.1
      */
     @Operation(summary = "用户登录", description = "用户使用用户名和密码进行登录验证")
      @ApiResponses({
@@ -69,15 +73,15 @@ public class AuthController {
             }
             
             // 调用登录业务逻辑
-            User user = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+            UserDTO userDTO = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
             
-            if (user == null) {
+            if (userDTO == null) {
                 return ResponseResult.error(AppConstants.Error.LOGIN_FAILED_CODE, AppConstants.Error.LOGIN_FAILED_MSG);
             }
             
             // 构造响应数据
             Map<String, Object> responseData = new HashMap<>();
-            responseData.put("user", user);
+            responseData.put("user", userDTO);
             // responseData.put("token", generateToken(user.getId())); // 生成临时令牌 - 暂时注释掉
             
             return ResponseResult.success(responseData);
@@ -113,7 +117,7 @@ public class AuthController {
        * </p>
        *
        * @return 标准响应格式
-       * @since 1.0.0
+       * @since v1.1.0-alpha.1
        */
         @Operation(summary = "用户登出", description = "用户登出系统，清除登录状态")
      @ApiResponses({

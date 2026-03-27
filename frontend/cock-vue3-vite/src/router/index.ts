@@ -3,6 +3,7 @@
  * 定义应用的所有路由规则
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 import { createRouter, createWebHistory } from 'vue-router'

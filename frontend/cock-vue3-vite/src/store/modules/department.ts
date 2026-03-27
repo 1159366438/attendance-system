@@ -3,6 +3,7 @@
  * 管理部门列表、部门树、部门操作等
  * @author Attendance System Team
  * @since 2026-03-21
+ * @version v1.1.0-alpha.1
  */
 import { defineStore } from 'pinia'
 import departmentApi from '../../api/departmentApi'

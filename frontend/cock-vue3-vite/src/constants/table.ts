@@ -3,6 +3,7 @@
  * 管理表格中使用的各种常量值
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 export const TABLE_CONSTANTS = {

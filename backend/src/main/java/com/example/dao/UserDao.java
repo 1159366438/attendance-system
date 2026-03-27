@@ -5,9 +5,12 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * 用户数据访问对象
+ * 用户数据访问接口
+ * 定义对用户表进行数据库操作的方法
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 @Mapper
 public interface UserDao {
@@ -66,4 +69,14 @@ public interface UserDao {
      * @return 用户列表
      */
     List<User> getUsersByDepartmentId(Integer departmentId);
+    
+    /**
+     * 查询未分配部门的用户列表
+     *
+     * @return 用户列表
+     * @author Attendance System Team
+     * @since 2026-03-27
+     * @version v1.1.0-alpha.1
+     */
+    List<User> getUnassignedUsers();
 }

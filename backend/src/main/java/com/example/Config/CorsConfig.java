@@ -2,8 +2,11 @@ package com.example.config;
 
 /**
  * CORS配置类
+ * 配置跨域资源共享(CORS)策略
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import com.example.constants.AppConstants;

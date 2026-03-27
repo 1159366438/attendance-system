@@ -9,8 +9,11 @@ import java.util.List;
 
 /**
  * 部门业务逻辑接口
+ * 定义部门管理相关的业务逻辑方法
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public interface DepartmentService {
     /**

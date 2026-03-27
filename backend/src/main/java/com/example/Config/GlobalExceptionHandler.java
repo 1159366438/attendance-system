@@ -2,8 +2,11 @@ package com.example.config;
 
 /**
  * 全局异常处理器
+ * 统一处理系统中的异常并返回标准化错误响应
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import com.example.common.ResponseResult;

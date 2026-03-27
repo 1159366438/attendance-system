@@ -3,6 +3,7 @@
  * 管理应用的多语言资源
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 export const zhCN = {
@@ -105,6 +106,44 @@ export const zhCN = {
     validationFailed: '请检查输入信息',
     forgotPasswordTip: '请联系管理员重置密码',
     registerTip: '请联系管理员开通账户'
+  },
+
+  // 组织架构相关
+  organizationChart: {
+    pageTitle: '组织架构',
+    addEmployeeButton: '添加员工',
+    refreshButton: '刷新',
+    editButton: '编辑',
+    deleteButton: '删除',
+    confirmButton: '确定',
+    cancelButton: '取消',
+    employeeNameHeader: '员工姓名',
+    emailHeader: '邮箱',
+    phoneHeader: '电话',
+    positionHeader: '职位',
+    statusHeader: '状态',
+    actionsHeader: '操作',
+    activeStatus: '在职',
+    inactiveStatus: '离职',
+    selectDeptPrompt: '请在左侧选择一个部门以查看员工信息',
+    selectDept: '请选择部门',
+    employees: '员工列表',
+    departmentTree: '部门树',
+    searchDepartment: '搜索部门',
+    loadDeptError: '加载部门数据失败',
+    loadEmployeeError: '加载员工数据失败',
+    deleteSuccess: '删除成功',
+    deleteEmployee: '删除员工',
+    confirmDelete: '确认删除员工 "%{name}"?',
+    notImplemented: '功能尚未实现',
+    edit: '编辑 %{name}',
+    addEmployeeDialogTitle: '添加员工',
+    selectEmployeeLabel: '选择员工',
+    selectEmployeePlaceholder: '请选择要添加的员工',
+    noUnassignedEmployees: '没有未分配部门的员工',
+    employeeAddSuccess: '员工添加成功',
+    employeeAddFailed: '员工添加失败',
+    fetchUnassignedFailed: '获取未分配员工失败'
   }
 }
 
@@ -204,6 +243,44 @@ export const enUS = {
     validationFailed: 'Please check input information',
     forgotPasswordTip: 'Please contact administrator to reset password',
     registerTip: 'Please contact administrator to activate account'
+  },
+
+  // Organization chart related
+  organizationChart: {
+    pageTitle: 'Organization Chart',
+    addEmployeeButton: 'Add Employee',
+    refreshButton: 'Refresh',
+    editButton: 'Edit',
+    deleteButton: 'Delete',
+    confirmButton: 'Confirm',
+    cancelButton: 'Cancel',
+    employeeNameHeader: 'Employee Name',
+    emailHeader: 'Email',
+    phoneHeader: 'Phone',
+    positionHeader: 'Position',
+    statusHeader: 'Status',
+    actionsHeader: 'Actions',
+    activeStatus: 'Active',
+    inactiveStatus: 'Inactive',
+    selectDeptPrompt: 'Please select a department from the left panel to view employee information',
+    selectDept: 'Please select a department',
+    employees: 'Employee List',
+    departmentTree: 'Department Tree',
+    searchDepartment: 'Search Department',
+    loadDeptError: 'Failed to load department data',
+    loadEmployeeError: 'Failed to load employee data',
+    deleteSuccess: 'Deleted successfully',
+    deleteEmployee: 'Delete Employee',
+    confirmDelete: 'Confirm to delete employee "%{name}"?',
+    notImplemented: 'Feature not implemented yet',
+    edit: 'Edit %{name}',
+    addEmployeeDialogTitle: 'Add Employee',
+    selectEmployeeLabel: 'Select Employee',
+    selectEmployeePlaceholder: 'Please select an employee to add',
+    noUnassignedEmployees: 'No unassigned employees',
+    employeeAddSuccess: 'Employee added successfully',
+    employeeAddFailed: 'Failed to add employee',
+    fetchUnassignedFailed: 'Failed to fetch unassigned employees'
   }
 }
 
@@ -223,8 +300,17 @@ export const setLocale = (locale: string) => {
   currentLocale = locale
 }
 
+// 替换消息中的参数
+const interpolateParams = (message: string, params: Record<string, any>): string => {
+  let result = message || ''
+  for (const [key, value] of Object.entries(params)) {
+    result = result.replace(new RegExp(`%\\{${key}\\}`, 'g'), String(value))
+  }
+  return result
+}
+
 // 获取特定消息
-export const t = (key: string, fallback?: string) => {
+export const t = (key: string, fallback?: string, params?: Record<string, any>) => {
   const keys = key.split('.')
   let result: any = getLocaleMessages()
   
@@ -232,5 +318,12 @@ export const t = (key: string, fallback?: string) => {
     result = result?.[k]
   }
   
-  return result || fallback || key
+  const message = result || fallback || key
+  
+  // 如果提供了参数，则进行参数替换
+  if (params && typeof message === 'string') {
+    return interpolateParams(message, params)
+  }
+  
+  return message
 }

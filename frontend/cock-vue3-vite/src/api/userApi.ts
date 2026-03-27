@@ -47,5 +47,18 @@ export const userApi = {
       avatar,          // 头像
       gender           // 性别
     })
+  },
+  
+  /**
+   * 为用户分配部门
+   * @param userId - 用户ID
+   * @param departmentId - 部门ID
+   * @returns Promise - 分配结果响应
+   */
+  assignUserToDepartment: (userId: number, departmentId: number) => {
+    return service.put(APP_CONSTANTS.ROUTE.PATHS.API.USER.ASSIGN_TO_DEPARTMENT, {
+      userId,
+      departmentId
+    })
   }
 }

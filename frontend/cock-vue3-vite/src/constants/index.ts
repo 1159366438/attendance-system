@@ -3,6 +3,7 @@
  * 提供单一入口点来访问所有常量，便于管理和维护
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 // 导出整合的应用主要常量

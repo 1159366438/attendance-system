@@ -18,8 +18,11 @@ import java.util.List;
 
 /**
  * 部门业务逻辑实现类
+ * 实现部门管理相关的业务逻辑
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 @Service
 public class DepartmentServiceImpl implements DepartmentService {

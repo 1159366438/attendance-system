@@ -5,8 +5,11 @@ import org.springframework.stereotype.Component;
 
 /**
  * 应用程序配置类
+ * 配置应用程序的自定义属性和参数
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 @Component
 @ConfigurationProperties(prefix = "app")

@@ -74,6 +74,7 @@
  * 提供主界面布局、菜单导航和用户信息显示
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 import { ref, watch, onMounted, computed } from 'vue'

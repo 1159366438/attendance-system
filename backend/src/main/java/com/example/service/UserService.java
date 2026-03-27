@@ -8,8 +8,11 @@ import java.util.List;
 
 /**
  * 用户服务接口
+ * 定义用户管理相关的业务逻辑方法
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 public interface UserService {
@@ -55,11 +58,12 @@ public interface UserService {
 
     /**
      * 用户注册
-     *
+     * 
      * @param registerRequest 注册请求参数
      * @return 注册结果
+     * @since v1.1.0-alpha.1
      */
-    ResponseResult<User> register(RegisterRequest registerRequest);
+    ResponseResult<UserDTO> register(RegisterRequest registerRequest);
 
     /**
      * 通过主键删除数据
@@ -70,19 +74,21 @@ public interface UserService {
     int deleteById(Integer id);
 
     /**
-     * 用户登录验证
-     *
+     * 用户登录
+     * 
      * @param username 用户名
-     * @param rawPassword 明文密码
-     * @return 用户对象，如果验证失败则返回null
+     * @param rawPassword 原始密码
+     * @return 登录用户信息（不包含敏感信息），登录失败返回null
+     * @since v1.1.0-alpha.1
      */
-    User login(String username, String rawPassword);
+    UserDTO login(String username, String rawPassword);
     
     /**
      * 获取用户信息（带错误处理）
      *
      * @param userId 用户ID
      * @return 用户信息响应
+     * @since v1.1.0-alpha.1
      */
     ResponseResult<UserDTO> getUserInfoWithHandling(Integer userId);
     
@@ -100,6 +106,29 @@ public interface UserService {
      * @param userId 用户ID
      * @param updateData 更新的数据
      * @return 更新结果响应
+     * @since v1.1.0-alpha.1
      */
     ResponseResult<UserDTO> updateUserInfo(Integer userId, User updateData);
+    
+    /**
+     * 为用户分配部门
+     *
+     * @param userId 用户ID
+     * @param departmentId 部门ID
+     * @return 更新结果响应
+     * @author Attendance System Team
+     * @since 2026-03-27
+     * @version v1.1.0-alpha.1
+     */
+    ResponseResult<UserDTO> assignUserToDepartment(Integer userId, Integer departmentId);
+    
+    /**
+     * 获取未分配部门的用户列表
+     *
+     * @return 用户列表
+     * @author Attendance System Team
+     * @since 2026-03-27
+     * @version v1.1.0-alpha.1
+     */
+    List<User> getUnassignedUsers();
 }

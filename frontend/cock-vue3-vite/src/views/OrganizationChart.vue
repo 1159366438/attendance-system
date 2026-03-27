@@ -33,7 +33,7 @@
         <div class="panel-header">
           <h3>{{ currentDeptName ? currentDeptName + ' - ' + APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.EMPLOYEES() : APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.SELECT_DEPT() }}</h3>
           <div class="actions">
-            <el-button type="primary" @click="addEmployee">
+            <el-button type="primary" @click="openAddEmployeeDialog">
               {{ APP_CONSTANTS.ORGANIZATION_CHART.BUTTONS.ADD_EMPLOYEE() }}
             </el-button>
             <el-button @click="refreshEmployees">
@@ -53,45 +53,45 @@
         >
           <el-table-column
           prop="username"
-          :label="t('organization.employeeName', '员工姓名')"
+          :label="APP_CONSTANTS.ORGANIZATION_CHART.TABLE.HEADERS.EMPLOYEE_NAME()"
           :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.NAME_WIDTH"
         />
           <el-table-column
           prop="email"
-          :label="t('organization.email', '邮箱')"
+          :label="APP_CONSTANTS.ORGANIZATION_CHART.TABLE.HEADERS.EMAIL()"
           :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.EMAIL_WIDTH"
         />
         <el-table-column
           prop="phone"
-          :label="t('organization.phone', '电话')"
+          :label="APP_CONSTANTS.ORGANIZATION_CHART.TABLE.HEADERS.PHONE()"
           :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.PHONE_WIDTH"
         />
         <el-table-column
           prop="position"
-          :label="t('organization.position', '职位')"
+          :label="APP_CONSTANTS.ORGANIZATION_CHART.TABLE.HEADERS.POSITION()"
           :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.POSITION_WIDTH"
         />
         <el-table-column
           prop="status"
-          :label="t('organization.status', '状态')"
+          :label="APP_CONSTANTS.ORGANIZATION_CHART.TABLE.HEADERS.STATUS()"
           :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.STATUS_WIDTH"
         >
           <template #default="{ row }">
             <el-tag :type="row.status === APP_CONSTANTS.ORGANIZATION_CHART.STATUS.ACTIVE ? 'success' : 'info'">
-              {{ row.status === APP_CONSTANTS.ORGANIZATION_CHART.STATUS.ACTIVE ? t('organization.active', '在职') : t('organization.inactive', '离职') }}
+              {{ row.status === APP_CONSTANTS.ORGANIZATION_CHART.STATUS.ACTIVE ? APP_CONSTANTS.ORGANIZATION_CHART.TABLE.STATUS.ACTIVE() : APP_CONSTANTS.ORGANIZATION_CHART.TABLE.STATUS.INACTIVE() }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column
-          :label="t('organization.actions', '操作')"
+          :label="APP_CONSTANTS.ORGANIZATION_CHART.TABLE.HEADERS.ACTIONS()"
           :width="APP_CONSTANTS.ORGANIZATION_CHART.TABLE_COLUMNS.ACTIONS_WIDTH"
         >
           <template #default="{ row }">
             <el-button size="small" @click="editEmployee(row)">
-              {{ t('organization.edit', '编辑') }}
+              {{ APP_CONSTANTS.ORGANIZATION_CHART.TABLE.ACTIONS.EDIT() }}
             </el-button>
             <el-button size="small" type="danger" @click="deleteEmployee(row)">
-              {{ t('organization.delete', '删除') }}
+              {{ APP_CONSTANTS.ORGANIZATION_CHART.TABLE.ACTIONS.DELETE() }}
             </el-button>
           </template>
         </el-table-column>
@@ -102,6 +102,39 @@
         </div>
       </div>
     </div>
+    
+    <!-- 添加员工对话框 -->
+    <el-dialog
+      v-model="addEmployeeDialogVisible"
+      :title="APP_CONSTANTS.ORGANIZATION_CHART.DIALOGS.ADD_EMPLOYEE_TITLE()"
+      width="500px"
+      :close-on-click-modal="false"
+    >
+      <el-form>
+        <el-form-item :label="APP_CONSTANTS.ORGANIZATION_CHART.FORM.LABELS.SELECT_EMPLOYEE()">
+          <el-select
+            v-model="selectedUnassignedEmployee"
+            :placeholder="APP_CONSTANTS.ORGANIZATION_CHART.FORM.PLACEHOLDERS.SELECT_EMPLOYEE()"
+            filterable
+            style="width: 100%"
+            :loading="loadingUnassigned"
+          >
+            <el-option
+              v-for="employee in unassignedEmployees"
+              :key="employee.id"
+              :label="employee.username"
+              :value="employee.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="addEmployeeDialogVisible = false">{{ APP_CONSTANTS.ORGANIZATION_CHART.BUTTONS.CANCEL() }}</el-button>
+          <el-button type="primary" @click="addEmployee" :disabled="!selectedUnassignedEmployee">{{ APP_CONSTANTS.ORGANIZATION_CHART.BUTTONS.CONFIRM() }}</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -111,6 +144,7 @@
  * 提供组织架构树形展示、部门员工管理功能
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 
 import { ref, onMounted, watch } from 'vue'
@@ -119,6 +153,7 @@ import { useDepartmentStore } from '../store/modules/department'
 import { t } from '../locales'
 import { APP_CONSTANTS } from '../constants'
 import departmentApi from '../api/departmentApi'
+import { userApi } from '../api/userApi'
 
 // 使用部门store
 const departmentStore = useDepartmentStore()
@@ -248,9 +283,79 @@ const refreshEmployees = () => {
   }
 }
 
+// 添加员工相关变量
+const addEmployeeDialogVisible = ref(false)
+const unassignedEmployees = ref<any[]>([])
+const selectedUnassignedEmployee = ref<number | null>(null)
+const loadingUnassigned = ref(false)
+
+// 获取未分配部门的员工
+const loadUnassignedEmployees = async () => {
+  loadingUnassigned.value = true
+  try {
+    const response = await departmentApi.getUnassignedEmployees()
+    if (response && response.data && response.data.code === 200) {
+      unassignedEmployees.value = Array.isArray(response.data.data) ? response.data.data.map((user: any) => ({
+        id: user.id,
+        username: user.username,
+        email: user.email || '',
+        phone: user.phone || '',
+        position: user.position || ''
+      })) : []
+    } else {
+      ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.FETCH_UNASSIGNED_FAILED())
+      unassignedEmployees.value = []
+    }
+  } catch (error: any) {
+    console.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.FETCH_UNASSIGNED_FAILED(), ':', error)
+    ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.FETCH_UNASSIGNED_FAILED())
+    unassignedEmployees.value = []
+  } finally {
+    loadingUnassigned.value = false
+  }
+}
+
+// 打开添加员工对话框
+const openAddEmployeeDialog = async () => {
+  if (!currentDeptId.value) {
+    ElMessage.warning(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.SELECT_DEPT())
+    return
+  }
+  await loadUnassignedEmployees()
+  if (unassignedEmployees.value.length === 0) {
+    ElMessage.info(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.NO_UNASSIGNED_EMPLOYEES())
+    return
+  }
+  addEmployeeDialogVisible.value = true
+}
+
 // 添加员工
-const addEmployee = () => {
-  ElMessage.info(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.NOT_IMPLEMENTED())
+const addEmployee = async () => {
+  if (!currentDeptId.value) {
+    ElMessage.warning(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.SELECT_DEPT())
+    return
+  }
+  
+  if (!selectedUnassignedEmployee.value) {
+    ElMessage.warning(APP_CONSTANTS.ORGANIZATION_CHART.FORM.PLACEHOLDERS.SELECT_EMPLOYEE())
+    return
+  }
+  
+  try {
+    const response = await userApi.assignUserToDepartment(selectedUnassignedEmployee.value, currentDeptId.value)
+    if (response && response.data && response.data.code === 200) {
+      ElMessage.success(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.EMPLOYEE_ADD_SUCCESS())
+      addEmployeeDialogVisible.value = false
+      selectedUnassignedEmployee.value = null
+      // 刷新员工列表
+      refreshEmployees()
+    } else {
+      ElMessage.error(response.data?.msg || APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.EMPLOYEE_ADD_FAILED())
+    }
+  } catch (error: any) {
+    console.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.FETCH_UNASSIGNED_FAILED(), ':', error)
+    ElMessage.error(APP_CONSTANTS.ORGANIZATION_CHART.MESSAGES.EMPLOYEE_ADD_FAILED())
+  }
 }
 
 // 编辑员工

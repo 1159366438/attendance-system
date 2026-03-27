@@ -2,8 +2,11 @@ package com.example.config;
 
 /**
  * 安全配置类
+ * 配置Spring Security安全策略
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import org.springframework.context.annotation.Bean;

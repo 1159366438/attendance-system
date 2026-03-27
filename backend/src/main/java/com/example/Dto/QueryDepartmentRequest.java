@@ -1,10 +1,12 @@
 package com.example.dto;
 
 /**
- * 查询部门请求参数类
- *
+ * 查询部门请求数据传输对象
+ * 封装查询部门时提交的相关条件
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class QueryDepartmentRequest {
     /**

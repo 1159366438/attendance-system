@@ -2,8 +2,11 @@ package com.example.config;
 
 /**
  * MyBatis配置类
+ * 配置MyBatis相关参数和事务管理
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import org.mybatis.spring.SqlSessionFactoryBean;

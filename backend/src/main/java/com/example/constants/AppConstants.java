@@ -2,8 +2,11 @@ package com.example.constants;
 
 /**
  * 应用程序常量类
+ * 定义系统中使用的各类常量值
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class AppConstants {
     

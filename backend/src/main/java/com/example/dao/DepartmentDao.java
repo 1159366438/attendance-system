@@ -7,8 +7,11 @@ import java.util.List;
 
 /**
  * 部门数据访问接口
+ * 定义对部门表进行数据库操作的方法
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 @Mapper
 public interface DepartmentDao {

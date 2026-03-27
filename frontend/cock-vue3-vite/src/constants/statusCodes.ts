@@ -3,6 +3,7 @@
  * 管理API响应和业务操作的状态码常量
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 export const STATUS_CODES = {

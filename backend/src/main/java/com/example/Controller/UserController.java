@@ -2,8 +2,11 @@ package com.example.controller;
 
 /**
  * 用户控制器
+ * 提供用户信息管理、查询等相关功能
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 
 import com.example.common.ResponseResult;
@@ -30,6 +33,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
+import java.util.List;
+
 
 @RestController // 标识为REST接口，返回JSON数据
 @RequestMapping("/api") // 匹配前端url的前缀 /api/input
@@ -50,7 +57,7 @@ public class UserController {
      * </p>
      *
      * @return UserDTO对象，表示查询到的用户信息（不包含敏感信息）
-     * @since 1.0.0
+     * @since v1.1.0-alpha.1
      */
     @Operation(summary = "获取用户信息", description = "根据用户ID获取用户的基本信息")
      @ApiResponses({
@@ -73,8 +80,8 @@ public class UserController {
      * </p>
      *
      * @param registerRequest 注册请求参数，包含用户名、密码等信息
-     * @return 标准响应格式，包含注册成功的用户信息
-     * @since 1.1.0
+     * @return 标准响应格式，包含注册成功的用户信息（不包含敏感信息）
+     * @since v1.1.0-alpha.1
      */
      @Operation(summary = "用户注册", description = "新用户注册账户")
      @ApiResponses({
@@ -83,7 +90,7 @@ public class UserController {
              @ApiResponse(responseCode = "500", description = "注册失败")
      })
      @PostMapping("/users")
-    public ResponseResult<User> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseResult<UserDTO> register(@RequestBody RegisterRequest registerRequest) {
      logger.info("用户注册请求: username={}", registerRequest.getUsername());
      
      try {
@@ -94,7 +101,7 @@ public class UserController {
          }
          
          // 调用注册业务逻辑
-         ResponseResult<User> registerResult = userService.register(registerRequest);
+         ResponseResult<UserDTO> registerResult = userService.register(registerRequest);
          
          // 直接返回服务层的结果
          return registerResult;
@@ -158,7 +165,7 @@ public class UserController {
   * @param userId 用户ID
   * @param updateData 更新的数据
   * @return 标准响应格式，包含更新后的用户信息（不包含敏感信息）
-  * @since 1.2.0
+  * @since v1.1.0-alpha.1
   */
  @Operation(summary = "更新用户信息", description = "更新当前登录用户的信息")
  @ApiResponses({
@@ -181,4 +188,76 @@ public class UserController {
          return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Error.SERVER_ERROR_MSG);
      }
  }
+    
+    /**
+     * 为用户分配部门接口
+     * <p>
+     * 该接口用于为用户分配到指定部门
+     * </p>
+     *
+     * @param requestBody 请求体，包含userId和departmentId
+     * @return 标准响应格式，包含更新后的用户信息
+     * @author Attendance System Team
+     * @since 2026-03-27
+     * @version v1.1.0-alpha.1
+     */
+    @Operation(summary = "为用户分配部门", description = "将指定用户分配到指定部门")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "分配部门成功"),
+            @ApiResponse(responseCode = "400", description = "参数错误"),
+            @ApiResponse(responseCode = "404", description = "用户不存在"),
+            @ApiResponse(responseCode = "500", description = "分配部门失败")
+    })
+    @PutMapping("/users/department")
+    public ResponseResult<UserDTO> assignUserToDepartment(@RequestBody Map<String, Object> requestBody) {
+        try {
+            Integer userId = requestBody.get("userId") != null ? Integer.parseInt(requestBody.get("userId").toString()) : null;
+            Integer departmentId = requestBody.get("departmentId") != null ? Integer.parseInt(requestBody.get("departmentId").toString()) : null;
+            
+            logger.info("为用户分配部门请求: userId={}, departmentId={}", userId, departmentId);
+            
+            if (userId == null || departmentId == null) {
+                return ResponseResult.error(AppConstants.Error.BAD_REQUEST_CODE, "用户ID和部门ID不能为空");
+            }
+            
+            // 调用分配用户到部门业务逻辑
+            ResponseResult<UserDTO> result = userService.assignUserToDepartment(userId, departmentId);
+            
+            return result;
+        } catch (Exception e) {
+            logger.error("为用户分配部门失败", e);
+            return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Error.SERVER_ERROR_MSG);
+        }
+    }
+    
+    /**
+     * 获取未分配部门的用户列表
+     * <p>
+     * 该接口用于获取所有未分配到任何部门的用户
+     * </p>
+     *
+     * @return 标准响应格式，包含未分配部门的用户列表
+     * @author Attendance System Team
+     * @since 2026-03-27
+     * @version v1.1.0-alpha.1
+     */
+    @Operation(summary = "获取未分配部门的用户", description = "获取所有未分配到任何部门的用户列表")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "获取成功"),
+            @ApiResponse(responseCode = "500", description = "获取失败")
+    })
+    @GetMapping("/users/unassigned")
+    public ResponseResult<List<User>> getUnassignedUsers() {
+        logger.info("获取未分配部门的用户列表请求");
+        
+        try {
+            // 调用获取未分配部门用户业务逻辑
+            List<User> users = userService.getUnassignedUsers();
+            
+            return ResponseResult.success(users);
+        } catch (Exception e) {
+            logger.error("获取未分配部门的用户列表失败", e);
+            return ResponseResult.error(AppConstants.Error.SERVER_ERROR_CODE, AppConstants.Error.SERVER_ERROR_MSG);
+        }
+    }
 }

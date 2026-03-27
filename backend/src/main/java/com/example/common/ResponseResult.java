@@ -4,8 +4,11 @@ import com.example.constants.AppConstants;
 
 /**
  * 统一响应结果类
+ * 定义API接口的统一响应格式
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  * 
  * @param <T> 响应数据类型
  */

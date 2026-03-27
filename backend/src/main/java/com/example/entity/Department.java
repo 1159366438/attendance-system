@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 部门表
+ * 部门实体类
+ * 对应数据库中的部门表，封装部门相关信息
+ * 
  * @author Attendance System Team
- * @since 2026-03-18
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class Department implements Serializable {
     /**

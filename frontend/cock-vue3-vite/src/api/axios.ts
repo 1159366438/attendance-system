@@ -3,6 +3,7 @@
  * 配置API请求实例、拦截器和错误处理
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 import axios from 'axios'
 import { APP_CONFIG } from '../config/appConfig'

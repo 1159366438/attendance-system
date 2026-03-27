@@ -3,6 +3,7 @@
  * 管理考勤状态、考勤记录、考勤操作等
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 import { defineStore } from 'pinia'
 import { attendanceApi } from '../../api/attendanceApi'
@@ -48,7 +49,7 @@ export const useAttendanceStore = defineStore(STORE_NAMES.ATTENDANCE, {
         const attendanceTime = new Date().toISOString()
         console.log('准备考勤数据:', { username, attendanceTime, userId }) // 开发调试日志
         // 调用考勤接口
-        const res = await attendanceApi.attendanceIn({ username, attendanceTime, userId: Number(userId) })
+        const res = await attendanceApi.attendanceIn({ username, attendanceTime, userId: userId || 1 })
         // 开发调试时可以启用日志
         console.log('考勤接口响应:', res)
         

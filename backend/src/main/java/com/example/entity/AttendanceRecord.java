@@ -5,8 +5,11 @@ import java.util.Date;
 
 /**
  * 考勤记录实体类
+ * 对应数据库中的考勤记录表，封装考勤记录相关信息
+ * 
  * @author Attendance System Team
- * @since 2026-03-15
+ * @since 2026-03-27
+ * @version v1.1.0-alpha.1
  */
 public class AttendanceRecord implements Serializable {
     private static final long serialVersionUID = -42311789699024229L;

@@ -3,6 +3,7 @@
  * 管理应用中使用的布局和菜单相关常量
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 import { t } from '../locales'

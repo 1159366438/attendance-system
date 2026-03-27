@@ -2,6 +2,7 @@
  * 认证控制器
  * @author Attendance System Team
  * @since 2026-03-18
+ * @version v1.1.0-alpha.1
  */
 
 import service from './axios'

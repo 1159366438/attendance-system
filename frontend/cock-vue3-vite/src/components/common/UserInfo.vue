@@ -12,7 +12,7 @@
         <!-- 用户头像 -->
         <el-avatar :src="userInfo.avatar" class="avatar" @click="openEditDialog"></el-avatar>
         <!-- 用户名 -->
-        <span class="user-name">{{ userInfo.name }}</span>
+        <span class="user-name">{{ userInfo.username }}</span>
         <!-- 登出按钮 -->
         <el-button link class="logout-btn" @click="handleLogout">
           {{ logoutText }}
@@ -95,6 +95,7 @@ import AvatarSelector from './AvatarSelector.vue'
  * 显示当前用户信息，包括头像、姓名和登出按钮
  * @author Attendance System Team
  * @since 2026-03-15
+ * @version v1.1.0-alpha.1
  */
 
 // 接收父组件传递的菜单文本
@@ -219,7 +220,7 @@ const openEditDialog = async () => {
   
   // 将当前用户信息复制到编辑表单
   editForm.value = {
-    username: userInfo.value.name,
+    username: userInfo.value.username || '',
     age: userInfo.value.age,
     gender: userInfo.value.gender,
     avatar: userInfo.value.avatar || '',
